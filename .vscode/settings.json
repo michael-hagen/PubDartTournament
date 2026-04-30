@@ -1,0 +1,22 @@
+{
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "todo",
+    "XXX",
+    "[ ]",
+    "[x]",
+    "HEADSUP"
+  ],
+  "todo-tree.regex.regex": "(//|#|<!--|;|/?\\*|^|^[ \\t]*(-|\\d+.))\\s*@?($TAGS)",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "css.lint.unknownAtRules": "ignore"
+}

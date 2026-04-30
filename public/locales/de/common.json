@@ -1,0 +1,18 @@
+{
+  "OK": "OK",
+  "CANCEL": "Abbrechen",
+  "CLOSE": "Schließen",
+  "HELP": "Hilfe",
+  "NEW": "Neu",
+  "OPEN": "Öffnen",
+  "SAVE": "Speichen",
+  "ABOUT": "Über",
+  "PREV": "Zurück",
+  "NEXT": "Weiter",
+  "ERROR": "Fehler",
+  "WARNING": "Warnung",
+  "INFO": "Info",
+  "LANGUAGE": "Sprache",
+  "GERMAN": "Deutsch",
+  "ENGLISH": "English"
+}
