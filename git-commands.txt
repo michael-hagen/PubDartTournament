@@ -1,0 +1,30 @@
+*******************************
+List of useful git commands
+*******************************
+
+Clone the PubDartTournament
+---------------------------
+git clone https://github.com/michael-hagen/PubDartTournament.git
+
+Update the list of remote branches
+----------------------------------
+
+git fetch -p
+
+
+List all branches
+-----------------
+
+git branch -a
+
+
+Delete a local branch (-D to force delete)
+------------------------------------------
+
+git branch -d {local_branch}
+
+
+Delete a remote branch
+----------------------
+
+git push origin -d {remote_branch}

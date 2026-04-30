@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button'
 interface CollapsiblePanelProps extends PropsWithChildren {
   title: string
   className?: string
+  titleClassName?: string
 }
 
-export default function CollapsiblePanel({ title, children, className }: CollapsiblePanelProps) {
+export default function CollapsiblePanel({ title, children, className, titleClassName }: CollapsiblePanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
@@ -28,7 +29,7 @@ export default function CollapsiblePanel({ title, children, className }: Collaps
         <Button size="sm" variant="outline" className="m-2 p-1" onClick={() => setIsCollapsed(!isCollapsed)}>
           {isCollapsed ? <Plus /> : <Minus />}
         </Button>
-        <div className={cn('flex-1 text-lg ', isCollapsed ? '[writing-mode:vertical-lr] tracking-wider' : '')}>
+        <div className={cn('flex-1 text-lg ', isCollapsed ? '[writing-mode:vertical-lr] tracking-wider' : '', titleClassName ? titleClassName : '')}>
           {title}
         </div>
       </div>

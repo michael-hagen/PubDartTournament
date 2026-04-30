@@ -42,7 +42,17 @@
   "TIP": {
     "COLOR_THEME": "Color Theme",
     "SET_FULLSCREEN": "Fullscreen",
-    "EXIT_FULLSCREEN": "Exit Fullscreen"
+    "EXIT_FULLSCREEN": "Exit Fullscreen",
+    "START_TOURNAMENT_TITLE": "Start tournament",
+    "START_TOURNAMENT_CONTENT_1": "Starting the tournament will create a tournament plan",
+    "START_TOURNAMENT_CONTENT_2": "where the players will randomly play with each other.",
+    "START_TOURNAMENT_CONTENT_3": "Important! You can't change the settings any longer after the start.",
+    "LEG_INPUT_TITLE": "Input points left",
+    "LEG_INPUT_CONTENT_1": "Type 0 for the winner",
+    "LEG_INPUT_CONTENT_2": "Type the points left for the loser",
+    "FINISH_ROUND_BUTTON_TITLE": "Finish round",
+    "FINISH_ROUND_BUTTON_CONTENT_1": "As soon as all legs of this round are done you have",
+    "FINISH_ROUND_BUTTON_CONTENT_2": "to finish the round to start the next round"
   },
   "ERROR_MESSAGE": {
     "MIN_PLAYERS": "The minimum amount of players is 4",

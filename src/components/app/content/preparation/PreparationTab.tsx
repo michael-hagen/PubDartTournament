@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import { Goal } from 'lucide-react'
-
 import { PreparationCard } from './PreparationCard'
 import GameVariantSwitcher from './GameVariantSwitcher'
 import GameModeSwitcher from './GameModeSwitcher'
@@ -10,8 +8,8 @@ import GameCheckoutSwitcher from './GameCheckoutSwitcher'
 import GameSetsSwitcher from './GameSetsSwitcher'
 import GameEliminationSwitcher from './GameEliminationSwitcher'
 import PlayersList from './PlayersList'
-import { Button } from '@/components/ui/button'
 import { useAppActions, useAppStore } from '@/store/AppStore'
+import StartButton from './StartButton'
 
 export default function PreparationTab() {
   const { t } = useTranslation(['app'])
@@ -19,7 +17,7 @@ export default function PreparationTab() {
   const startDisabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
   const { startTournament } = useAppActions()
 
-  const handleStartTournament = () => {
+  const handleStartClicked = () => {
     startTournament()
   }
 
@@ -60,16 +58,7 @@ export default function PreparationTab() {
         </PreparationCard>
       </div>
       <div className="flex justify-center p-8">
-        <Button
-          disabled={startDisabled}
-          variant="outline"
-          size="lg"
-          className="min-w-60"
-          onClick={handleStartTournament}
-        >
-          <Goal />
-          {t('START_TOURNAMENT')}
-        </Button>
+        <StartButton disabled={startDisabled} handleClick={handleStartClicked} />
       </div>
     </div>
   )

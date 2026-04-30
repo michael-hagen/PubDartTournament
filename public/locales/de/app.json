@@ -41,7 +41,17 @@
   "TIP": {
     "COLOR_THEME": "Farbschema",
     "SET_FULLSCREEN": "Vollbildmodus",
-    "EXIT_FULLSCREEN": "Vollbildmodus beenden"
+    "EXIT_FULLSCREEN": "Vollbildmodus beenden",
+    "START_TOURNAMENT_TITLE": "Turnier starten",
+    "START_TOURNAMENT_CONTENT_1": "Beim starten des Turniers wird ein Turnierplan erstellt, bei dem",
+    "START_TOURNAMENT_CONTENT_2": "die Spieler in der ersten Runde zufällig aufeinandertreffen.",
+    "START_TOURNAMENT_CONTENT_3": "Wichtig! Änderungen an den Einstellungen sind danach nicht mehr möglich.",
+    "LEG_INPUT_TITLE": "Eingabe der Restpunkte",
+    "LEG_INPUT_CONTENT_1": "Für den Gewinner gib bitte eine 0 ein",
+    "LEG_INPUT_CONTENT_2": "Für den Verlierer gib bitte die Restpunktzahl ein",
+    "FINISH_ROUND_BUTTON_TITLE": "Runde beenden",
+    "FINISH_ROUND_BUTTON_CONTENT_1": "Sobald alle Spiele einer Runde beendet sind muss die Runde",
+    "FINISH_ROUND_BUTTON_CONTENT_2": "abgeschloßen werden, um die nächste Runde zu starten"
   },
   "ERROR_MESSAGE": {
     "MIN_PLAYERS": "Es müssen mindestens 4 Spieler am Turnier teilnehmen",
