@@ -1,20 +1,32 @@
 import { Input } from '@/components/ui/input'
 import { TooltipTrigger, TooltipContent, Tooltip } from '@/components/ui/tooltip'
 import { useAppStore } from '@/store/AppStore'
+import { useRef, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface LegInputProps {
-  value: number
+  value: string
+  legIndex: number
   disabled?: boolean
+  errorMessage?: string
   className?: string
+  handleOnChange: (event: ChangeEvent<HTMLInputElement, HTMLInputElement>, legIndex: number) => void
 }
 
-export default function LegInput({ value, disabled, className }: LegInputProps) {
+export default function LegInput({
+  value,
+  legIndex,
+  disabled,
+  errorMessage,
+  className,
+  handleOnChange,
+}: LegInputProps) {
   const { t } = useTranslation(['app'])
+  const inputRef = useRef<HTMLInputElement>(null)
   const gameMode = useAppStore((state) => state.gameMode)
   const maxLen = gameMode === 'MODE_1001' ? 4 : 3
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End']
 
     if (e.ctrlKey || e.metaKey || allowedKeys.includes(e.key)) {
@@ -26,16 +38,23 @@ export default function LegInput({ value, disabled, className }: LegInputProps) 
     }
   }
 
+  const handleOnFocus = () => {
+    inputRef.current?.setSelectionRange(0, value.length)
+  }
+
   return (
     <Tooltip delayDuration={1000}>
-      <TooltipTrigger asChild>
+      <TooltipTrigger asChild onFocus={(e) => e.preventDefault()}>
         <Input
+          ref={inputRef}
           value={value}
           disabled={disabled}
-          className={`rounded-none text-right ${maxLen === 3 ? 'w-12' : 'w-14'} ${className}`}
+          className={`rounded-none text-right ${maxLen === 3 ? 'w-12' : 'w-14'} ${errorMessage !== undefined ? 'border-destructive text-destructive' : ''} ${className}`}
           type="text"
           maxLength={maxLen}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleOnKeyDown}
+          onFocus={handleOnFocus}
+          onChange={(e) => handleOnChange(e, legIndex)}
         />
       </TooltipTrigger>
       <TooltipContent>

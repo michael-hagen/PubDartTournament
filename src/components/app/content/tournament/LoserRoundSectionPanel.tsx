@@ -1,7 +1,7 @@
 import { useAppStore } from '@/store/AppStore'
 import LoserTitle from './LoserTitle'
 import MatchItem from './MatchItem'
-import FinishButton from './FinishButton'
+import AlertDialogComponent from '@/components/common/AlertDialogComponent'
 
 interface LoserRoundSectionPanelProps {
   roundIndex: number
@@ -14,7 +14,7 @@ export default function LoserRoundSectionPanel({ roundIndex }: LoserRoundSection
   const disabled = round.finished || !prevRoundFinished
 
   const handleFinishClicked = () => {
-    console.log('--> Finish clicked');
+    console.log('--> Finish clicked')
   }
 
   return (
@@ -23,10 +23,16 @@ export default function LoserRoundSectionPanel({ roundIndex }: LoserRoundSection
       <div className="flex-1 flex flex-col p-4 overflow-auto">
         <div className="flex-1 flex flex-col gap-6">
           {round.loserMatches?.map(({ id }, index) => (
-            <MatchItem key={id} roundIndex={roundIndex} loserMatchIndex={index}/>
+            <MatchItem key={id} roundIndex={roundIndex} loserMatchIndex={index} />
           ))}
         </div>
-        <FinishButton disabled={disabled} handleClick={handleFinishClicked}/>
+        <AlertDialogComponent
+          buttonTitle="app:FINISH_ROUND"
+          dialogTitle="app:FINISH_ROUND_TITLE"
+          dialogDescription="app:FINISH_ROUND_DESCRIPTION"
+          disabled={disabled}
+          handleClick={handleFinishClicked}
+        />
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 import { useAppStore } from '@/store/AppStore'
 import MatchItem from './MatchItem'
-import FinishButton from './FinishButton'
+import AlertDialogComponent from '@/components/common/AlertDialogComponent'
 
 interface RoundSectionPanelProps {
   roundIndex: number
@@ -23,7 +23,13 @@ export default function RoundSectionPanel({ roundIndex }: RoundSectionPanelProps
           <MatchItem key={id} roundIndex={roundIndex} winnerMatchIndex={index} />
         ))}
       </div>
-      <FinishButton disabled={disabled} handleClick={handleFinishClicked} />
+      <AlertDialogComponent
+        buttonTitle="app:FINISH_ROUND"
+        dialogTitle="app:FINISH_ROUND_TITLE"
+        dialogDescription="app:FINISH_ROUND_DESCRIPTION"
+        disabled={disabled}
+        handleClick={handleFinishClicked}
+      />
     </div>
   )
 }

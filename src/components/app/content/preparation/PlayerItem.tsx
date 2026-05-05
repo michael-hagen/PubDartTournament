@@ -31,6 +31,7 @@ export default function PlayerItem({
   const [value, setValue] = useState(player)
   const inputRef = useRef<HTMLInputElement>(null)
   const { updatePlayer, addPlayer, removePlayer } = useAppActions()
+  const errMsg = errorMessage !== undefined ? t(errorMessage) : null
 
   useEffect(() => {
     if (!gainFocus || !inputRef || !inputRef.current) return
@@ -73,7 +74,7 @@ export default function PlayerItem({
     removePlayer(playerIndex)
   }
 
-  const handleFocus = (gained: boolean) => {
+  const handleOnFocus = (gained: boolean) => {
     if (gained) {
       handleSelectPlayer(playerIndex)
     } else {
@@ -90,8 +91,8 @@ export default function PlayerItem({
           placeholder={isNewPlayer ? t('NEW_PLAYER') : t('REMOVE_PLAYER')}
           value={value}
           disabled={disabled}
-          onFocus={() => handleFocus(true)}
-          onBlur={() => handleFocus(false)}
+          onFocus={() => handleOnFocus(true)}
+          onBlur={() => handleOnFocus(false)}
           onKeyDown={handleKeyDown}
           onChange={handleOnChange}
         />
@@ -106,11 +107,11 @@ export default function PlayerItem({
           </InputGroupAddon>
         )}
       </InputGroup>
-      {errorMessage && (
+      {errMsg && (
         <FieldError>
           <div className="flex p-2 gap-1">
             <Ban className="w-4 h-4" />
-            {errorMessage}
+            {errMsg}
           </div>
         </FieldError>
       )}

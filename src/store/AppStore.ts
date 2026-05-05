@@ -5,7 +5,7 @@ import {
   DefaultGameCheckout,
   DefaultGameMode,
   DefaultGameOpening,
-  DefaultGameSets,
+  DefaultGameLegs,
   DefaultGameState,
   DefaultGameElimination,
   DefaultGameVariant,
@@ -16,12 +16,13 @@ import {
   DefaultPlayers,
   DefaultGetAByePlayer,
   DefaultEmptyPlayer,
+  DefaultLegValue,
 } from '@/globals/defaults'
 import {
   type GameCheckoutType,
   type GameModeType,
   type GameOpeningType,
-  type GameSetsType,
+  type GameLegsType,
   type GameStateType,
   type GameEliminationType,
   type GameVariantType,
@@ -30,6 +31,8 @@ import {
   type RoundType,
   type MatchType,
   type MatchRowType,
+  type LegValueType,
+  type TournamentType,
 } from '@/globals/types'
 import {
   calculateEliminationRounds,
@@ -38,7 +41,6 @@ import {
   nextPowerOfTwo,
   shuffleArray,
 } from '@/lib/utils'
-import i18next from 'i18next'
 
 export const useAppStore = create(
   combine(
@@ -50,10 +52,11 @@ export const useAppStore = create(
       gameMode: structuredClone(DefaultGameMode),
       gameOpening: structuredClone(DefaultGameOpening),
       gameCheckout: structuredClone(DefaultGameCheckout),
-      gameSets: structuredClone(DefaultGameSets),
+      gameLegs: structuredClone(DefaultGameLegs),
       gameElimination: structuredClone(DefaultGameElimination),
       selectedTab: structuredClone(DefaultGameState),
       tournamentPanelScale: structuredClone(DefaultScale),
+      preparationError: false,
       players: [
         { id: generateUUID(), name: 'Micky' },
         { id: generateUUID(), name: 'Anke' },
@@ -74,15 +77,15 @@ export const useAppStore = create(
       tournament: structuredClone(DefaultTournament),
     },
     (set, get) => {
-      const getSetCount = (): number => {
-        switch (get().gameSets) {
-          case 'SETS_2':
+      const getLegsToWin = (): number => {
+        switch (get().gameLegs) {
+          case 'LEGS_2':
             return 2
-          case 'SETS_3':
+          case 'LEGS_3':
             return 3
-          case 'SETS_4':
+          case 'LEGS_4':
             return 4
-          case 'SETS_5':
+          case 'LEGS_5':
             return 5
         }
       }
@@ -116,16 +119,78 @@ export const useAppStore = create(
 
           if (exists) {
             newPlayers[playerIndex].errorMessage = 'ERROR_MESSAGE.DUPLICATE_PLAYER_NAME'
+            set({ preparationError: true })
           }
         })
       }
 
-      const getPreparationErrorMessage = (): string | null => {
-        if (get().players.length < 4) return i18next.t('ERROR_MESSAGE.MIN_PLAYERS', { ns: 'app' })
-        if (get().players.length > 128) return i18next.t('ERROR_MESSAGE.MAX_PLAYERS', { ns: 'app' })
-        if (get().players.some((player) => player.errorMessage !== null && player.errorMessage !== undefined))
-          return i18next.t('ERROR_MESSAGE.DUPLICATE_PLAYER', { ns: 'app' })
+      const validatePreparation = (): string | null => {
+        // First validate the list of players
+        validatePlayers(get().players)
+        // Reset the preparationError
+        set({ preparationError: false })
+
+        // The last player in the list is a placeholder for entering a new player
+        const playerCount = get().players.length - 1
+        if (playerCount < 4) {
+          set({ preparationError: true })
+          return 'ERROR_MESSAGE.MIN_PLAYERS'
+        }
+        if (playerCount > 128) {
+          set({ preparationError: true })
+          return 'ERROR_MESSAGE.MAX_PLAYERS'
+        }
+        if (get().players.some((player, index) => index < playerCount && player.name.trim().length === 0)) {
+          set({ preparationError: true })
+          return 'ERROR_MESSAGE.EMPTY_PLAYER_NAME'
+        }
+        if (get().players.some((player) => player.errorMessage !== null && player.errorMessage !== undefined)) {
+          set({ preparationError: true })
+          return 'ERROR_MESSAGE.DUPLICATE_PLAYER_NAME'
+        }
         return null
+      }
+
+      const prepareFirstRound = (newTournament: TournamentType, playerList: PlayerType[]) => {
+        const firstRound = newTournament.rounds[0]
+        const legsToWin = getLegsToWin()
+        let playerOneIndex = 0
+        let playerTwoIndex = playerList.length / 2
+        // In the first round there are only winner ;-)
+        for (let i = 0; i < firstRound.winnerMatches.length; i++) {
+          // Pair the players for each match
+          firstRound.winnerMatches[i].playerOneRow.player = playerList[playerOneIndex]
+          firstRound.winnerMatches[i].playerTwoRow.player = playerList[playerTwoIndex]
+          // Check if one player is a 'get a bye' and init the values for this case
+          const isPlayerOneGetABye = playerList[playerOneIndex].name === 'GET_A_BYE'
+          const isPlayerTwoGetABye = playerList[playerTwoIndex].name === 'GET_A_BYE'
+          if (isPlayerOneGetABye || isPlayerTwoGetABye) {
+            const legValueX01: LegValueType = {
+              remainingPoints: getX01(),
+            }
+            firstRound.winnerMatches[i].playerOneRow.legs = []
+            for (let j = 0; j < legsToWin; j++) {
+              firstRound.winnerMatches[i].playerOneRow.legs.push(
+                isPlayerOneGetABye ? structuredClone(legValueX01) : structuredClone(DefaultLegValue),
+              )
+            }
+            firstRound.winnerMatches[i].playerTwoRow.legs = []
+            for (let j = 0; j < legsToWin; j++) {
+              firstRound.winnerMatches[i].playerTwoRow.legs.push(
+                isPlayerTwoGetABye ? structuredClone(legValueX01) : structuredClone(DefaultLegValue),
+              )
+            }
+            if (isPlayerOneGetABye) {
+              firstRound.winnerMatches[i].playerOneRow.isWinner = false
+              firstRound.winnerMatches[i].playerTwoRow.isWinner = true
+            } else {
+              firstRound.winnerMatches[i].playerOneRow.isWinner = true
+              firstRound.winnerMatches[i].playerTwoRow.isWinner = false
+            }
+          }
+          playerOneIndex++
+          playerTwoIndex++
+        }
       }
 
       const prepareKOTournament = () => {
@@ -139,9 +204,6 @@ export const useAppStore = create(
         }
         // Calculate the amount of rounds needed
         const eliminationRounds = calculateEliminationRounds(playerCount)
-        // Get the sets needed to win
-        const setCount = getSetCount()
-
         // Create the tournament data structure
         const newTournament = structuredClone(DefaultTournament)
         eliminationRounds.map(({ games }, index) => {
@@ -155,48 +217,27 @@ export const useAppStore = create(
             const playerOneRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
-              legs: Array(setCount).fill(0),
+              legs: [structuredClone(DefaultLegValue)],
               throws: [],
             }
-            const playerTowRow: MatchRowType = {
+            const playerTwoRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
-              legs: Array(setCount).fill(0),
+              legs: [structuredClone(DefaultLegValue)],
               throws: [],
             }
             const winnerMatch: MatchType = {
               id: generateUUID(),
               playerOneRow: playerOneRow,
-              playerTwoRow: playerTowRow,
+              playerTwoRow: playerTwoRow,
             }
             newRound.winnerMatches.push(winnerMatch)
           }
           newTournament.rounds.push(newRound)
         })
 
-        // Prepare the first round with the list of players
-        const firstRound = newTournament.rounds[0]
-        let playerOneIndex = 0
-        let playerTwoIndex = playerCount / 2
-        for (let i = 0; i < firstRound.winnerMatches.length; i++) {
-          firstRound.winnerMatches[i].playerOneRow.player = playerList[playerOneIndex]
-          firstRound.winnerMatches[i].playerTwoRow.player = playerList[playerTwoIndex]
-          const isPlayerOneGetABye = playerList[playerOneIndex].name === 'GET_A_BYE'
-          const isPlayerTwoGetABye = playerList[playerTwoIndex].name === 'GET_A_BYE'
-          if (isPlayerOneGetABye || isPlayerTwoGetABye) {
-            firstRound.winnerMatches[i].playerOneRow.legs = Array(setCount).fill(isPlayerOneGetABye ? getX01() : 0)
-            firstRound.winnerMatches[i].playerTwoRow.legs = Array(setCount).fill(isPlayerTwoGetABye ? getX01() : 0)
-            if (isPlayerOneGetABye) {
-              firstRound.winnerMatches[i].playerOneRow.isWinner = false
-              firstRound.winnerMatches[i].playerTwoRow.isWinner = true
-            } else {
-              firstRound.winnerMatches[i].playerOneRow.isWinner = true
-              firstRound.winnerMatches[i].playerTwoRow.isWinner = false
-            }
-          }
-          playerOneIndex++
-          playerTwoIndex++
-        }
+        prepareFirstRound(newTournament, playerList)
+
         set({ tournament: newTournament })
       }
 
@@ -210,12 +251,9 @@ export const useAppStore = create(
           playerList.push(structuredClone(DefaultGetAByePlayer))
         }
         const doubleEliminationRounds = calculateDoubleEliminationRounds(playerCount)
-        // Get the sets needed to win
-        const setCount = getSetCount()
         // Create the tournament data structure
         const newTournament = structuredClone(DefaultTournament)
         doubleEliminationRounds.map(({ winnerGames, loserGames }, index) => {
-          console.log('--> round: ', index, ' winnerGames: ', winnerGames, ' loserGames', loserGames)
           const newRound: RoundType = {
             id: generateUUID(),
             name: index === doubleEliminationRounds.length - 1 ? 'FINAL' : 'ROUND',
@@ -227,19 +265,19 @@ export const useAppStore = create(
             const winnerPlayerOneRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
-              legs: Array(setCount).fill(0),
+              legs: [structuredClone(DefaultLegValue)],
               throws: [],
             }
-            const winnerPlayerTowRow: MatchRowType = {
+            const winnerPlayerTwoRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
-              legs: Array(setCount).fill(0),
+              legs: [structuredClone(DefaultLegValue)],
               throws: [],
             }
             const winnerMatch: MatchType = {
               id: generateUUID(),
               playerOneRow: winnerPlayerOneRow,
-              playerTwoRow: winnerPlayerTowRow,
+              playerTwoRow: winnerPlayerTwoRow,
             }
             newRound.winnerMatches.push(winnerMatch)
           }
@@ -247,13 +285,13 @@ export const useAppStore = create(
             const loserPlayerOneRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
-              legs: Array(setCount).fill(0),
+              legs: [structuredClone(DefaultLegValue)],
               throws: [],
             }
             const loserPlayerTowRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
-              legs: Array(setCount).fill(0),
+              legs: [structuredClone(DefaultLegValue)],
               throws: [],
             }
             const loserMatch: MatchType = {
@@ -265,29 +303,8 @@ export const useAppStore = create(
           }
           newTournament.rounds.push(newRound)
         })
-        // Prepare the first round with the list of players
-        const firstRound = newTournament.rounds[0]
-        let playerOneIndex = 0
-        let playerTwoIndex = playerCount / 2
-        for (let i = 0; i < firstRound.winnerMatches.length; i++) {
-          firstRound.winnerMatches[i].playerOneRow.player = playerList[playerOneIndex]
-          firstRound.winnerMatches[i].playerTwoRow.player = playerList[playerTwoIndex]
-          const isPlayerOneGetABye = playerList[playerOneIndex].name === 'GET_A_BYE'
-          const isPlayerTwoGetABye = playerList[playerTwoIndex].name === 'GET_A_BYE'
-          if (isPlayerOneGetABye || isPlayerTwoGetABye) {
-            firstRound.winnerMatches[i].playerOneRow.legs = Array(setCount).fill(isPlayerOneGetABye ? getX01() : 0)
-            firstRound.winnerMatches[i].playerTwoRow.legs = Array(setCount).fill(isPlayerTwoGetABye ? getX01() : 0)
-            if (isPlayerOneGetABye) {
-              firstRound.winnerMatches[i].playerOneRow.isWinner = false
-              firstRound.winnerMatches[i].playerTwoRow.isWinner = true
-            } else {
-              firstRound.winnerMatches[i].playerOneRow.isWinner = true
-              firstRound.winnerMatches[i].playerTwoRow.isWinner = false
-            }
-          }
-          playerOneIndex++
-          playerTwoIndex++
-        }
+
+        prepareFirstRound(newTournament, playerList)
 
         set({ tournament: newTournament })
       }
@@ -329,9 +346,9 @@ export const useAppStore = create(
             set({ gameCheckout: newCheckout })
           },
 
-          setGameSets: (newSets: GameSetsType) => {
-            if (get().gameSets === newSets) return
-            set({ gameSets: newSets })
+          setGameLegs: (newLegs: GameLegsType) => {
+            if (get().gameLegs === newLegs) return
+            set({ gameLegs: newLegs })
           },
 
           setGameElimination: (newElimination: GameEliminationType) => {
@@ -350,20 +367,26 @@ export const useAppStore = create(
           },
 
           updatePlayer: (playerIndex: number, player: string) => {
-            if (playerIndex < 0 || playerIndex > get().players.length - 1 || get().players[playerIndex].name === player)
+            if (
+              playerIndex < 0 ||
+              playerIndex > get().players.length - 1 ||
+              get().players[playerIndex].name === player.trim()
+            )
               return
 
             const newPlayers = get().players.slice()
-            newPlayers[playerIndex] = { id: generateUUID(), name: player }
-
+            newPlayers[playerIndex] = { id: generateUUID(), name: player.trim() }
             validatePlayers(newPlayers)
             set({ players: newPlayers })
+            validatePreparation()
           },
 
           addPlayer: () => {
             const newPlayers = get().players.slice()
             newPlayers.push({ id: generateUUID(), name: '' })
+            validatePlayers(newPlayers)
             set({ players: newPlayers })
+            validatePreparation()
           },
 
           removePlayer: (playerIndex: number) => {
@@ -373,17 +396,19 @@ export const useAppStore = create(
             if (get().players.length === 1) {
               const newPlayers = get().players.slice()
               newPlayers[playerIndex] = { id: generateUUID(), name: '' }
+              validatePlayers(newPlayers)
               set({ players: newPlayers })
+              validatePreparation()
               return
             }
 
             const newPlayers = get().players.filter((_, index) => index !== playerIndex)
             validatePlayers(newPlayers)
             set({ players: newPlayers })
+            validatePreparation()
           },
 
           newGame: () => {
-            console.log('--> execute new game')
             set({
               selectedTab: structuredClone(DefaultGameState),
               gameState: structuredClone(DefaultGameState),
@@ -391,7 +416,7 @@ export const useAppStore = create(
               gameMode: structuredClone(DefaultGameMode),
               gameOpening: structuredClone(DefaultGameOpening),
               gameCheckout: structuredClone(DefaultGameCheckout),
-              gameSets: structuredClone(DefaultGameSets),
+              gameLegs: structuredClone(DefaultGameLegs),
               gameElimination: structuredClone(DefaultGameElimination),
               players: structuredClone(DefaultPlayers),
               tournament: structuredClone(DefaultTournament),
@@ -399,10 +424,8 @@ export const useAppStore = create(
           },
 
           startTournament: () => {
-            const preparationErrorMessage = getPreparationErrorMessage()
-            if (preparationErrorMessage) {
-              console.log(preparationErrorMessage)
-            } else {
+            validatePreparation()
+            if (!get().preparationError) {
               if (get().gameElimination === 'KO') {
                 prepareKOTournament()
               }
@@ -411,6 +434,86 @@ export const useAppStore = create(
               }
               set({ gameState: 'TOURNAMENT' })
               set({ selectedTab: 'TOURNAMENT' })
+            }
+          },
+
+          setLegValue: (
+            roundIndex: number,
+            winnerMatchIndex: number | undefined,
+            loserMatchIndex: number | undefined,
+            isPlayerOne: boolean,
+            legIndex: number,
+            remainingPoints: number,
+          ) => {
+            console.log(
+              `value changed for round: ${roundIndex} winnerMatchIndex: ${winnerMatchIndex} loserMatchIndex: ${loserMatchIndex} isPlayerOne: ${isPlayerOne} legIndex: ${legIndex} legValue: ${remainingPoints}`,
+            )
+            const newTournament = structuredClone(get().tournament)
+            const round = newTournament.rounds[roundIndex]
+            const match: MatchType | null =
+              winnerMatchIndex !== undefined
+                ? round.winnerMatches[winnerMatchIndex]
+                : loserMatchIndex !== undefined && round.loserMatches !== undefined
+                  ? round.loserMatches[loserMatchIndex]
+                  : null
+            if (match) {
+              const row: MatchRowType = isPlayerOne ? match.playerOneRow : match.playerTwoRow
+              row.legs[legIndex].remainingPoints = remainingPoints
+              // Reset the errorMessages
+              let invalidLeg = false
+              match.playerOneRow.legs[legIndex].errorMessage = undefined
+              match.playerTwoRow.legs[legIndex].errorMessage = undefined
+              // Is the value in the range from 0 to the x01 (301, 501, 701, 1001) game mode
+              const maxPoints = getX01()
+              if (remainingPoints > maxPoints) {
+                invalidLeg = true
+                row.legs[legIndex].errorMessage = 'REMAINING_POINTS_RANGE'
+              }
+              // Do we have a valid leg (one player with 0 the other with remaining points > 0)
+              const val1 = match.playerOneRow.legs[legIndex].remainingPoints
+              const val2 = match.playerTwoRow.legs[legIndex].remainingPoints
+              if (val1 > 0 && val2 > 0) {
+                invalidLeg = true
+                match.playerOneRow.legs[legIndex].errorMessage = 'INVALID_LEG'
+                match.playerTwoRow.legs[legIndex].errorMessage = 'INVALID_LEG'
+              }
+              if (!invalidLeg) {
+                // Do we already have a winner or do we need an additional leg
+                const legsToWin = getLegsToWin()
+                const currentLegs = match.playerOneRow.legs.length
+                const winsPlayerOne = match.playerTwoRow.legs.filter((leg) => leg.remainingPoints > 0).length
+                const winsPlayerTwo = match.playerOneRow.legs.filter((leg) => leg.remainingPoints > 0).length
+                let hasWinner = false
+                match.playerOneRow.isWinner = undefined
+                match.playerTwoRow.isWinner = undefined
+                if (winsPlayerOne === legsToWin) {
+                  hasWinner = true
+                  match.playerOneRow.isWinner = true
+                  match.playerTwoRow.isWinner = false
+                }
+                if (winsPlayerTwo === legsToWin) {
+                  hasWinner = true
+                  match.playerOneRow.isWinner = false
+                  match.playerTwoRow.isWinner = true
+                }
+                if (!hasWinner) {
+                  if (currentLegs <= winsPlayerOne + winsPlayerTwo) {
+                    match.playerOneRow.legs.push(structuredClone(DefaultLegValue))
+                    match.playerTwoRow.legs.push(structuredClone(DefaultLegValue))
+                  }
+                }
+                if (currentLegs - 1 > winsPlayerOne + winsPlayerTwo) {
+                  match.playerOneRow.legs.pop()
+                  match.playerTwoRow.legs.pop()
+                }
+              }
+
+              // Set the new tournament data
+              set({ tournament: newTournament })
+            } else {
+              throw Error(
+                `Can't find match for winnerMatchIndex: ${winnerMatchIndex} loserMatchIndex: ${loserMatchIndex}`,
+              )
             }
           },
         },

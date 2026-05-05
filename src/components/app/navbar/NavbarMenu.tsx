@@ -9,25 +9,40 @@ import LanguageMenu from './LanguageMenu'
 import ThemeSwitcher from './ThemeSwitcher'
 import FullscreenSwitcher from './FullscreenSwitcher'
 import { useAppActions } from '@/store/AppStore'
+import AboutDialog from './AboutDialog'
+import AlertDialogComponent from '@/components/common/AlertDialogComponent'
+import NotImplementedDialog from '@/components/common/NotImplementedDialog'
 
 export default function NavbarMenu() {
   const { t } = useTranslation(['common'])
   const { newGame } = useAppActions()
 
+  const handleNewTournamentClicked = () => {
+    newGame()
+  }
+
   return (
     <div className="hidden lg:flex items-center space-x-2 lg:space-x-4">
-      <Button variant="outline" size="lg" onClick={newGame}>
-        <File />
-        {t('NEW')}
-      </Button>
-      <Button variant="outline" size="lg">
-        <FolderOpen />
-        {t('OPEN')}
-      </Button>
-      <Button variant="outline" size="lg">
-        <Save />
-        {t('SAVE')}
-      </Button>
+      <AlertDialogComponent
+        icon={File}
+        buttonTitle="NEW"
+        dialogTitle="app:NEW_TOURNAMENT_TITLE"
+        dialogDescription="app:NEW_TOURNAMENT_DESCRIPTION"
+        handleClick={handleNewTournamentClicked}
+        size="lg"
+      />
+      <NotImplementedDialog>
+        <Button variant="outline" size="lg">
+          <FolderOpen />
+          {t('OPEN')}
+        </Button>
+      </NotImplementedDialog>
+      <NotImplementedDialog>
+        <Button variant="outline" size="lg">
+          <Save />
+          {t('SAVE')}
+        </Button>
+      </NotImplementedDialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="lg">
@@ -40,10 +55,12 @@ export default function NavbarMenu() {
           <LanguageMenu />
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button variant="outline" size="lg">
-        <Info />
-        {t('ABOUT')}
-      </Button>
+      <AboutDialog>
+        <Button variant="outline" size="lg">
+          <Info />
+          {t('ABOUT')}
+        </Button>
+      </AboutDialog>
       <ThemeSwitcher />
       <FullscreenSwitcher />
     </div>

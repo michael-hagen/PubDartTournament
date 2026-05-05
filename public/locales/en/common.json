@@ -14,5 +14,7 @@
   "INFO": "Info",
   "LANGUAGE": "Language",
   "GERMAN": "Deutsch",
-  "ENGLISH": "English"
+  "ENGLISH": "English",
+  "NOT_IMPLEMENTED_YET_TITLE": "Not implemented yet",
+  "NOT_IMPLEMENTED_YET_DESCRIPTION": "This function is not available at the moment"
 }

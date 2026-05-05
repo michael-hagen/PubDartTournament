@@ -1,6 +1,7 @@
-import { useAppStore } from '@/store/AppStore'
+import { useAppActions, useAppStore } from '@/store/AppStore'
 import { useTranslation } from 'react-i18next'
 import LegInput from './LegInput'
+import type { ChangeEvent } from 'react'
 
 interface MatchRowItemProps {
   roundIndex: number
@@ -18,6 +19,7 @@ export default function MatchRowItem({
   const { t } = useTranslation(['app'])
   const rounds = useAppStore((state) => state.tournament.rounds)
   const round = useAppStore((state) => state.tournament.rounds[roundIndex])
+  const { setLegValue } = useAppActions()
   const winnerMatch = winnerMatchIndex != undefined ? round.winnerMatches[winnerMatchIndex] : null
   const loserMatch = loserMatchIndex != undefined && round.loserMatches ? round.loserMatches[loserMatchIndex] : null
   const match = winnerMatch ? winnerMatch : loserMatch
@@ -37,6 +39,12 @@ export default function MatchRowItem({
   const disabled =
     round.finished || !prevRoundFinished || playerOneName === 'GET_A_BYE' || playerTwoName === 'GET_A_BYE'
 
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement, HTMLInputElement>, legIndex: number) => {
+    const value = parseInt(event.target.value);
+    const remainingPoints = isNaN(value) ? 0 : value 
+    setLegValue(roundIndex, winnerMatchIndex, loserMatchIndex, isPlayerOne, legIndex, remainingPoints)
+  }
+
   return (
     <div className="flex-1 flex flex-row gap-2">
       <div
@@ -45,8 +53,15 @@ export default function MatchRowItem({
         {isWinner === undefined ? '' : isWinner ? '✨ ' : '👎 '}
         {playerName}
       </div>
-      {legs.map((leg) => (
-        <LegInput value={leg} disabled={disabled} />
+      {legs.map((leg, index) => (
+        <LegInput
+          key={index}
+          value={leg.remainingPoints.toString()}
+          errorMessage={leg.errorMessage}
+          legIndex={index}
+          disabled={disabled}
+          handleOnChange={handleOnChange}
+        />
       ))}
     </div>
   )

@@ -5,16 +5,18 @@ import GameVariantSwitcher from './GameVariantSwitcher'
 import GameModeSwitcher from './GameModeSwitcher'
 import GameOpeningSwitcher from './GameOpeningSwitcher'
 import GameCheckoutSwitcher from './GameCheckoutSwitcher'
-import GameSetsSwitcher from './GameSetsSwitcher'
+import GameLegsSwitcher from './GameLegsSwitcher'
 import GameEliminationSwitcher from './GameEliminationSwitcher'
 import PlayersList from './PlayersList'
 import { useAppActions, useAppStore } from '@/store/AppStore'
-import StartButton from './StartButton'
+import { Goal } from 'lucide-react'
+import AlertDialogComponent from '@/components/common/AlertDialogComponent'
 
 export default function PreparationTab() {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
-  const startDisabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const preparationError = useAppStore((state) => state.preparationError)
+  const startDisabled = preparationError || gameState === 'TOURNAMENT' || gameState === 'REPORT'
   const { startTournament } = useAppActions()
 
   const handleStartClicked = () => {
@@ -44,8 +46,8 @@ export default function PreparationTab() {
           </div>
 
           <div className="flex flex-row space-x-6">
-            <PreparationCard title={t('SETS')} className="flex-1 min-w-70">
-              <GameSetsSwitcher />
+            <PreparationCard title={t('LEGS')} className="flex-1 min-w-70">
+              <GameLegsSwitcher />
             </PreparationCard>
             <PreparationCard title={t('TOURNAMENT_MODE')} className="flex-1 min-w-70">
               <GameEliminationSwitcher />
@@ -58,7 +60,16 @@ export default function PreparationTab() {
         </PreparationCard>
       </div>
       <div className="flex justify-center p-8">
-        <StartButton disabled={startDisabled} handleClick={handleStartClicked} />
+        <AlertDialogComponent
+          icon={Goal}
+          buttonTitle="app:START_TOURNAMENT"
+          dialogTitle="app:START_TOURNAMENT_TITLE"
+          dialogDescription="app:START_TOURNAMENT_DESCRIPTION"
+          disabled={startDisabled}
+          handleClick={handleStartClicked}
+          size="lg"
+          className="min-w-60 min-h-16"
+        />
       </div>
     </div>
   )

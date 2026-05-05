@@ -5,7 +5,7 @@ export type GameVariantType = 'ELECTRONIC_DART' | 'STEEL_DART'
 export type GameModeType = 'MODE_301' | 'MODE_501' | 'MODE_701' | 'MODE_1001'
 export type GameOpeningType = 'SINGLE_IN' | 'DOUBLE_IN' | 'MASTER_IN'
 export type GameCheckoutType = 'SINGLE_OUT' | 'DOUBLE_OUT' | 'MASTER_OUT'
-export type GameSetsType = 'SETS_2' | 'SETS_3' | 'SETS_4' | 'SETS_5'
+export type GameLegsType = 'LEGS_2' | 'LEGS_3' | 'LEGS_4' | 'LEGS_5'
 export type GameEliminationType = 'KO' | 'DOUBLE_KO'
 
 export type PlayerType = {
@@ -14,10 +14,15 @@ export type PlayerType = {
   errorMessage?: string
 }
 
+export type LegValueType = {
+  remainingPoints: number
+  errorMessage?: string
+}
+
 export type MatchRowType = {
   id: string
   player: PlayerType
-  legs: number[]
+  legs: LegValueType[]
   throws: number[]
   isWinner?: boolean
 }
@@ -67,8 +72,8 @@ export function isGameCheckoutType(val: string): val is GameCheckoutType {
   return val === 'SINGLE_OUT' || val === 'DOUBLE_OUT' || val === 'MASTER_OUT'
 }
 
-export function isGameSetsType(val: string): val is GameSetsType {
-  return val === 'SETS_2' || val === 'SETS_3' || val === 'SETS_4' || val === 'SETS_5'
+export function isGameLegsType(val: string): val is GameLegsType {
+  return val === 'LEGS_2' || val === 'LEGS_3' || val === 'LEGS_4' || val === 'LEGS_5'
 }
 
 export function isGameEliminationType(val: string): val is GameEliminationType {
