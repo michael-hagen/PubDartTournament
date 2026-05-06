@@ -8,7 +8,8 @@ interface LegInputProps {
   value: string
   legIndex: number
   disabled?: boolean
-  errorMessage?: string
+  fieldError: boolean
+  matchError: boolean
   className?: string
   handleOnChange: (event: ChangeEvent<HTMLInputElement, HTMLInputElement>, legIndex: number) => void
 }
@@ -17,7 +18,8 @@ export default function LegInput({
   value,
   legIndex,
   disabled,
-  errorMessage,
+  fieldError,
+  matchError,
   className,
   handleOnChange,
 }: LegInputProps) {
@@ -49,7 +51,7 @@ export default function LegInput({
           ref={inputRef}
           value={value}
           disabled={disabled}
-          className={`rounded-none text-right ${maxLen === 3 ? 'w-12' : 'w-14'} ${errorMessage !== undefined ? 'border-destructive text-destructive' : ''} ${className}`}
+          className={`rounded-none text-right ${maxLen === 3 ? 'w-12' : 'w-14'} ${fieldError ? 'text-destructive' : ''} ${matchError ? 'border-destructive' : ''} ${className}`}
           type="text"
           maxLength={maxLen}
           onKeyDown={handleOnKeyDown}

@@ -21,14 +21,14 @@ export function calculateEliminationRounds(playerCount: number) {
 
   const rounds = []
 
-  let currentGames = playerCount / 2
+  let currentMatchCount = playerCount / 2
   let i = 1
-  while (currentGames >= 1) {
+  while (currentMatchCount >= 1) {
     rounds.push({
       round: i++,
-      games: currentGames,
+      matchCount: currentMatchCount,
     })
-    currentGames /= 2
+    currentMatchCount /= 2
   }
   return rounds
 }
@@ -44,44 +44,43 @@ export function calculateDoubleEliminationRounds(playerCount: number) {
   // First round only winners
   rounds.push({
     round: 1,
-    winnerGames: playerCount / 2,
-    loserGames: 0,
+    winnerMatchCount: playerCount / 2,
+    loserMatchCount: 0,
   })
 
-  let currentWinnerGames = playerCount / 4
-  let currentLoserGames = playerCount / 4
+  // Calculate the winner and loser matches
+  let currentWinnerMatchCount = playerCount / 4
+  let currentLoserMatchCount = playerCount / 4
 
   for (let i = 1; i < totalRounds - 1; i++) {
-    let winnerGames = 0
-    let loserGames = 0
+    let winnerMatchCount = 0
+    let loserMatchCount = 0
 
-    // Winner Bracket Spiele finden alle zwei Runden statt
-    // (Synchronisiert mit dem Fortschritt im Loser Bracket)
-    if (i % 2 === 1 && currentWinnerGames >= 1) {
-      winnerGames = currentWinnerGames
-      currentWinnerGames /= 2
+    // Only every second round we have a winner bracket
+    if (i % 2 === 1 && currentWinnerMatchCount >= 1) {
+      winnerMatchCount = currentWinnerMatchCount
+      currentWinnerMatchCount /= 2
     }
 
-    // Loser Bracket Spiele
-    // In jeder Runde des Loser Brackets wird gespielt
-    loserGames = Math.max(1, currentLoserGames)
-    // Die Anzahl der Spiele im Loser-Bracket sinkt nur jede zweite Runde
+    // Every round there are loser brackets but only every second round we have to
+    // divide the match count because we got players from the winners round
+    loserMatchCount = Math.max(1, currentLoserMatchCount)
     if (i % 2 === 0) {
-      currentLoserGames /= 2
+      currentLoserMatchCount /= 2
     }
 
     rounds.push({
       round: i + 1,
-      winnerGames: winnerGames,
-      loserGames: loserGames,
+      winnerMatchCount: winnerMatchCount,
+      loserMatchCount: loserMatchCount,
     })
   }
 
-  // The final
+  // The final bracket
   rounds.push({
     round: totalRounds,
-    winnerGames: 1,
-    loserGames: 0,
+    winnerMatchCount: 1,
+    loserMatchCount: 0,
   })
 
   return rounds

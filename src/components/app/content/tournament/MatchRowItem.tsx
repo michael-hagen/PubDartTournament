@@ -40,8 +40,8 @@ export default function MatchRowItem({
     round.finished || !prevRoundFinished || playerOneName === 'GET_A_BYE' || playerTwoName === 'GET_A_BYE'
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement, HTMLInputElement>, legIndex: number) => {
-    const value = parseInt(event.target.value);
-    const remainingPoints = isNaN(value) ? 0 : value 
+    const value = parseInt(event.target.value)
+    const remainingPoints = isNaN(value) ? 0 : value
     setLegValue(roundIndex, winnerMatchIndex, loserMatchIndex, isPlayerOne, legIndex, remainingPoints)
   }
 
@@ -57,7 +57,8 @@ export default function MatchRowItem({
         <LegInput
           key={index}
           value={leg.remainingPoints.toString()}
-          errorMessage={leg.errorMessage}
+          fieldError={leg.error}
+          matchError={match.matchErrorMessages.length > 0}
           legIndex={index}
           disabled={disabled}
           handleOnChange={handleOnChange}

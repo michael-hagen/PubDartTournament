@@ -27,7 +27,7 @@ export const DefaultScale: number = 100
 export const DefaultPlayers: PlayerType[] = [{ id: generateUUID(), name: '' }]
 export const DefaultEmptyPlayer: PlayerType = { id: generateUUID(), name: '' }
 export const DefaultGetAByePlayer: PlayerType = { id: generateUUID(), name: 'GET_A_BYE' }
-export const DefaultLegValue: LegValueType = { remainingPoints: 0 }
+export const DefaultLegValue: LegValueType = { remainingPoints: 0, error: false }
 export const DefaultTournament: TournamentType = {
   id: generateUUID(),
   name: 'PubDartTournament_' + new Date().toISOString().slice(0, 10).replace(/-/g, ''),

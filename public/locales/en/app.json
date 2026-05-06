@@ -46,6 +46,7 @@
   "FINISH_ROUND": "Finish Round",
   "FINISH_ROUND_TITLE": "Finish current round and start next round",
   "FINISH_ROUND_DESCRIPTION": "IMPORTANT! Changes to the current round are no longer possible after finishing the round",
+  "MATCH_INPUT_ERRORS": "This match has the following input errors:",
   "TIP": {
     "COLOR_THEME": "Color Theme",
     "SET_FULLSCREEN": "Fullscreen",
@@ -59,7 +60,9 @@
     "MAX_PLAYERS": "The maximum amount of players is 128",
     "EMPTY_PLAYER_NAME": "Player name must not be empty",
     "DUPLICATE_PLAYER_NAME": "Duplicate player name",
-    "REMAINING_POINTS_RANGE": "The remaining points must be between 0 and {{maxRemainingPoints}}",
-    "INVALID_LEG": "The winner of the leg must have 0 remaining points the loser a value greater than 0"
+    "REMAINING_POINTS_RANGE": "The remaining points should not be greater than the chosen game allows",
+    "INVALID_LEG": "The winner of the leg must have 0 remaining points the loser a value greater than 0",
+    "TO_MANY_WINS": "To many legs",
+    "EMPTY_LEG": "Leg with no winner"
   }
 }

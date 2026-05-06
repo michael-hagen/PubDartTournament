@@ -16,7 +16,7 @@ export type PlayerType = {
 
 export type LegValueType = {
   remainingPoints: number
-  errorMessage?: string
+  error: boolean
 }
 
 export type MatchRowType = {
@@ -31,6 +31,8 @@ export type MatchType = {
   id: string
   playerOneRow: MatchRowType
   playerTwoRow: MatchRowType
+  fieldErrorMessages: string[]
+  matchErrorMessages: string[]
 }
 
 export type RoundType = {

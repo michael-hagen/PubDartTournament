@@ -166,6 +166,7 @@ export const useAppStore = create(
           const isPlayerTwoGetABye = playerList[playerTwoIndex].name === 'GET_A_BYE'
           if (isPlayerOneGetABye || isPlayerTwoGetABye) {
             const legValueX01: LegValueType = {
+              error: false,
               remainingPoints: getX01(),
             }
             firstRound.winnerMatches[i].playerOneRow.legs = []
@@ -206,14 +207,14 @@ export const useAppStore = create(
         const eliminationRounds = calculateEliminationRounds(playerCount)
         // Create the tournament data structure
         const newTournament = structuredClone(DefaultTournament)
-        eliminationRounds.map(({ games }, index) => {
+        eliminationRounds.map(({ matchCount }, index) => {
           const newRound: RoundType = {
             id: generateUUID(),
             name: index === eliminationRounds.length - 1 ? 'FINAL' : 'ROUND',
             winnerMatches: [],
             finished: false,
           }
-          for (let i = 0; i < games; i++) {
+          for (let i = 0; i < matchCount; i++) {
             const playerOneRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
@@ -228,6 +229,8 @@ export const useAppStore = create(
             }
             const winnerMatch: MatchType = {
               id: generateUUID(),
+              fieldErrorMessages: [],
+              matchErrorMessages: [],
               playerOneRow: playerOneRow,
               playerTwoRow: playerTwoRow,
             }
@@ -253,7 +256,7 @@ export const useAppStore = create(
         const doubleEliminationRounds = calculateDoubleEliminationRounds(playerCount)
         // Create the tournament data structure
         const newTournament = structuredClone(DefaultTournament)
-        doubleEliminationRounds.map(({ winnerGames, loserGames }, index) => {
+        doubleEliminationRounds.map(({ winnerMatchCount, loserMatchCount }, index) => {
           const newRound: RoundType = {
             id: generateUUID(),
             name: index === doubleEliminationRounds.length - 1 ? 'FINAL' : 'ROUND',
@@ -261,7 +264,7 @@ export const useAppStore = create(
             loserMatches: [],
             finished: false,
           }
-          for (let i = 0; i < winnerGames; i++) {
+          for (let i = 0; i < winnerMatchCount; i++) {
             const winnerPlayerOneRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
@@ -276,12 +279,14 @@ export const useAppStore = create(
             }
             const winnerMatch: MatchType = {
               id: generateUUID(),
+              fieldErrorMessages: [],
+              matchErrorMessages: [],
               playerOneRow: winnerPlayerOneRow,
               playerTwoRow: winnerPlayerTwoRow,
             }
             newRound.winnerMatches.push(winnerMatch)
           }
-          for (let i = 0; i < loserGames; i++) {
+          for (let i = 0; i < loserMatchCount; i++) {
             const loserPlayerOneRow: MatchRowType = {
               id: generateUUID(),
               player: structuredClone(DefaultEmptyPlayer),
@@ -296,6 +301,8 @@ export const useAppStore = create(
             }
             const loserMatch: MatchType = {
               id: generateUUID(),
+              fieldErrorMessages: [],
+              matchErrorMessages: [],
               playerOneRow: loserPlayerOneRow,
               playerTwoRow: loserPlayerTowRow,
             }
@@ -459,52 +466,93 @@ export const useAppStore = create(
             if (match) {
               const row: MatchRowType = isPlayerOne ? match.playerOneRow : match.playerTwoRow
               row.legs[legIndex].remainingPoints = remainingPoints
+
               // Reset the errorMessages
-              let invalidLeg = false
-              match.playerOneRow.legs[legIndex].errorMessage = undefined
-              match.playerTwoRow.legs[legIndex].errorMessage = undefined
-              // Is the value in the range from 0 to the x01 (301, 501, 701, 1001) game mode
+              match.fieldErrorMessages = []
+              match.matchErrorMessages = []
+
               const maxPoints = getX01()
-              if (remainingPoints > maxPoints) {
-                invalidLeg = true
-                row.legs[legIndex].errorMessage = 'REMAINING_POINTS_RANGE'
+              const legsToWin = getLegsToWin()
+              const maxLegs = legsToWin * 2 - 1
+              const currentLegs = match.playerOneRow.legs.length
+              let winsPlayerOne = 0
+              let winsPlayerTwo = 0
+              let hasWinner = false
+
+              for (let i = 0; i < match.playerOneRow.legs.length; i++) {
+                const leg1 = match.playerOneRow.legs[i]
+                const leg2 = match.playerTwoRow.legs[i]
+                // Reset error for the legs
+                leg1.error = false
+                leg2.error = false
+                // Check if the remaining points are in the range of the game mode
+                if (leg1.remainingPoints > maxPoints) {
+                  match.fieldErrorMessages.push('ERROR_MESSAGE.REMAINING_POINTS_RANGE')
+                  leg1.error = true
+                }
+                // Check if there is an empty leg
+                if (leg2.remainingPoints > maxPoints) {
+                  match.fieldErrorMessages.push('ERROR_MESSAGE.REMAINING_POINTS_RANGE')
+                  leg2.error = true
+                }
+                if (leg1.remainingPoints > 0 && leg2.remainingPoints > 0) {
+                  match.fieldErrorMessages.push('ERROR_MESSAGE.INVALID_LEG')
+                  leg1.error = true
+                  leg2.error = true
+                }
+                if (leg1.remainingPoints > 0) winsPlayerTwo++
+                if (leg2.remainingPoints > 0) winsPlayerOne++
               }
-              // Do we have a valid leg (one player with 0 the other with remaining points > 0)
-              const val1 = match.playerOneRow.legs[legIndex].remainingPoints
-              const val2 = match.playerTwoRow.legs[legIndex].remainingPoints
-              if (val1 > 0 && val2 > 0) {
-                invalidLeg = true
-                match.playerOneRow.legs[legIndex].errorMessage = 'INVALID_LEG'
-                match.playerTwoRow.legs[legIndex].errorMessage = 'INVALID_LEG'
+
+              // find out if there is already a winner
+              match.playerOneRow.isWinner = undefined
+              match.playerTwoRow.isWinner = undefined
+              if (winsPlayerOne === legsToWin) {
+                hasWinner = true
+                match.playerOneRow.isWinner = true
+                match.playerTwoRow.isWinner = false
+              } else if (winsPlayerOne > legsToWin) {
+                match.matchErrorMessages.push('ERROR_MESSAGE.TO_MANY_WINS')
               }
-              if (!invalidLeg) {
-                // Do we already have a winner or do we need an additional leg
-                const legsToWin = getLegsToWin()
-                const currentLegs = match.playerOneRow.legs.length
-                const winsPlayerOne = match.playerTwoRow.legs.filter((leg) => leg.remainingPoints > 0).length
-                const winsPlayerTwo = match.playerOneRow.legs.filter((leg) => leg.remainingPoints > 0).length
-                let hasWinner = false
-                match.playerOneRow.isWinner = undefined
-                match.playerTwoRow.isWinner = undefined
-                if (winsPlayerOne === legsToWin) {
-                  hasWinner = true
-                  match.playerOneRow.isWinner = true
-                  match.playerTwoRow.isWinner = false
-                }
-                if (winsPlayerTwo === legsToWin) {
-                  hasWinner = true
-                  match.playerOneRow.isWinner = false
-                  match.playerTwoRow.isWinner = true
-                }
-                if (!hasWinner) {
-                  if (currentLegs <= winsPlayerOne + winsPlayerTwo) {
-                    match.playerOneRow.legs.push(structuredClone(DefaultLegValue))
-                    match.playerTwoRow.legs.push(structuredClone(DefaultLegValue))
-                  }
-                }
-                if (currentLegs - 1 > winsPlayerOne + winsPlayerTwo) {
+              if (winsPlayerTwo === legsToWin) {
+                hasWinner = true
+                match.playerOneRow.isWinner = false
+                match.playerTwoRow.isWinner = true
+              } else if (winsPlayerTwo > legsToWin) {
+                match.matchErrorMessages.push('ERROR_MESSAGE.TO_MANY_WINS')
+              }
+
+              if (hasWinner) {
+                // If we have a winner we might have to delete the last leg
+                const remainingPoints1 = match.playerOneRow.legs[match.playerOneRow.legs.length - 1].remainingPoints
+                const remainingPoints2 = match.playerTwoRow.legs[match.playerOneRow.legs.length - 1].remainingPoints
+                if (remainingPoints1 === 0 && remainingPoints2 === 0) {
                   match.playerOneRow.legs.pop()
                   match.playerTwoRow.legs.pop()
+                }
+              } else {
+                // If there is no winner we might have to add a new leg
+                if (currentLegs <= winsPlayerOne + winsPlayerTwo && currentLegs < maxLegs) {
+                  match.playerOneRow.legs.push(structuredClone(DefaultLegValue))
+                  match.playerTwoRow.legs.push(structuredClone(DefaultLegValue))
+                }
+              }
+              // If previous legs are edited there might be an unnecessary leg at the end
+              if (currentLegs - 1 > winsPlayerOne + winsPlayerTwo) {
+                const remainingPoints1 = match.playerOneRow.legs[match.playerOneRow.legs.length - 1].remainingPoints
+                const remainingPoints2 = match.playerTwoRow.legs[match.playerOneRow.legs.length - 1].remainingPoints
+                // Only remove the leg if not already edited
+                if (remainingPoints1 === 0 && remainingPoints2 === 0) {
+                  match.playerOneRow.legs.pop()
+                  match.playerTwoRow.legs.pop()
+                }
+              }
+              // Check if there are legs with 0:0 in the middle of the match
+              for (let i = 0; i < match.playerOneRow.legs.length - 1; i++) {
+                const remainingPoints1 = match.playerOneRow.legs[i].remainingPoints
+                const remainingPoints2 = match.playerTwoRow.legs[i].remainingPoints
+                if (remainingPoints1 === 0 && remainingPoints2 === 0) {
+                  match.matchErrorMessages.push('ERROR_MESSAGE.EMPTY_LEG')
                 }
               }
 
