@@ -196,7 +196,8 @@ export const useAppStore = create(
 
       const prepareKOTournament = () => {
         // The count of players must be a power of 2 (2, 4, 8, 16, 32, ...)
-        const playerCount = nextPowerOfTwo(get().players.length)
+        // -2 because the last player is only a placeholder (that's -1) and if we have a power of two playercount we don't want the nexPowerOfTwo (thats another -1)
+        const playerCount = nextPowerOfTwo(get().players.length - 2)
         // We want to have a random order of players
         const playerList = shuffleArray<PlayerType>(get().players.slice(0, get().players.length - 1))
         // Fill the remaining spots with a (get a bye) player
@@ -246,7 +247,8 @@ export const useAppStore = create(
 
       const prepareDoubleKOTournament = () => {
         // The count of players must be a power of 2 (2, 4, 8, 16, 32, ...)
-        const playerCount = nextPowerOfTwo(get().players.length)
+        // -2 because the last player is only a placeholder (that's -1) and if we have a power of two playercount we don't want the nexPowerOfTwo (thats another -1)
+        const playerCount = nextPowerOfTwo(get().players.length - 2)
         // We want to have a random order of players
         const playerList = shuffleArray<PlayerType>(get().players.slice(0, get().players.length - 1))
         // Fill the remaining spots with a (get a bye) player
