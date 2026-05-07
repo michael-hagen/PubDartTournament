@@ -28,7 +28,7 @@ export default function PreparationTab() {
       <div className="flex-1 flex flex-col lg:flex-row w-full p-4 gap-6">
         <div className="flex-1 space-y-6">
           <div className="flex flex-row space-x-6">
-            <PreparationCard title={t('VARIANT')} className="flex-1 min-w-70">
+            <PreparationCard title={t('VARIANT')} className="flex-1 min-w-70 text-muted-foreground">
               <GameVariantSwitcher />
             </PreparationCard>
             <PreparationCard title={t('GAME_MODE')} className="flex-1 min-w-70">

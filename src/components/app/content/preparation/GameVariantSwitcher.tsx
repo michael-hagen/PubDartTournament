@@ -6,7 +6,8 @@ import { useAppActions, useAppStore } from '@/store/AppStore'
 
 export default function GameVariantSwitcher() {
   const gameState = useAppStore((state) => state.gameState)
-  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  // TODO: Remove "|| true" when game variant selection is implemented
+  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || true
   const gameVariant = useAppStore((state) => state.gameVariant)
   const { setGameVariant } = useAppActions()
 
