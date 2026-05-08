@@ -46,11 +46,15 @@ export default function MatchItem({ roundIndex, winnerMatchIndex, loserMatchInde
           </HoverCardTrigger>
           <HoverCardContent className="flex w-90 flex-col gap-2">
             <div className="text-lg">{t('MATCH_INPUT_ERRORS', { ns: 'app' })}</div>
-            {match.fieldErrorMessages.map((errorMessage) => (
-              <div className="text-muted-foreground">{t(errorMessage, { ns: 'app' })}</div>
+            {match.fieldErrorMessages.map((errorMessage, index) => (
+              <div key={index} className="text-muted-foreground">
+                {t(errorMessage, { ns: 'app' })}
+              </div>
             ))}
-            {match.matchErrorMessages.map((errorMessage) => (
-              <div className="text-muted-foreground">{t(errorMessage, { ns: 'app' })}</div>
+            {match.matchErrorMessages.map((errorMessage, index) => (
+              <div key={index} className="text-muted-foreground">
+                {t(errorMessage, { ns: 'app' })}
+              </div>
             ))}
           </HoverCardContent>
         </HoverCard>

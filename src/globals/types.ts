@@ -40,6 +40,7 @@ export type RoundType = {
   name: string
   winnerMatches: MatchType[]
   loserMatches?: MatchType[]
+  finishable: boolean
   finished: boolean
 }
 

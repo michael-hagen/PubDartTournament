@@ -44,7 +44,10 @@
   "LOSER_TITLE": "Loser",
   "FINISH_ROUND": "Runde Beenden",
   "FINISH_ROUND_TITLE": "Aktuelle Runde beenden und neue Runde starten",
-  "FINISH_ROUND_DESCRIPTION": "WICHTIG! Änderungen an der aktuellen Runden sind nach dem Beenden der Runde nicht mehr möglich.",
+  "FINISH_ROUND_DESCRIPTION": "WICHTIG! Änderungen an der aktuellen Runde sind nach dem Beenden der Runde nicht mehr möglich.",
+  "FINISH_TOURNAMENT": "Turnier Beenden",
+  "FINISH_TOURNAMENT_TITLE": "Finale abschließen und Turnier bejubeln",
+  "FINISH_TOURNAMENT_DESCRIPTION": "WICHTIG! Nachdem das Finale beendet ist können keine Änderungen mehr gemacht werden.",
   "MATCH_INPUT_ERRORS": "Dieses Spiel hat folgende Eingabefehler:",
   "TIP": {
     "COLOR_THEME": "Farbschema",

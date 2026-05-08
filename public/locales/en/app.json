@@ -46,6 +46,9 @@
   "FINISH_ROUND": "Finish Round",
   "FINISH_ROUND_TITLE": "Finish current round and start next round",
   "FINISH_ROUND_DESCRIPTION": "IMPORTANT! Changes to the current round are no longer possible after finishing the round",
+  "FINISH_TOURNAMENT": "Finish tournament",
+  "FINISH_TOURNAMENT_TITLE": "Finish the final round and celebrate the tournament",
+  "FINISH_TOURNAMENT_DESCRIPTION": "IMPORTANT! After the tournament is finished changes are no longer possible.",
   "MATCH_INPUT_ERRORS": "This match has the following input errors:",
   "TIP": {
     "COLOR_THEME": "Color Theme",

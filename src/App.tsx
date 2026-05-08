@@ -1,30 +1,70 @@
+import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import confetti from 'canvas-confetti'
+
+import { isThemeType } from './globals/types'
+import { DEFAULT_LANGUAGE, DEFAULT_THEME } from './globals/defaults'
+
 import { TooltipProvider } from './components/ui/tooltip'
 import ContentContainer from './components/app/content/ContentContainer'
 import Navbar from './components/app/navbar/Navbar'
-import { useAppActions } from './store/AppStore'
-import { DefaultLanguage, DefaultTheme } from './globals/defaults'
-import { isThemeType } from './globals/types'
-import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import Statusbar from './components/app/statusbar/Statusbar'
+
+import { useAppActions, useAppStore } from './store/AppStore'
 
 export default function App() {
   const isInitialized = useRef(false)
   const { i18n } = useTranslation()
-  const { setLanguage, setTheme } = useAppActions()
+  const { setLanguage, setTheme, setShowConfetti } = useAppActions()
+  const showConfetti = useAppStore((state) => state.showConfetti)
+  const { finishTournament } = useAppActions()
+  const timerRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (!isInitialized.current) {
-      const language = i18n.language.split(/[_-]/)[0] || DefaultLanguage
+      const language = i18n.language.split(/[_-]/)[0] || DEFAULT_LANGUAGE
       setLanguage(language)
 
       const storedTheme = localStorage.getItem('theme')
-      const theme = storedTheme ? (isThemeType(storedTheme) ? storedTheme : DefaultTheme) : DefaultTheme
+      const theme = storedTheme ? (isThemeType(storedTheme) ? storedTheme : DEFAULT_THEME) : DEFAULT_THEME
       setTheme(theme)
 
       isInitialized.current = true
     }
   }, [i18n.language, setLanguage, setTheme])
+
+  useEffect(() => {
+    if (showConfetti) {
+      const stopConfetti = () => {
+        if (timerRef.current) {
+          clearInterval(timerRef.current)
+          timerRef.current = null
+          setShowConfetti(false)
+          confetti.reset()
+        }
+        finishTournament()
+      }
+
+      timerRef.current = setInterval(() => {
+        confetti({
+          particleCount: 80,
+          spread: 80,
+          origin: { x: Math.random(), y: Math.random() - 0.2 },
+          zIndex: 100,
+        })
+      }, 300)
+
+      window.addEventListener('keydown', stopConfetti)
+      window.addEventListener('pointerdown', stopConfetti)
+
+      // Cleanup event listener and timer
+      return () => {
+        window.removeEventListener('keydown', stopConfetti)
+        window.removeEventListener('pointerdown', stopConfetti)
+        stopConfetti()
+      }
+    }
+  }, [finishTournament, setShowConfetti, showConfetti])
 
   return (
     <TooltipProvider>
@@ -35,6 +75,7 @@ export default function App() {
           <Statusbar />
         </div>
       </div>
+      {showConfetti && <div className="fixed inset-0 pointer-events-none z-100" />}
     </TooltipProvider>
   )
 }
