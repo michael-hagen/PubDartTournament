@@ -24,10 +24,10 @@ export default function GameLegsSwitcher() {
       value=""
       onValueChange={handleLegsChange}
     >
-      <ToggleGroupButton value={'LEGS_2'} currentValue={gameLegs} />
-      <ToggleGroupButton value={'LEGS_3'} currentValue={gameLegs} />
-      <ToggleGroupButton value={'LEGS_4'} currentValue={gameLegs} />
-      <ToggleGroupButton value={'LEGS_5'} currentValue={gameLegs} />
+      <ToggleGroupButton value={'2'} currentValue={gameLegs} />
+      <ToggleGroupButton value={'3'} currentValue={gameLegs} />
+      <ToggleGroupButton value={'4'} currentValue={gameLegs} />
+      <ToggleGroupButton value={'5'} currentValue={gameLegs} />
     </ToggleGroup>
   )
 }

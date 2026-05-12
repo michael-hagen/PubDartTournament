@@ -24,10 +24,10 @@ export default function GameModeSwitcher() {
       value=""
       onValueChange={handleModeChange}
     >
-      <ToggleGroupButton value={'MODE_301'} currentValue={gameMode} />
-      <ToggleGroupButton value={'MODE_501'} currentValue={gameMode} />
-      <ToggleGroupButton value={'MODE_701'} currentValue={gameMode} />
-      <ToggleGroupButton value={'MODE_1001'} currentValue={gameMode} />
+      <ToggleGroupButton value={'301'} currentValue={gameMode} />
+      <ToggleGroupButton value={'501'} currentValue={gameMode} />
+      <ToggleGroupButton value={'701'} currentValue={gameMode} />
+      <ToggleGroupButton value={'1001'} currentValue={gameMode} />
     </ToggleGroup>
   )
 }

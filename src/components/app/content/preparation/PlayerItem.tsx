@@ -3,8 +3,9 @@ import { Ban, Trash2 } from 'lucide-react'
 
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group'
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
-import { useAppActions, useAppStore } from '@/store/AppStore'
+import { useAppStore } from '@/store/AppStore'
 import { Field, FieldError } from '@/components/ui/field'
+import { addPlayer, removePlayer, updatePlayer } from '@/store/PlayerActions'
 
 interface PlayerProps {
   playerIndex: number
@@ -30,7 +31,6 @@ export default function PlayerItem({
   const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
   const [value, setValue] = useState(player)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { updatePlayer, addPlayer, removePlayer } = useAppActions()
   const errMsg = errorMessage !== undefined ? t(errorMessage) : null
 
   useEffect(() => {
@@ -83,9 +83,11 @@ export default function PlayerItem({
     }
   }
 
+  // <InputGroup className="rounded-none border-t-0 border-b-input p-2 h-10">
+
   return (
     <Field data-invalid={errorMessage != null}>
-      <InputGroup className="rounded-none border-t-0 border-b-input p-2 h-10">
+      <InputGroup className={`rounded-none p-2 h-10 ${isNewPlayer ? '' : 'border-b-0'}`}>
         <InputGroupInput
           ref={inputRef}
           placeholder={isNewPlayer ? t('NEW_PLAYER') : t('REMOVE_PLAYER')}

@@ -1,6 +1,7 @@
 import { useAppActions, useAppStore } from '@/store/AppStore'
 import MatchItem from './MatchItem'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
+import { finishRound } from '@/store/RoundActions'
 
 interface RoundSectionPanelProps {
   roundIndex: number
@@ -9,7 +10,7 @@ interface RoundSectionPanelProps {
 export default function RoundSectionPanel({ roundIndex }: RoundSectionPanelProps) {
   const rounds = useAppStore((state) => state.tournament.rounds)
   const round = useAppStore((state) => state.tournament.rounds[roundIndex])
-  const { finishRound, setShowConfetti } = useAppActions()
+  const { setShowConfetti } = useAppActions()
   const prevRoundFinished = roundIndex > 0 ? rounds[roundIndex - 1].finished : true
   const disabled = round.finished || !prevRoundFinished || !round.finishable
   const isFinalRound = roundIndex === rounds.length - 1

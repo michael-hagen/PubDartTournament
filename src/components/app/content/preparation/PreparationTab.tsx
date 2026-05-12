@@ -8,16 +8,16 @@ import GameCheckoutSwitcher from './GameCheckoutSwitcher'
 import GameLegsSwitcher from './GameLegsSwitcher'
 import GameEliminationSwitcher from './GameEliminationSwitcher'
 import PlayersList from './PlayersList'
-import { useAppActions, useAppStore } from '@/store/AppStore'
+import { useAppStore } from '@/store/AppStore'
 import { Goal } from 'lucide-react'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
+import { startTournament } from '@/store/TournamentActions'
 
 export default function PreparationTab() {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
   const preparationError = useAppStore((state) => state.preparationError)
   const startDisabled = preparationError || gameState === 'TOURNAMENT' || gameState === 'REPORT'
-  const { startTournament } = useAppActions()
 
   const handleStartClicked = () => {
     startTournament()

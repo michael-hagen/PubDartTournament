@@ -18,15 +18,34 @@ export const DEFAULT_LANGUAGE: string = 'en'
 export const DEFAULT_THEME: ThemeType = 'dark'
 export const DEFAULT_GAME_STATE: GameStateType = 'PREPARATION'
 export const DEFAULT_GAME_VARIANT: GameVariantType = 'ELECTRONIC_DART'
-export const DEFAULT_GAME_MODE: GameModeType = 'MODE_501'
+export const DEFAULT_GAME_MODE: GameModeType = '501'
 export const DEFAULT_GAME_OPENING: GameOpeningType = 'SINGLE_IN'
 export const DEFAULT_GAME_CHECKOUT: GameCheckoutType = 'SINGLE_OUT'
-export const DEFAULT_GAME_LEGS: GameLegsType = 'LEGS_2'
+export const DEFAULT_GAME_LEGS: GameLegsType = '2'
 export const DEFAULT_GAME_ELIMINATION: GameEliminationType = 'DOUBLE_KO'
 export const DEFAULT_SCALE: number = 100
-export const DEFAULT_PLAYERS: PlayerType[] = [{ id: generateUUID(), name: '' }]
-export const DEFAULT_EMPTY_PLAYER: PlayerType = { id: generateUUID(), name: '' }
-export const DEFAULT_GET_A_BYE_PLAYER: PlayerType = { id: generateUUID(), name: 'GET_A_BYE' }
+export const DEFAULT_GET_A_BYE_PLAYER: PlayerType = {
+  id: generateUUID(), 
+  name: 'GET_A_BYE',
+  rank: 0,
+  roundReached: 0,
+  wonMatches: 0,
+  lostMatches: 0,
+  wonLegs: 0,
+  lostLegs: 0,
+  remainingPoints: 0
+}
+export const DEFAULT_EMPTY_PLAYER: PlayerType = {
+  id: generateUUID(), 
+  name: '',
+  rank: 0,
+  roundReached: 0,
+  wonMatches: 0,
+  lostMatches: 0,
+  wonLegs: 0,
+  lostLegs: 0,
+  remainingPoints: 0
+}
 export const DEFAULT_LEG_VALUE: LegValueType = { remainingPoints: 0, error: false }
 export const DEFAULT_EMPTY_TOURNAMENT: TournamentType = {
   id: generateUUID(),

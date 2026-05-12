@@ -8,17 +8,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../ui
 import LanguageMenu from './LanguageMenu'
 import ThemeSwitcher from './ThemeSwitcher'
 import FullscreenSwitcher from './FullscreenSwitcher'
-import { useAppActions } from '@/store/AppStore'
 import AboutDialog from './AboutDialog'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
 import NotImplementedDialog from '@/components/common/NotImplementedDialog'
+import { newTournament } from '@/store/TournamentActions'
 
 export default function NavbarMenu() {
   const { t } = useTranslation(['common'])
-  const { newGame } = useAppActions()
 
   const handleNewTournamentClicked = () => {
-    newGame()
+    newTournament()
   }
 
   return (

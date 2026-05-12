@@ -2,15 +2,22 @@
 export type ThemeType = 'light' | 'dark'
 export type GameStateType = 'PREPARATION' | 'TOURNAMENT' | 'REPORT'
 export type GameVariantType = 'ELECTRONIC_DART' | 'STEEL_DART'
-export type GameModeType = 'MODE_301' | 'MODE_501' | 'MODE_701' | 'MODE_1001'
+export type GameModeType = '301' | '501' | '701' | '1001'
 export type GameOpeningType = 'SINGLE_IN' | 'DOUBLE_IN' | 'MASTER_IN'
 export type GameCheckoutType = 'SINGLE_OUT' | 'DOUBLE_OUT' | 'MASTER_OUT'
-export type GameLegsType = 'LEGS_2' | 'LEGS_3' | 'LEGS_4' | 'LEGS_5'
+export type GameLegsType = '2' | '3' | '4' | '5'
 export type GameEliminationType = 'KO' | 'DOUBLE_KO'
 
 export type PlayerType = {
   id: string
   name: string
+  rank: number
+  roundReached: number
+  wonMatches: number
+  lostMatches: number
+  wonLegs: number
+  lostLegs: number
+  remainingPoints: number
   errorMessage?: string
 }
 
@@ -64,7 +71,7 @@ export function isGameVariantType(val: string): val is GameVariantType {
 }
 
 export function isGameModeType(val: string): val is GameModeType {
-  return val === 'MODE_301' || val === 'MODE_501' || val === 'MODE_701' || val === 'MODE_1001'
+  return val === '301' || val === '501' || val === '701' || val === '1001'
 }
 
 export function isGameOpeningType(val: string): val is GameOpeningType {
@@ -76,7 +83,7 @@ export function isGameCheckoutType(val: string): val is GameCheckoutType {
 }
 
 export function isGameLegsType(val: string): val is GameLegsType {
-  return val === 'LEGS_2' || val === 'LEGS_3' || val === 'LEGS_4' || val === 'LEGS_5'
+  return val === '2' || val === '3' || val === '4' || val === '5'
 }
 
 export function isGameEliminationType(val: string): val is GameEliminationType {

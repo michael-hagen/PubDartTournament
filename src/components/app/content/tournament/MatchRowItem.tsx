@@ -1,7 +1,8 @@
-import { useAppActions, useAppStore } from '@/store/AppStore'
+import { useAppStore } from '@/store/AppStore'
 import { useTranslation } from 'react-i18next'
 import LegInput from './LegInput'
 import type { ChangeEvent } from 'react'
+import { setLegValue } from '@/store/LegActions'
 
 interface MatchRowItemProps {
   roundIndex: number
@@ -19,7 +20,6 @@ export default function MatchRowItem({
   const { t } = useTranslation(['app'])
   const rounds = useAppStore((state) => state.tournament.rounds)
   const round = useAppStore((state) => state.tournament.rounds[roundIndex])
-  const { setLegValue } = useAppActions()
   const winnerMatch = winnerMatchIndex != undefined ? round.winnerMatches[winnerMatchIndex] : null
   const loserMatch = loserMatchIndex != undefined && round.loserMatches ? round.loserMatches[loserMatchIndex] : null
   const match = winnerMatch ? winnerMatch : loserMatch
@@ -45,12 +45,14 @@ export default function MatchRowItem({
     setLegValue(roundIndex, winnerMatchIndex, loserMatchIndex, isPlayerOne, legIndex, remainingPoints)
   }
 
+  // 👑 ✨ 👎👎🏾😭😞💩🏳️
+
   return (
     <div className="flex-1 flex flex-row gap-2">
       <div
         className={`flex flex-row items-center w-40 min-h-8 border ps-2 ${isGetABye ? 'text-muted-foreground' : ''}`}
       >
-        {isWinner === undefined ? '' : isWinner ? '✨ ' : '👎 '}
+        {isWinner === undefined ? '' : isWinner ? '👑 ' : '💩 '}
         {playerName}
       </div>
       {legs.map((leg, index) => (

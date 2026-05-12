@@ -11,13 +11,13 @@ import Navbar from './components/app/navbar/Navbar'
 import Statusbar from './components/app/statusbar/Statusbar'
 
 import { useAppActions, useAppStore } from './store/AppStore'
+import { finishTournament } from './store/TournamentActions'
 
 export default function App() {
   const isInitialized = useRef(false)
   const { i18n } = useTranslation()
   const { setLanguage, setTheme, setShowConfetti } = useAppActions()
   const showConfetti = useAppStore((state) => state.showConfetti)
-  const { finishTournament } = useAppActions()
   const timerRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -41,8 +41,8 @@ export default function App() {
           timerRef.current = null
           setShowConfetti(false)
           confetti.reset()
+          finishTournament()
         }
-        finishTournament()
       }
 
       timerRef.current = setInterval(() => {
@@ -64,7 +64,7 @@ export default function App() {
         stopConfetti()
       }
     }
-  }, [finishTournament, setShowConfetti, showConfetti])
+  }, [setShowConfetti, showConfetti])
 
   return (
     <TooltipProvider>

@@ -1,7 +1,8 @@
-import { useAppActions, useAppStore } from '@/store/AppStore'
+import { useAppStore } from '@/store/AppStore'
 import LoserTitle from './LoserTitle'
 import MatchItem from './MatchItem'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
+import { finishRound } from '@/store/RoundActions'
 
 interface LoserRoundSectionPanelProps {
   roundIndex: number
@@ -12,7 +13,6 @@ export default function LoserRoundSectionPanel({ roundIndex }: LoserRoundSection
   const round = useAppStore((state) => state.tournament.rounds[roundIndex])
   const prevRoundFinished = roundIndex > 0 ? rounds[roundIndex - 1].finished : true
   const disabled = round.finished || !prevRoundFinished || !round.finishable
-  const { finishRound } = useAppActions()
 
   const handleFinishClicked = () => {
     finishRound(roundIndex)

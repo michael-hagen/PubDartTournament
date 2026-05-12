@@ -1,7 +1,6 @@
 import { File, Save, FolderOpen, Globe, Info, Menu } from 'lucide-react'
 import { Button } from '../../ui/button'
 import { useTranslation } from 'react-i18next'
-import { useAppActions } from '@/store/AppStore'
 
 import {
   DropdownMenu,
@@ -21,13 +20,13 @@ import FullscreenSwitcher from './FullscreenSwitcher'
 import AboutDialog from './AboutDialog'
 import NotImplementedDialog from '@/components/common/NotImplementedDialog'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
+import { newTournament } from '@/store/TournamentActions'
 
 export default function Navbar() {
   const { t } = useTranslation(['common'])
-  const { newGame } = useAppActions()
 
   const handleNewTournamentClicked = () => {
-    newGame()
+    newTournament()
   }
 
   return (

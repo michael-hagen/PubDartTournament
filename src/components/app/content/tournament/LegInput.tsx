@@ -26,7 +26,7 @@ export default function LegInput({
   const { t } = useTranslation(['app'])
   const inputRef = useRef<HTMLInputElement>(null)
   const gameMode = useAppStore((state) => state.gameMode)
-  const maxLen = gameMode === 'MODE_1001' ? 4 : 3
+  const maxLen = gameMode === '1001' ? 4 : 3
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End']
