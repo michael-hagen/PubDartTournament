@@ -83,8 +83,6 @@ export default function PlayerItem({
     }
   }
 
-  // <InputGroup className="rounded-none border-t-0 border-b-input p-2 h-10">
-
   return (
     <Field data-invalid={errorMessage != null}>
       <InputGroup className={`rounded-none p-2 h-10 ${isNewPlayer ? '' : 'border-b-0'}`}>

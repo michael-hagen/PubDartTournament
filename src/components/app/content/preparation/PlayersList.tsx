@@ -26,8 +26,6 @@ export default function PlayersList() {
     }
   }
 
-  // <div className="w-full max-w-100 min-h-full max-h-80 overflow-auto border border-t-input border-l-0 border-r-0 border-b-0">
-
   return (
     <div className="w-full max-w-100 min-h-full max-h-80 overflow-auto border-none p-1">
       {players.map((player, playerIndex) => (
