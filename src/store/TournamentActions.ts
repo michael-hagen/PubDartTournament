@@ -64,7 +64,7 @@ export function startTournament() {
 
 export function finishTournament() {
   const state = getState()
-  const newPlayers = structuredClone(state.players)
+  const newPlayers = state.players.slice(0, state.players.length - 1)
   const rounds = state.tournament.rounds
 
   const calculateMatch = (match: MatchType, roundIndex: number) => {
@@ -162,12 +162,6 @@ export function finishTournament() {
   })
   newPlayers.map((player, index) => {
     player.rank = index + 1
-  })
-
-  newPlayers.map((player) => {
-    console.log(
-      `${player.rank} ${player.name} ${player.roundReached} ${player.wonMatches}/${player.lostMatches} ${player.wonLegs}/${player.lostLegs} ${player.remainingPoints}`,
-    )
   })
 
   setState({ players: newPlayers })

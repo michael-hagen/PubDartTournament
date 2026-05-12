@@ -177,7 +177,7 @@ function finishEvenRound(newTournament: TournamentType, roundIndex: number) {
 }
 
 function finishLastRound(newTournament: TournamentType) {
-  const round = newTournament.rounds[0]
+  const round = newTournament.rounds[newTournament.rounds.length - 1]
 
   if (!round.finishable) return
 

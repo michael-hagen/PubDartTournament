@@ -50,7 +50,7 @@ export default function MatchRowItem({
   return (
     <div className="flex-1 flex flex-row gap-2">
       <div
-        className={`flex flex-row items-center w-40 min-h-8 border ps-2 ${isGetABye ? 'text-muted-foreground' : ''}`}
+        className={`flex flex-row items-center w-40 min-h-8 max-h-16 border ps-2 ${isGetABye ? 'text-muted-foreground' : ''}`}
       >
         {isWinner === undefined ? '' : isWinner ? '👑 ' : '💩 '}
         {playerName}

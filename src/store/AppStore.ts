@@ -135,15 +135,13 @@ export const useAppStore = create(
       }),
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onRehydrateStorage: (_state) => {
-        console.log('Start loading store...')
-
         return (_state, error) => {
           if (error) {
             console.error('Error loading store: ', error)
             localStorage.removeItem('pub-dart-tournament')
             newTournament()
           } else {
-            console.log('Store loaded successfully')
+            // Nothing yet to do
           }
         }
       },

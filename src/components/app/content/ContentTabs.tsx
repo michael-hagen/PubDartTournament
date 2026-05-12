@@ -25,7 +25,7 @@ export default function ContentTabs() {
       onValueChange={handleTabChange}
     >
       <div className="flex">
-        <TabsList variant="line" className="mx-auto gap-6 md:gap-12 lg:gap-18 pt-4 bg-transparent">
+        <TabsList variant="line" className="mx-auto gap-6 md:gap-12 lg:gap-18 pt-4 bg-transparent no-print">
           {/* <TabsList variant="line" className="grid w-100 grid-cols-3"> */}
           <TabsTrigger
             value="PREPARATION"
