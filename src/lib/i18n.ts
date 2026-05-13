@@ -12,7 +12,7 @@ export default i18n
     ns: ["common", "app"],
     defaultNS: "common",
     backend: {
-      loadPath: "/locales/{{lng}}/{{ns}}.json",
+      loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json`,
     },
     debug: false,
     interpolation: {

@@ -68,9 +68,9 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-full">
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div className="flex flex-col min-h-screen max-h-screen">
+        <div className="flex flex-col flex-1 overflow-auto">
           <ContentContainer />
           <Statusbar />
         </div>
