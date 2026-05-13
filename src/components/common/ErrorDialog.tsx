@@ -26,7 +26,7 @@ export default function ErrorDialog({ errorMsg, setErrorMsg }: ErrorDialogProps)
       <AlertDialogContent className="border border-red-500">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive">{t('ERROR', 'Error')}</AlertDialogTitle>
-          <AlertDialogDescription>{errorMsg}</AlertDialogDescription>
+          <AlertDialogDescription className="max-h-100 overflow-auto">{errorMsg}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogAction onClick={() => setErrorMsg(null)}>{t('OK')}</AlertDialogAction>

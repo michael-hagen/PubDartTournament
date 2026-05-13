@@ -33,6 +33,23 @@ export default function App() {
     }
   }, [i18n.language, setLanguage, setTheme])
 
+  // Handle viewport height for mobile and fullscreen
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+    }
+
+    setVH()
+    window.addEventListener('resize', setVH)
+    window.addEventListener('orientationchange', setVH)
+
+    return () => {
+      window.removeEventListener('resize', setVH)
+      window.removeEventListener('orientationchange', setVH)
+    }
+  }, [])
+
   useEffect(() => {
     if (showConfetti) {
       const stopConfetti = () => {
@@ -68,7 +85,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
         <Navbar />
         <div className="flex flex-col flex-1 overflow-auto">
           <ContentContainer />

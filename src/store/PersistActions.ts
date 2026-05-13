@@ -55,9 +55,6 @@ export async function saveTournament(): Promise<string | null> {
     errorMessage = error instanceof Error ? error.message : String(error)
   }
 
-  // return new Promise((resolve) => {
-  //   resolve(errorMessage)
-  // })
   return errorMessage
 }
 
@@ -79,11 +76,45 @@ export async function openTournament(): Promise<string | null> {
           })
           return fileHandle
         } catch (error) {
-          if (!(error instanceof DOMException && error.name === 'AbortError')) return null
-          errorMessage = 'Browser does not support File System Access API'
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            // User cancelled the dialog
+            return null
+          }
+          // Fall through to fallback method
         }
       }
-      return null
+
+      // Fallback for browsers that don't support File System Access API
+      return new Promise<FileSystemFileHandle | null>((resolve) => {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = '.json'
+        input.style.display = 'none'
+
+        input.onchange = (e: Event) => {
+          const files = (e.target as HTMLInputElement).files
+          if (!files || files.length === 0) {
+            resolve(null) // User cancelled
+            return
+          }
+
+          // Create a FileSystemFileHandle-like object from the File
+          const file = files[0]
+          const fileHandle = {
+            getFile: async () => file,
+          } as FileSystemFileHandle
+
+          resolve(fileHandle)
+        }
+
+        input.oncancel = () => {
+          resolve(null) // User cancelled
+        }
+
+        document.body.appendChild(input)
+        input.click()
+        document.body.removeChild(input)
+      })
     }
 
     const fileHandle = await getFileHandle()
@@ -91,6 +122,13 @@ export async function openTournament(): Promise<string | null> {
     if (!fileHandle) return errorMessage
 
     const jsonText = await (await fileHandle.getFile()).text()
+
+    if (jsonText) {
+      // const jsonObject = JSON.parse(jsonText)
+      // return JSON.stringify(jsonObject, null, 4)
+      return jsonText
+    }
+
     const tournamentData = JSON.parse(jsonText)
 
     if (!tournamentData || typeof tournamentData !== 'object') {
