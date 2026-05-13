@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
+
 import { File, Save, FolderOpen, Globe, Info, Menu } from 'lucide-react'
 import { Button } from '../../ui/button'
-import { useTranslation } from 'react-i18next'
 
 import {
   DropdownMenu,
@@ -18,15 +20,27 @@ import LanguageMenu from './LanguageMenu'
 import ThemeSwitcher from './ThemeSwitcher'
 import FullscreenSwitcher from './FullscreenSwitcher'
 import AboutDialog from './AboutDialog'
-import NotImplementedDialog from '@/components/common/NotImplementedDialog'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
+import ErrorDialog from '@/components/common/ErrorDialog'
 import { newTournament } from '@/store/TournamentActions'
+import { openTournament, saveTournament } from '@/store/PersistActions'
 
 export default function Navbar() {
   const { t } = useTranslation(['common'])
+  const openFileDisabled = !('showSaveFilePicker' in window)
+  const saveFileDisabled = !('showOpenFilePicker' in window)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const handleNewTournamentClicked = () => {
     newTournament()
+  }
+
+  const handleOpenTournamentClicked = async () => {
+    setErrorMsg(await openTournament())
+  }
+
+  const handleSaveTournamentClicked = async () => {
+    setErrorMsg(await saveTournament())
   }
 
   return (
@@ -48,18 +62,27 @@ export default function Navbar() {
               {t('NEW')}
             </DropdownMenuItem>
           </AlertDialogComponent>
-          <NotImplementedDialog>
-            <DropdownMenuItem className="h-10" onSelect={(e) => e.preventDefault()}>
+
+          <AlertDialogComponent
+            dialogTitle="app:OPEN_TOURNAMENT_TITLE"
+            dialogDescription="app:OPEN_TOURNAMENT_DESCRIPTION"
+            handleClick={handleOpenTournamentClicked}
+          >
+            <DropdownMenuItem disabled={openFileDisabled} className="h-10" onSelect={(e) => e.preventDefault()}>
               <FolderOpen />
               {t('OPEN')}
             </DropdownMenuItem>
-          </NotImplementedDialog>
-          <NotImplementedDialog>
-            <DropdownMenuItem className="h-10" onSelect={(e) => e.preventDefault()}>
-              <Save />
-              {t('SAVE')}
-            </DropdownMenuItem>
-          </NotImplementedDialog>
+          </AlertDialogComponent>
+
+          <DropdownMenuItem
+            disabled={saveFileDisabled}
+            className="h-10"
+            onSelect={(e) => e.preventDefault()}
+            onClick={handleSaveTournamentClicked}
+          >
+            <Save />
+            {t('SAVE')}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="h-10">
@@ -86,6 +109,8 @@ export default function Navbar() {
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <ErrorDialog errorMsg={errorMsg} setErrorMsg={setErrorMsg} />
     </div>
   )
 }

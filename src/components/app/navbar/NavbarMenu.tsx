@@ -10,14 +10,27 @@ import ThemeSwitcher from './ThemeSwitcher'
 import FullscreenSwitcher from './FullscreenSwitcher'
 import AboutDialog from './AboutDialog'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
-import NotImplementedDialog from '@/components/common/NotImplementedDialog'
 import { newTournament } from '@/store/TournamentActions'
+import { openTournament, saveTournament } from '@/store/PersistActions'
+import { useState } from 'react'
+import ErrorDialog from '@/components/common/ErrorDialog'
 
 export default function NavbarMenu() {
   const { t } = useTranslation(['common'])
+  const openFileDisabled = !('showSaveFilePicker' in window)
+  const saveFileDisabled = !('showOpenFilePicker' in window)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const handleNewTournamentClicked = () => {
     newTournament()
+  }
+
+  const handleOpenTournamentClicked = async () => {
+    setErrorMsg(await openTournament())
+  }
+
+  const handleSaveTournamentClicked = async () => {
+    setErrorMsg(await saveTournament())
   }
 
   return (
@@ -30,18 +43,19 @@ export default function NavbarMenu() {
         handleClick={handleNewTournamentClicked}
         size="lg"
       />
-      <NotImplementedDialog>
-        <Button variant="outline" size="lg">
-          <FolderOpen />
-          {t('OPEN')}
-        </Button>
-      </NotImplementedDialog>
-      <NotImplementedDialog>
-        <Button variant="outline" size="lg">
-          <Save />
-          {t('SAVE')}
-        </Button>
-      </NotImplementedDialog>
+      <AlertDialogComponent
+        icon={FolderOpen}
+        buttonTitle="OPEN"
+        dialogTitle="app:OPEN_TOURNAMENT_TITLE"
+        dialogDescription="app:OPEN_TOURNAMENT_DESCRIPTION"
+        handleClick={handleOpenTournamentClicked}
+        size="lg"
+        disabled={openFileDisabled}
+      />
+      <Button disabled={saveFileDisabled} variant="outline" size="lg" onClick={handleSaveTournamentClicked}>
+        <Save />
+        {t('SAVE')}
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="lg">
@@ -62,6 +76,8 @@ export default function NavbarMenu() {
       </AboutDialog>
       <ThemeSwitcher />
       <FullscreenSwitcher />
+
+      <ErrorDialog errorMsg={errorMsg} setErrorMsg={setErrorMsg} />
     </div>
   )
 }

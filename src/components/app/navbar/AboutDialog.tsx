@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react'
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
 
@@ -11,8 +11,9 @@ import { useTranslation } from 'react-i18next'
 export default function AboutDialog(props: PropsWithChildren) {
   const { t } = useTranslation(['common', 'app'])
   const theme = useAppStore((state) => state.theme)
-  const appVersion = import.meta.env.APP_VERSION
-  const appDate = import.meta.env.APP_DATE
+  const appVersion = import.meta.env.APP_VERSION ?? '0.0.0'
+  const appDate = import.meta.env.APP_DATE ?? ''
+  const aboutImage = theme === 'dark' ? AboutImageDark : AboutImageLight
 
   return (
     <Dialog>
@@ -20,16 +21,15 @@ export default function AboutDialog(props: PropsWithChildren) {
       <DialogContent className="min-h-160 min-w-160 m-0 p-0 overflow-hidden">
         <div className="relative flex flex-col">
           <div className="grow">
-            <img
-              src={theme === 'dark' ? AboutImageDark : AboutImageLight}
-              alt="About Image"
-              className="w-[1024] h-[1024]"
-            />
+            <img src={aboutImage} alt={t('app:ABOUT_IMAGE_ALT')} className="w-full h-auto object-cover" />
           </div>
 
-          <div className="absolute top-4 w-full flex justify-center text-3xl">
-            <p>{t('ABOUT') + ' ' + t('app:PUB') + ' ' + t('app:DART') + ' ' + t('app:TOURNAMENT')}</p>
-          </div>
+          <DialogHeader className="absolute top-4 w-full flex justify-center">
+            <DialogTitle className="text-3xl text-center">{t('app:ABOUT_TITLE')}</DialogTitle>
+            <DialogDescription className="sr-only">
+              {t('app:ABOUT_DESCRIPTION')}
+            </DialogDescription>
+          </DialogHeader>
           <div className="absolute bottom-12 w-full flex justify-center ">
             <DialogClose asChild>
               <Button className="px-8">OK</Button>
