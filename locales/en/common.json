@@ -1,0 +1,20 @@
+{
+  "OK": "OK",
+  "CANCEL": "Cancel",
+  "CLOSE": "Close",
+  "HELP": "Help",
+  "NEW": "New",
+  "OPEN": "Open",
+  "SAVE": "Save",
+  "ABOUT": "About",
+  "PREV": "Previous",
+  "NEXT": "Next",
+  "ERROR": "Error",
+  "WARNING": "Warning",
+  "INFO": "Info",
+  "LANGUAGE": "Language",
+  "GERMAN": "Deutsch",
+  "ENGLISH": "English",
+  "NOT_IMPLEMENTED_YET_TITLE": "Not implemented yet",
+  "NOT_IMPLEMENTED_YET_DESCRIPTION": "This function is not available at the moment"
+}
