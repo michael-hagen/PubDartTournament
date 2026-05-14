@@ -50,7 +50,13 @@
   "FINISH_TOURNAMENT": "Finish tournament",
   "FINISH_TOURNAMENT_TITLE": "Finish the final round and celebrate the tournament",
   "FINISH_TOURNAMENT_DESCRIPTION": "IMPORTANT! After the tournament is finished changes are no longer possible.",
-  "MATCH_INPUT_ERRORS": "This match has the following input errors:",
+  "REPORT_HEADER_RANK": "Rank",
+  "REPORT_HEADER_PLAYER": "Player",
+  "REPORT_HEADER_REACHED_ROUND": "Round Reached",
+  "REPORT_HEADER_MATCHES": "Matches",
+  "REPORT_HEADER_LEGS": "Legs",
+  "REPORT_HEADER_REMAINING_POINTS": "Remaining Points",
+
   "TIP": {
     "COLOR_THEME": "Color Theme",
     "SET_FULLSCREEN": "Fullscreen",
@@ -67,6 +73,7 @@
     "REMAINING_POINTS_RANGE": "The remaining points should not be greater than the chosen game allows",
     "INVALID_LEG": "The winner of the leg must have 0 remaining points the loser a value greater than 0",
     "TO_MANY_WINS": "To many legs",
-    "EMPTY_LEG": "Leg with no winner"
+    "EMPTY_LEG": "Leg with no winner",
+    "MATCH_INPUT_ERRORS": "This match has the following input errors:"
   }
 }

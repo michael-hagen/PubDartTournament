@@ -45,7 +45,12 @@
   "FINISH_TOURNAMENT": "Turnier Beenden",
   "FINISH_TOURNAMENT_TITLE": "Finale abschließen und Turnier bejubeln",
   "FINISH_TOURNAMENT_DESCRIPTION": "WICHTIG! Nachdem das Finale beendet ist können keine Änderungen mehr gemacht werden.",
-  "MATCH_INPUT_ERRORS": "Dieses Spiel hat folgende Eingabefehler:",
+  "REPORT_HEADER_RANK": "Rang",
+  "REPORT_HEADER_PLAYER": "Spieler",
+  "REPORT_HEADER_REACHED_ROUND": "Erreichte Runde",
+  "REPORT_HEADER_MATCHES": "Spiele",
+  "REPORT_HEADER_LEGS": "Legs",
+  "REPORT_HEADER_REMAINING_POINTS": "Restpunkte",
   "TIP": {
     "COLOR_THEME": "Farbschema",
     "SET_FULLSCREEN": "Vollbildmodus",
@@ -62,6 +67,7 @@
     "REMAINING_POINTS_RANGE": "Die Restpunkte dürfen nicht größer sein als das gewählte Spiel erlaubt",
     "INVALID_LEG": "Der Gewinner des Spiels muss 0 Restpunkte haben, der Verlierer muss einen Wert größer als 0 haben",
     "TO_MANY_WINS": "Mindestens ein Spieler hat zu viele gewonnene Spiele",
-    "EMPTY_LEG": "Mindestens ein Spiel hat keinen Gewinner"
+    "EMPTY_LEG": "Mindestens ein Spiel hat keinen Gewinner",
+    "MATCH_INPUT_ERRORS": "Dieses Spiel hat folgende Eingabefehler:"
   }
 }
