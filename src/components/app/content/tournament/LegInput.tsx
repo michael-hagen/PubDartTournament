@@ -55,7 +55,7 @@ export default function LegInput({
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          autoComplete="off"
+          autoComplete="one-time-code"
           spellCheck="false"
           maxLength={maxLen}
           onKeyDown={handleOnKeyDown}

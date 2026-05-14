@@ -25,27 +25,41 @@ import ErrorDialog from '@/components/common/ErrorDialog'
 import { newTournament } from '@/store/TournamentActions'
 import { openTournament, saveTournament } from '@/store/PersistActions'
 
-export default function Navbar() {
+export default function HamburgerMenu() {
   const { t } = useTranslation(['common'])
+  const [menuOpen, setMenuOpen] = useState(false)
   const openFileDisabled = !('showSaveFilePicker' in window)
   const saveFileDisabled = !('showOpenFilePicker' in window)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const handleNewTournamentClicked = () => {
+    setMenuOpen(false)
     newTournament()
   }
 
   const handleOpenTournamentClicked = async () => {
+    setMenuOpen(false)
     setErrorMsg(await openTournament())
   }
 
   const handleSaveTournamentClicked = async () => {
+    setMenuOpen(false)
     setErrorMsg(await saveTournament())
+  }
+
+  const handleAboutOpenChange = (open: boolean) => {
+    if (!open) {
+      setMenuOpen(false)
+    }
+  }
+
+  const handleClosePopup = () => {
+    setMenuOpen(false)
   }
 
   return (
     <div className="flex lg:hidden gap-1">
-      <DropdownMenu>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="lg">
             <Menu />
@@ -96,7 +110,7 @@ export default function Navbar() {
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
-          <AboutDialog>
+          <AboutDialog handleAboutOpenChange={handleAboutOpenChange}>
             <DropdownMenuItem className="h-10" onSelect={(e) => e.preventDefault()}>
               <Info />
               {t('ABOUT')}
@@ -104,8 +118,8 @@ export default function Navbar() {
           </AboutDialog>
           <DropdownMenuSeparator />
           <div className="flex flex-row p-2 space-x-2">
-            <ThemeSwitcher />
-            <FullscreenSwitcher />
+            <ThemeSwitcher handleClosePopup={handleClosePopup} />
+            <FullscreenSwitcher handleClosePopup={handleClosePopup} />
           </div>
         </DropdownMenuContent>
       </DropdownMenu>

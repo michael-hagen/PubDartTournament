@@ -6,11 +6,17 @@ import { Fullscreen, Shrink } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/tooltip'
 import { Button } from '../../ui/button'
 
-export default function FullscreenSwitcher() {
+interface FullscreenSwitcherProps {
+  handleClosePopup?: () => void
+}
+
+export default function FullscreenSwitcher(props: FullscreenSwitcherProps) {
   const { t } = useTranslation(['app'])
   const [fullscreenFlag, setFullscreenFlag] = useState(false)
 
   const toggleFullscreen = () => {
+    props.handleClosePopup?.()
+
     if (document.fullscreenElement) {
       document.exitFullscreen()
       setFullscreenFlag(false)

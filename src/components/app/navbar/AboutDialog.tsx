@@ -16,7 +16,11 @@ import AboutImageLight from '@/assets/AboutLight.jpg'
 import { useAppStore } from '@/store/AppStore'
 import { useTranslation } from 'react-i18next'
 
-export default function AboutDialog(props: PropsWithChildren) {
+interface AboutDialogProps extends PropsWithChildren {
+  handleAboutOpenChange?: (open: boolean) => void
+}
+
+export default function AboutDialog(props: AboutDialogProps) {
   const { t } = useTranslation(['common', 'app'])
   const theme = useAppStore((state) => state.theme)
   const appVersion = import.meta.env.APP_VERSION ?? '0.0.0'
@@ -24,7 +28,7 @@ export default function AboutDialog(props: PropsWithChildren) {
   const aboutImage = theme === 'dark' ? AboutImageDark : AboutImageLight
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={props.handleAboutOpenChange}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent className="m-0 p-0 overflow-hidden min-w-140 md:min-w-160 lg:min-w-180">
         <div className="relative flex flex-col">

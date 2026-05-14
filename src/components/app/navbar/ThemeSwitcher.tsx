@@ -8,12 +8,17 @@ import { ToggleGroup } from '@/components/ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ToggleGroupButton } from '@/components/common/ToggleGroupButton'
 
-export default function ThemeSwitcher() {
+interface ThemeSwitcherProps {
+  handleClosePopup?: () => void
+}
+
+export default function ThemeSwitcher(props: ThemeSwitcherProps) {
   const { t } = useTranslation(['app'])
   const theme = useAppStore((state) => state.theme)
   const { setTheme } = useAppActions()
 
   const handleThemeChange = (value: string) => {
+    props.handleClosePopup?.()
     if (!isThemeType(value)) return
     setTheme(value)
   }

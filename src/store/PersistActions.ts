@@ -74,7 +74,7 @@ async function saveContent(filename: string, content: string): Promise<string | 
 
       return null
     } catch (error) {
-      if (!(error instanceof DOMException && error.name === 'AbortError')) return null
+      if (error instanceof DOMException && error.name === 'AbortError') return null
       return `Error (File System API): ${error instanceof Error ? error.message : error}`
     }
   }
@@ -163,7 +163,7 @@ async function loadContent(): Promise<LoadResultType> {
         cleanup()
 
         if (!content || content.trim().length === 0) {
-          resolve({content: null, errorMessage: `Error: File ${file.name} Size: ${file.size}`})
+          resolve({ content: null, errorMessage: `Error: File ${file.name} Size: ${file.size}` })
         }
         resolve({ content, errorMessage: null })
       }
