@@ -8,6 +8,8 @@ Designed for anyone who wants to organize a dart tournament and expects more fea
 
 As a passionate player, I was always looking for an easy-to-use, visually appealing, and reliable app to manage tournaments. Since I couldn't find a solution that met these requirements, I decided to build it myself. **Pub Dart Tournament** is the result of that passion—a tool built by a player, for players.
 
+I'm also looking for a new job and use this project as a reference for my work
+
 ## ✨ Features
 
 - **User-Friendly:** Intuitive handling for a smooth tournament flow.
@@ -17,6 +19,8 @@ As a passionate player, I was always looking for an easy-to-use, visually appeal
 - **Serverless:** All data remains local; no server or database setup required.
 - **Open Source:** Transparent development and open for contributions.
 - **Completely Free:** No hidden costs or subscriptions.
+
+- **To be continued:** I've some nice ideas for future version. Stay tuned.
 
 ## 🛠 Tech Stack
 
