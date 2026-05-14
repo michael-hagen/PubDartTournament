@@ -33,18 +33,19 @@ As a passionate player, I was always looking for an easy-to-use, visually appeal
 ### Preparation
 
 Set up your game modes, players, and variants.
-![preparation.jpg](preparation.jpg)
+<img width="1371" height="1118" alt="preparation" src="https://github.com/user-attachments/assets/3d0b142d-b9fe-42ed-981f-8a864133ff1c" />
 
 ### Tournament Management
 
 Keep track of matches, scores, and brackets.
-![tournament_1.jpg](tournament_1.jpg)
-![tournament_2.jpg](tournament_2.jpg)
+<img width="1371" height="1120" alt="tournament_2" src="https://github.com/user-attachments/assets/8943ce3b-45a9-43cb-b739-211455fd6f41" />
+<img width="1373" height="1121" alt="tournament_1" src="https://github.com/user-attachments/assets/7433e17b-7557-4e01-a121-db3d0b0162c8" />
 
 ### Results & Reports
 
 Detailed rankings and tournament statistics.
-![report.jpg](report.jpg)
+<img width="1371" height="1118" alt="preparation" src="https://github.com/user-attachments/assets/d92350c7-f0c7-415a-944d-5d038ea2623d" />
+
 
 ## 🚀 Getting Started
 
