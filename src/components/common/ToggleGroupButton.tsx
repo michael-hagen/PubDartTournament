@@ -18,7 +18,6 @@ export function ToggleGroupButton({ value, currentValue, children, className }: 
     <ToggleGroupItem
       key={value}
       value={value}
-      size="lg"
       className={
         cn(
           currentValue === value

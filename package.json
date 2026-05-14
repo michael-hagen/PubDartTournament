@@ -1,8 +1,8 @@
 {
   "name": "pub-dart-tournament",
   "private": true,
-  "version": "0.2.1 beta",
-  "build-date": "2026-05-13",
+  "version": "0.2.0 beta",
+  "build-date": "2026-05-14",
   "type": "module",
   "scripts": {
     "dev": "vite",

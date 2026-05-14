@@ -14,8 +14,8 @@ export default function WinnerRoundSectionPanel({ roundIndex }: WinnerRoundSecti
 
   return (
     <div className="flex-1 min-h-0 h-full flex flex-col">
-      <WinnerTitle disabled={disabled}/>
-      <div className="flex-1 flex flex-col p-4 gap-6 overflow-auto">
+      <WinnerTitle disabled={disabled} />
+      <div className="flex-1 flex flex-col p-2 lg:p-4 gap-4 lg:gap-6 overflow-auto">
         {round.winnerMatches.map(({ id }, index) => (
           <MatchItem key={id} roundIndex={roundIndex} winnerMatchIndex={index} />
         ))}

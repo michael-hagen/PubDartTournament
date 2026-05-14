@@ -22,14 +22,25 @@ export default function CollapsiblePanel({ title, children, className, titleClas
     >
       <div
         className={cn(
-          'flex items-center bg-background gap-2',
+          'flex items-center bg-background',
           isCollapsed ? 'flex-col h-full border-none' : 'flex-row w-full border-b',
         )}
       >
-        <Button size="sm" variant="outline" className="m-2 p-1" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-6 lg:h-7 m-1.5 lg:m-2 p-1"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
           {isCollapsed ? <Plus /> : <Minus />}
         </Button>
-        <div className={cn('flex-1 text-lg ', isCollapsed ? '[writing-mode:vertical-lr] tracking-wider' : '', titleClassName ? titleClassName : '')}>
+        <div
+          className={cn(
+            'flex-1 lg:text-lg ps-1 pt-1',
+            isCollapsed ? '[writing-mode:vertical-lr] tracking-wider' : '',
+            titleClassName ? titleClassName : '',
+          )}
+        >
           {title}
         </div>
       </div>

@@ -21,8 +21,8 @@ export default function LoserRoundSectionPanel({ roundIndex }: LoserRoundSection
   return (
     <div className="flex-1 min-h-0 h-full flex flex-col">
       <LoserTitle disabled={disabled} />
-      <div className="flex-1 flex flex-col p-4 overflow-auto">
-        <div className="flex-1 flex flex-col gap-6">
+      <div className="flex-1 flex flex-col p-2 lg:p-4 overflow-auto">
+        <div className="flex-1 flex flex-col gap-4 lg:gap-6">
           {round.loserMatches?.map(({ id }, index) => (
             <MatchItem key={id} roundIndex={roundIndex} loserMatchIndex={index} />
           ))}

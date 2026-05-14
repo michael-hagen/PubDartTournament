@@ -41,7 +41,7 @@ export default function LegInput({
   }
 
   const handleOnFocus = () => {
-    inputRef.current?.setSelectionRange(0, value.length)
+    setTimeout(() => inputRef.current?.setSelectionRange(0, value.length), 50)
   }
 
   return (
@@ -53,10 +53,15 @@ export default function LegInput({
           disabled={disabled}
           className={`rounded-none text-right ${maxLen === 3 ? 'w-12' : 'w-14'} ${fieldError ? 'text-destructive' : ''} ${matchError ? 'border-destructive' : ''} ${className}`}
           type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          autoComplete="off"
+          spellCheck="false"
           maxLength={maxLen}
           onKeyDown={handleOnKeyDown}
           onFocus={handleOnFocus}
           onChange={(e) => handleOnChange(e, legIndex)}
+          onContextMenu={(e) => e.preventDefault()}
         />
       </TooltipTrigger>
       <TooltipContent>

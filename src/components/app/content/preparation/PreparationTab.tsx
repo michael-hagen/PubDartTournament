@@ -25,9 +25,9 @@ export default function PreparationTab() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex-1 flex flex-col lg:flex-row w-full p-4 gap-6">
-        <div className="flex-1 space-y-6">
-          <div className="flex flex-row space-x-6">
+      <div className="flex-1 flex flex-col lg:flex-row w-full p-2 md:p-4 gap-4">
+        <div className="flex-1 space-y-4">
+          <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0">
             <PreparationCard title={t('VARIANT')} className="flex-1 min-w-70 text-muted-foreground">
               <GameVariantSwitcher />
             </PreparationCard>
@@ -36,7 +36,7 @@ export default function PreparationTab() {
             </PreparationCard>
           </div>
 
-          <div className="flex flex-row space-x-6">
+          <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0">
             <PreparationCard title={t('OPENING')} className="flex-1 min-w-70">
               <GameOpeningSwitcher />
             </PreparationCard>
@@ -45,7 +45,7 @@ export default function PreparationTab() {
             </PreparationCard>
           </div>
 
-          <div className="flex flex-row space-x-6">
+          <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0">
             <PreparationCard title={t('LEGS')} className="flex-1 min-w-70">
               <GameLegsSwitcher />
             </PreparationCard>
@@ -59,7 +59,8 @@ export default function PreparationTab() {
           <PlayersList />
         </PreparationCard>
       </div>
-      <div className="flex justify-center p-8">
+
+      <div className="flex justify-center p-2">
         <AlertDialogComponent
           icon={Goal}
           buttonTitle="app:START_TOURNAMENT"
@@ -68,7 +69,7 @@ export default function PreparationTab() {
           disabled={startDisabled}
           handleClick={handleStartClicked}
           size="lg"
-          className="min-w-60 min-h-16"
+          className="min-w-60 md:min-h-12 lg:min-h-14"
         />
       </div>
     </div>

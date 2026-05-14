@@ -10,9 +10,10 @@ export default function Statusbar() {
 
   return (
     <div className="flex justify-center h-10 ps-4 pt-2 pe-4 pb-2 no-print">
-      <div className="flex-1 flex gap-2 text-sm text-muted-foreground">
+      <div className="w-0 md:w-full gap-2 text-sm text-muted-foreground whitespace-nowrap overflow-clip">
         {t('app:COPYRIGHT') + ` (Ver. ${appVersion} / ${appDate})`}
       </div>
+      <div className="flex-1"></div>
       <div>{selectedTab === 'TOURNAMENT' && <ZoomSlider />}</div>
     </div>
   )

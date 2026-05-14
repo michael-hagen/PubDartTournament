@@ -16,7 +16,7 @@ export default function TournamentTab() {
   })
 
   return (
-    <div className="flex flex-row h-full p-4 gap-4 overflow-auto" style={{ zoom: panelScale / 100 }}>
+    <div className="flex flex-row h-full p-2 lg:p-4 gap-2 lg:gap-4 overflow-auto" style={{ zoom: panelScale / 100 }}>
       {rounds.map((round, roundIndex) => (
         <CollapsiblePanel
           key={round.id}
