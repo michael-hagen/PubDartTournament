@@ -45,7 +45,7 @@ export default function MatchItem({ roundIndex, winnerMatchIndex, loserMatchInde
             </Button>
           </HoverCardTrigger>
           <HoverCardContent className="flex w-90 flex-col gap-2">
-            <div className="text-lg">{t('MATCH_INPUT_ERRORS', { ns: 'app' })}</div>
+            <div className="text-lg">{t('ERROR_MESSAGE.MATCH_INPUT_ERRORS', { ns: 'app' })}</div>
             {match.fieldErrorMessages.map((errorMessage, index) => (
               <div key={index} className="text-muted-foreground">
                 {t(errorMessage, { ns: 'app' })}

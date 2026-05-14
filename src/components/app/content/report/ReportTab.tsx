@@ -1,7 +1,9 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useAppStore } from '@/store/AppStore'
+import { useTranslation } from 'react-i18next'
 
 export default function ReportTab() {
+  const { t } = useTranslation(['common', 'app'])
   const players = useAppStore((state) => state.players)
   const rounds = useAppStore((state) => state.tournament.rounds)
 
@@ -10,12 +12,12 @@ export default function ReportTab() {
       <Table>
         <TableHeader className="bg-background">
           <TableRow>
-            <TableHead className="text-center w-40">Rang</TableHead>
-            <TableHead className="text-center w-80 overflow-hidden">Spieler</TableHead>
-            <TableHead className="text-center w-40">Erreichte Runde</TableHead>
-            <TableHead className="text-center w-40">Spiele</TableHead>
-            <TableHead className="text-center w-40">Legs</TableHead>
-            <TableHead className="text-center w-40">Restpunkte</TableHead>
+            <TableHead className="text-center w-40">{t('app:REPORT_HEADER_RANK')}</TableHead>
+            <TableHead className="text-center w-80 overflow-hidden">{t('app:REPORT_HEADER_PLAYER')}</TableHead>
+            <TableHead className="text-center w-40">{t('app:REPORT_HEADER_REACHED_ROUND')}</TableHead>
+            <TableHead className="text-center w-40">{t('app:REPORT_HEADER_MATCHES')}</TableHead>
+            <TableHead className="text-center w-40">{t('app:REPORT_HEADER_LEGS')}</TableHead>
+            <TableHead className="text-center w-40">{t('app:REPORT_HEADER_REMAINING_POINTS')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
