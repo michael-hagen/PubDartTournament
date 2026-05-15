@@ -31,6 +31,7 @@ I'm also looking for a new job and use this project as a reference for my work
 - **Components:** [shadcn/ui](https://ui.shadcn.com/)
 - **State Management:** [Zustand](https://docs.pmnd.rs/zustand/)
 - **Localization:** [i18next](https://www.i18next.com/)
+- **Vitest (comming next):** [vitest](https://www.https://vitest.dev/)
 
 ## 📸 Screenshots
 

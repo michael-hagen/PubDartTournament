@@ -26,7 +26,7 @@ export default function ReportTab() {
               <TableCell className="text-center">{player.rank}</TableCell>
               <TableCell className="text-center">{player.name}</TableCell>
               <TableCell className="text-center">
-                {player.roundReached === rounds.length - 1 ? 'Finale' : player.roundReached + 1}
+                {player.roundReached === rounds.length - 1 ? t('app:FINAL') : player.roundReached + 1}
               </TableCell>
               <TableCell className="text-center">{player.wonMatches + ' / ' + player.lostMatches}</TableCell>
               <TableCell className="text-center">{player.wonLegs + ' / ' + player.lostLegs}</TableCell>
