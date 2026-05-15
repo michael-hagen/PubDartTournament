@@ -20,6 +20,7 @@ export default function App() {
   const showConfetti = useAppStore((state) => state.showConfetti)
   const timerRef = useRef<number | null>(null)
 
+  // Set language and theme at app start
   useEffect(() => {
     if (!isInitialized.current) {
       const language = i18n.language.split(/[_-]/)[0] || DEFAULT_LANGUAGE
@@ -41,6 +42,7 @@ export default function App() {
     }
 
     setVH()
+
     window.addEventListener('resize', setVH)
     window.addEventListener('orientationchange', setVH)
 
@@ -50,6 +52,7 @@ export default function App() {
     }
   }, [])
 
+  // Show a confetti firework at the end of the tournament
   useEffect(() => {
     if (showConfetti) {
       const stopConfetti = () => {
