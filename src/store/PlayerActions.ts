@@ -77,8 +77,8 @@ function validatePlayers(newPlayers: PlayerType[]) {
     }
   })
 
-  // Check min/max player count
-  if (newPlayers.length < MIN_PLAYERS) {
+  // Check min/max player count ( <= because the last player is just a placeholder for adding new players)
+  if (newPlayers.length <= MIN_PLAYERS) {
     setState({ preparationError: true })
   }
   if (newPlayers.length > MAX_PLAYERS) {

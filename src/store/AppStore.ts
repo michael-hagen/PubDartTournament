@@ -49,7 +49,7 @@ export const useAppStore = create(
         selectedTab: DEFAULT_GAME_STATE,
         tournamentPanelScale: DEFAULT_SCALE,
         // TODO: Better store an array of error messages
-        preparationError: false,
+        preparationError: true,
         showConfetti: false,
       },
 

@@ -139,6 +139,7 @@
   }
 }
 
+/* Some tweaks for printing the report table*/
 @media print {
   .no-print {
     display: none !important;
@@ -150,7 +151,6 @@
     box-shadow: none !important;
   }
 
-  /* 2. Spezielle Korrektur für Tabellen */
   table {
     border-collapse: collapse !important;
     width: 100%;
@@ -158,16 +158,16 @@
 
   th,
   td {
-    border: 1px solid #333 !important; /* Sichtbare Rahmen */
+    border: 1px solid #333 !important; /* print borders */
     color: black !important;
     background-color: transparent !important;
     padding: 8px;
   }
 
-  /* 3. Graustufen-Hintergrund für Header (falls gewünscht) */
+  /* Headers with light gray background */
   th {
     background-color: #f0f0f0 !important;
-    -webkit-print-color-adjust: exact; /* Erzwingt Hintergrundfarben in Chrome/Safari */
+    -webkit-print-color-adjust: exact; 
     print-color-adjust: exact;
   }
 }

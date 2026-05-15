@@ -38,7 +38,7 @@ export function newTournament() {
     tournament: structuredClone(DEFAULT_EMPTY_TOURNAMENT),
     tournamentPanelScale: DEFAULT_SCALE,
     // TODO: Better store an array of error messages
-    preparationError: false,
+    preparationError: true,
     showConfetti: false,
   })
 }

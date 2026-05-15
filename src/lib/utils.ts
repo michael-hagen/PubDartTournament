@@ -14,10 +14,12 @@ export function nextPowerOfTwo(n: number) {
   return Math.pow(2, Math.ceil(Math.log2(n + 1)))
 }
 
+export function isPowerOfTwo(n: number): boolean {
+  return n >= 2 && (n & (n - 1)) === 0
+}
+
 export function calculateEliminationRounds(playerCount: number) {
-  if (playerCount < 2 || (playerCount & (playerCount - 1)) !== 0) {
-    throw new Error('The number of players must be a power of two.')
-  }
+  if (!isPowerOfTwo(playerCount)) throw new Error('The number of players must be a power of two.')
 
   const rounds = []
 
@@ -34,9 +36,7 @@ export function calculateEliminationRounds(playerCount: number) {
 }
 
 export function calculateDoubleEliminationRounds(playerCount: number) {
-  if (playerCount < 2 || (playerCount & (playerCount - 1)) !== 0) {
-    throw new Error('Teilnehmerzahl muss eine Zweierpotenz sein.')
-  }
+  if (!isPowerOfTwo(playerCount)) throw new Error('The number of players must be a power of two.')
 
   const rounds = []
   const totalRounds = 2 * Math.log2(playerCount)
@@ -94,3 +94,9 @@ export function shuffleArray<T>(arr: T[]): T[] {
   }
   return newArr
 }
+
+//-------------------------------------------------------
+// Internal utility functions
+//-------------------------------------------------------
+
+
