@@ -68,6 +68,7 @@
   "ERROR_MESSAGE": {
     "MIN_PLAYERS": "The minimum amount of players is 4",
     "MAX_PLAYERS": "The maximum amount of players is 128",
+    "MIN_MAX_PLAYERS": "The number of players must be between 4 und 128",
     "EMPTY_PLAYER_NAME": "Player name must not be empty",
     "DUPLICATE_PLAYER_NAME": "Duplicate player name",
     "REMAINING_POINTS_RANGE": "The remaining points should not be greater than the chosen game allows",

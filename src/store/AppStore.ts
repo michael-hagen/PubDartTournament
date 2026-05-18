@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { combine, persist } from 'zustand/middleware'
 
+import { type PlayerType } from '@/globals/types'
+import { APP_STORE_STORAGE_NAME } from '@/globals/globals'
 import {
   DEFAULT_GAME_CHECKOUT,
   DEFAULT_GAME_MODE,
@@ -15,7 +17,6 @@ import {
   DEFAULT_EMPTY_TOURNAMENT,
   DEFAULT_EMPTY_PLAYER,
 } from '@/globals/defaults'
-import { type PlayerType } from '@/globals/types'
 import { generateUUID } from '@/lib/utils'
 import { newTournament } from './TournamentActions'
 
@@ -38,8 +39,9 @@ export const useAppStore = create(
         tournamentPanelScale: DEFAULT_SCALE,
         selectedTab: DEFAULT_GAME_STATE,
         showConfetti: false,
-        // TODO: Better store an array of error messages
-        preparationError: true,
+        // A new tournament has an empty list of players so we have an error by default
+        // This prevents the user to start the tournament without a valid list of players
+        preparationErrorMessages: ['ERROR_MESSAGE.MIN_MAX_PLAYER'] as string[],
       },
 
       (set, get) => {
@@ -69,7 +71,7 @@ export const useAppStore = create(
       },
     ),
     {
-      name: 'pub-dart-tournament',
+      name: APP_STORE_STORAGE_NAME,
       partialize: (state) => ({
         gameState: state.gameState,
         gameVariant: state.gameVariant,
@@ -88,7 +90,7 @@ export const useAppStore = create(
         return (_state, error) => {
           if (error) {
             console.error('Error loading store: ', error)
-            localStorage.removeItem('pub-dart-tournament')
+            localStorage.removeItem(APP_STORE_STORAGE_NAME)
             newTournament()
           } else {
             // Nothing yet to do

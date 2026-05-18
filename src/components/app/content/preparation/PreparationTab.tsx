@@ -16,8 +16,8 @@ import { startTournament } from '@/store/TournamentActions'
 export default function PreparationTab() {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
-  const preparationError = useAppStore((state) => state.preparationError)
-  const startDisabled = preparationError || gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const preparationErrorMessages = useAppStore((state) => state.preparationErrorMessages)
+  const startDisabled = (preparationErrorMessages && preparationErrorMessages.length > 0) || gameState === 'TOURNAMENT' || gameState === 'REPORT'
 
   const handleStartClicked = () => {
     startTournament()

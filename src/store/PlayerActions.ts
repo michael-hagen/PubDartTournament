@@ -51,8 +51,7 @@ export function updatePlayer(playerIndex: number, playerName: string) {
 //------------------------------------------------------------------------------
 
 function validatePlayers(newPlayers: PlayerType[]) {
-  // Reset the preparation error
-  setState({ preparationError: false })
+  const errorMessages: string[] = []
 
   newPlayers.map((player, playerIndex) => {
     // Reset the error messages. We will validate the list of players and add new error messages if needed (brute force but simple)
@@ -63,7 +62,7 @@ function validatePlayers(newPlayers: PlayerType[]) {
     if (playerIndex < newPlayers.length - 1) {
       if (player.name.trim().length === 0) {
         newPlayers[playerIndex].errorMessage = 'ERROR_MESSAGE.EMPTY_PLAYER_NAME'
-        setState({ preparationError: true })
+        errorMessages.push('ERROR_MESSAGE.EMPTY_PLAYER_NAME')
       }
     }
 
@@ -73,15 +72,14 @@ function validatePlayers(newPlayers: PlayerType[]) {
 
     if (exists) {
       newPlayers[playerIndex].errorMessage = 'ERROR_MESSAGE.DUPLICATE_PLAYER_NAME'
-      setState({ preparationError: true })
+      errorMessages.push('ERROR_MESSAGE.DUPLICATE_PLAYER_NAME')
     }
   })
 
   // Check min/max player count ( <= because the last player is just a placeholder for adding new players)
-  if (newPlayers.length <= MIN_PLAYERS) {
-    setState({ preparationError: true })
+  if (newPlayers.length <= MIN_PLAYERS || newPlayers.length > MAX_PLAYERS) {
+    errorMessages.push('ERROR_MESSAGE.MIN_MAX_PLAYER')
   }
-  if (newPlayers.length > MAX_PLAYERS) {
-    setState({ preparationError: true })
-  }
+
+  setState({ preparationErrorMessages: errorMessages })
 }

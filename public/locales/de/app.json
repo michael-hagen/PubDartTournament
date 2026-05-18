@@ -62,6 +62,7 @@
   "ERROR_MESSAGE": {
     "MIN_PLAYERS": "Es müssen mindestens 4 Spieler am Turnier teilnehmen",
     "MAX_PLAYERS": "Es dürfen höchstens 128 Spieler am Turnier teilnehmen",
+    "MIN_MAX_PLAYERS": "Die Anzahl Spieler muss zwischen 4 und 128 liegen",
     "EMPTY_PLAYER_NAME": "Der Spielername darf nicht leer sein",
     "DUPLICATE_PLAYER_NAME": "Der Spielername muss eindeutig sein",
     "REMAINING_POINTS_RANGE": "Die Restpunkte dürfen nicht größer sein als das gewählte Spiel erlaubt",

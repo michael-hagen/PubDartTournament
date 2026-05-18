@@ -21,11 +21,10 @@ import {
   DEFAULT_LEG_VALUE,
   DEFAULT_SCALE,
 } from '@/globals/defaults'
-import { MAX_PLAYERS, MIN_PLAYERS } from '@/globals/globals'
 import { prepareGetAByeMatch } from './MatchActions'
 
 export function newTournament() {
-  setState({
+  const newTournament = {
     selectedTab: DEFAULT_GAME_STATE,
     gameState: DEFAULT_GAME_STATE,
     gameVariant: DEFAULT_GAME_VARIANT,
@@ -37,21 +36,19 @@ export function newTournament() {
     players: [{ ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }] as PlayerType[],
     tournament: structuredClone(DEFAULT_EMPTY_TOURNAMENT),
     tournamentPanelScale: DEFAULT_SCALE,
-    // TODO: Better store an array of error messages
-    preparationError: true,
+    // A new tournament has an empty list of players so we have an error by default
+    // This prevents the user to start the tournament without a valid list of players
+    preparationErrorMessages: ['ERROR_MESSAGE.MIN_MAX_PLAYER'],
     showConfetti: false,
-  })
+  }
+  setState(newTournament)
 }
 
 export function startTournament() {
   const state = getState()
 
-  if (state.players.length < MIN_PLAYERS || state.players.length > MAX_PLAYERS) {
-    state.preparationError = true
-    return
-  }
-
-  if (state.preparationError) return
+  if (state.preparationErrorMessages && state.preparationErrorMessages.length > 0)
+    throw Error('Try to startTournament while having preparation errors')
 
   if (state.gameElimination === 'KO') {
     prepareKOTournament()
