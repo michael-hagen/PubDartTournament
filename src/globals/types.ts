@@ -58,34 +58,34 @@ export type TournamentType = {
 }
 
 // Type guards for global types
-export function isThemeType(val: string): val is ThemeType {
+export function isThemeType(val: unknown): val is ThemeType {
   return val === 'light' || val === 'dark'
 }
 
-export function isGameStateType(val: string): val is GameStateType {
+export function isGameStateType(val: unknown): val is GameStateType {
   return val === 'PREPARATION' || val === 'TOURNAMENT' || val === 'REPORT'
 }
 
-export function isGameVariantType(val: string): val is GameVariantType {
+export function isGameVariantType(val: unknown): val is GameVariantType {
   return val === 'ELECTRONIC_DART' || val === 'STEEL_DART'
 }
 
-export function isGameModeType(val: string): val is GameModeType {
+export function isGameModeType(val: unknown): val is GameModeType {
   return val === '301' || val === '501' || val === '701' || val === '1001'
 }
 
-export function isGameOpeningType(val: string): val is GameOpeningType {
+export function isGameOpeningType(val: unknown): val is GameOpeningType {
   return val === 'SINGLE_IN' || val === 'DOUBLE_IN' || val === 'MASTER_IN'
 }
 
-export function isGameCheckoutType(val: string): val is GameCheckoutType {
+export function isGameCheckoutType(val: unknown): val is GameCheckoutType {
   return val === 'SINGLE_OUT' || val === 'DOUBLE_OUT' || val === 'MASTER_OUT'
 }
 
-export function isGameLegsType(val: string): val is GameLegsType {
+export function isGameLegsType(val: unknown): val is GameLegsType {
   return val === '2' || val === '3' || val === '4' || val === '5'
 }
 
-export function isGameEliminationType(val: string): val is GameEliminationType {
+export function isGameEliminationType(val: unknown): val is GameEliminationType {
   return val === 'KO' || val === 'DOUBLE_KO'
 }

@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]): string {
 }
 
 export function generateUUID(): string {
-  return self.crypto.randomUUID()
+  return globalThis.crypto.randomUUID()
 }
 
 export function nextPowerOfTwo(n: number): number {
@@ -20,9 +20,9 @@ export function isPowerOfTwo(n: number): boolean {
 }
 
 export function calculateEliminationRounds(playerCount: number) {
-  if (!isPowerOfTwo(playerCount)) throw new Error(`playerCount:${playerCount} must be a power of two.`)
   if (playerCount < MIN_PLAYERS || playerCount > MAX_PLAYERS)
     throw new Error(`playerCount:${playerCount} must be between ${MIN_PLAYERS} and ${MAX_PLAYERS}`)
+  if (!isPowerOfTwo(playerCount)) throw new Error(`playerCount:${playerCount} must be a power of two.`)
 
   const rounds = []
 
@@ -39,9 +39,9 @@ export function calculateEliminationRounds(playerCount: number) {
 }
 
 export function calculateDoubleEliminationRounds(playerCount: number) {
-  if (!isPowerOfTwo(playerCount)) throw new Error(`playerCount:${playerCount} must be a power of two.`)
   if (playerCount < MIN_PLAYERS || playerCount > MAX_PLAYERS)
     throw new Error(`playerCount:${playerCount} must be between ${MIN_PLAYERS} and ${MAX_PLAYERS}`)
+  if (!isPowerOfTwo(playerCount)) throw new Error(`playerCount:${playerCount} must be a power of two.`)
 
   const rounds = []
   const totalRounds = 2 * Math.log2(playerCount)

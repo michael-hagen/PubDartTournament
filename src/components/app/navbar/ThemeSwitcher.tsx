@@ -19,8 +19,13 @@ export default function ThemeSwitcher(props: ThemeSwitcherProps) {
 
   const handleThemeChange = (value: string) => {
     props.handleClosePopup?.()
+
     if (!isThemeType(value)) return
+    
     setTheme(value)
+    localStorage.setItem('theme', value)
+    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.add(value)
   }
 
   return (

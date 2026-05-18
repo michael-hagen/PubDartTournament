@@ -1,231 +1,157 @@
-import { expect, test, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   calculateDoubleEliminationRounds,
   calculateEliminationRounds,
+  cn,
   isPowerOfTwo,
   nextPowerOfTwo,
   shuffleArray,
 } from '../utils'
+import { doubleEliminationCases, eliminationCases } from './utils.data'
 
-test.each([
-  [-1, 1],
-  [0, 1],
-  [1, 2],
-  [1.5, 2],
-  [2, 4],
-  [3, 4],
-  [4, 8],
-  [5, 8],
-  [127, 128],
-  [127.999, 128],
-  [867, 1024],
-])('nextPowerOfTwo(%f) === %f', (input, expected) => {
-  expect(nextPowerOfTwo(input)).toBe(expected)
-})
+describe('utils.ts exports', () => {
+  test('cn merges simple class strings', () => {
+    expect(cn('px-2', 'py-4')).toBe('px-2 py-4')
+  })
 
-test.each([
-  [-4, false],
-  [-1, false],
-  [0, false],
-  [1, false],
-  [1.5, false],
-  [2, true],
-  [4, true],
-  [8, true],
-  [128, true],
-  [127.999, false],
-])('isPowerOfTwo(%f) === %s', (input, expected) => {
-  expect(isPowerOfTwo(input)).toBe(expected)
-})
+  test('cn handles empty inputs', () => {
+    expect(cn()).toBe('')
+    expect(cn('')).toBe('')
+    expect(cn('', '', '')).toBe('')
+  })
 
-const eliminationCases: Array<[number, Array<{ round: number; matchCount: number }>]> = [
-  [
-    4,
-    [
-      { round: 1, matchCount: 2 },
-      { round: 2, matchCount: 1 },
-    ],
-  ],
-  [
-    8,
-    [
-      { round: 1, matchCount: 4 },
-      { round: 2, matchCount: 2 },
-      { round: 3, matchCount: 1 },
-    ],
-  ],
-  [
-    16,
-    [
-      { round: 1, matchCount: 8 },
-      { round: 2, matchCount: 4 },
-      { round: 3, matchCount: 2 },
-      { round: 4, matchCount: 1 },
-    ],
-  ],
-  [
-    32,
-    [
-      { round: 1, matchCount: 16 },
-      { round: 2, matchCount: 8 },
-      { round: 3, matchCount: 4 },
-      { round: 4, matchCount: 2 },
-      { round: 5, matchCount: 1 },
-    ],
-  ],
-  [
-    64,
-    [
-      { round: 1, matchCount: 32 },
-      { round: 2, matchCount: 16 },
-      { round: 3, matchCount: 8 },
-      { round: 4, matchCount: 4 },
-      { round: 5, matchCount: 2 },
-      { round: 6, matchCount: 1 },
-    ],
-  ],
-  [
-    128,
-    [
-      { round: 1, matchCount: 64 },
-      { round: 2, matchCount: 32 },
-      { round: 3, matchCount: 16 },
-      { round: 4, matchCount: 8 },
-      { round: 5, matchCount: 4 },
-      { round: 6, matchCount: 2 },
-      { round: 7, matchCount: 1 },
-    ],
-  ],
-]
+  test('cn handles conditional classes with objects', () => {
+    expect(cn('base', { active: true, disabled: false })).toBe('base active')
+    expect(cn('base', { active: false, disabled: true })).toBe('base disabled')
+  })
 
-test.each(eliminationCases)('calculateEliminationRounds(%i) returns expected rounds', (playerCount, expected) => {
-  expect(calculateEliminationRounds(playerCount)).toStrictEqual(expected)
-})
+  test('cn handles arrays of classes', () => {
+    expect(cn(['px-2', 'py-4'], 'rounded')).toBe('px-2 py-4 rounded')
+  })
 
-test.each([-1, 2, 3, 7])('calculateEliminationRounds(%i) throws for invalid player count', (playerCount) => {
-  expect(() => calculateEliminationRounds(playerCount)).toThrow()
-})
+  test('cn merges conflicting tailwind classes (twMerge)', () => {
+    // px-2 should override px-4
+    expect(cn('px-4', 'px-2')).toBe('px-2')
+    // py-4 should override py-2
+    expect(cn('py-2', 'py-4')).toBe('py-4')
+    // text-red-500 should override text-blue-500
+    expect(cn('text-blue-500', 'text-red-500')).toBe('text-red-500')
+  })
 
-const doubleEliminationCases: Array<
-  [number, Array<{ round: number; winnerMatchCount: number; loserMatchCount: number }>]
-> = [
-  [
-    4,
-    [
-      { round: 1, winnerMatchCount: 2, loserMatchCount: 0 },
-      { round: 2, winnerMatchCount: 1, loserMatchCount: 1 },
-      { round: 3, winnerMatchCount: 0, loserMatchCount: 1 },
-      { round: 4, winnerMatchCount: 1, loserMatchCount: 0 },
-    ],
-  ],
-  [
-    8,
-    [
-      { round: 1, winnerMatchCount: 4, loserMatchCount: 0 },
-      { round: 2, winnerMatchCount: 2, loserMatchCount: 2 },
-      { round: 3, winnerMatchCount: 0, loserMatchCount: 2 },
-      { round: 4, winnerMatchCount: 1, loserMatchCount: 1 },
-      { round: 5, winnerMatchCount: 0, loserMatchCount: 1 },
-      { round: 6, winnerMatchCount: 1, loserMatchCount: 0 },
-    ],
-  ],
-  [
-    16,
-    [
-      { round: 1, winnerMatchCount: 8, loserMatchCount: 0 },
-      { round: 2, winnerMatchCount: 4, loserMatchCount: 4 },
-      { round: 3, winnerMatchCount: 0, loserMatchCount: 4 },
-      { round: 4, winnerMatchCount: 2, loserMatchCount: 2 },
-      { round: 5, winnerMatchCount: 0, loserMatchCount: 2 },
-      { round: 6, winnerMatchCount: 1, loserMatchCount: 1 },
-      { round: 7, winnerMatchCount: 0, loserMatchCount: 1 },
-      { round: 8, winnerMatchCount: 1, loserMatchCount: 0 },
-    ],
-  ],
-  [
-    32,
-    [
-      { round: 1, winnerMatchCount: 16, loserMatchCount: 0 },
-      { round: 2, winnerMatchCount: 8, loserMatchCount: 8 },
-      { round: 3, winnerMatchCount: 0, loserMatchCount: 8 },
-      { round: 4, winnerMatchCount: 4, loserMatchCount: 4 },
-      { round: 5, winnerMatchCount: 0, loserMatchCount: 4 },
-      { round: 6, winnerMatchCount: 2, loserMatchCount: 2 },
-      { round: 7, winnerMatchCount: 0, loserMatchCount: 2 },
-      { round: 8, winnerMatchCount: 1, loserMatchCount: 1 },
-      { round: 9, winnerMatchCount: 0, loserMatchCount: 1 },
-      { round: 10, winnerMatchCount: 1, loserMatchCount: 0 },
-    ],
-  ],
-  [
-    64,
-    [
-      { round: 1, winnerMatchCount: 32, loserMatchCount: 0 },
-      { round: 2, winnerMatchCount: 16, loserMatchCount: 16 },
-      { round: 3, winnerMatchCount: 0, loserMatchCount: 16 },
-      { round: 4, winnerMatchCount: 8, loserMatchCount: 8 },
-      { round: 5, winnerMatchCount: 0, loserMatchCount: 8 },
-      { round: 6, winnerMatchCount: 4, loserMatchCount: 4 },
-      { round: 7, winnerMatchCount: 0, loserMatchCount: 4 },
-      { round: 8, winnerMatchCount: 2, loserMatchCount: 2 },
-      { round: 9, winnerMatchCount: 0, loserMatchCount: 2 },
-      { round: 10, winnerMatchCount: 1, loserMatchCount: 1 },
-      { round: 11, winnerMatchCount: 0, loserMatchCount: 1 },
-      { round: 12, winnerMatchCount: 1, loserMatchCount: 0 },
-    ],
-  ],
-  [
-    128,
-    [
-      { round: 1, winnerMatchCount: 64, loserMatchCount: 0 },
-      { round: 2, winnerMatchCount: 32, loserMatchCount: 32 },
-      { round: 3, winnerMatchCount: 0, loserMatchCount: 32 },
-      { round: 4, winnerMatchCount: 16, loserMatchCount: 16 },
-      { round: 5, winnerMatchCount: 0, loserMatchCount: 16 },
-      { round: 6, winnerMatchCount: 8, loserMatchCount: 8 },
-      { round: 7, winnerMatchCount: 0, loserMatchCount: 8 },
-      { round: 8, winnerMatchCount: 4, loserMatchCount: 4 },
-      { round: 9, winnerMatchCount: 0, loserMatchCount: 4 },
-      { round: 10, winnerMatchCount: 2, loserMatchCount: 2 },
-      { round: 11, winnerMatchCount: 0, loserMatchCount: 2 },
-      { round: 12, winnerMatchCount: 1, loserMatchCount: 1 },
-      { round: 13, winnerMatchCount: 0, loserMatchCount: 1 },
-      { round: 14, winnerMatchCount: 1, loserMatchCount: 0 },
-    ],
-  ],
-]
+  test('cn handles mixed input types', () => {
+    expect(cn('px-2', { 'py-4': true }, ['rounded', 'shadow'])).toContain('px-2')
+    expect(cn('px-2', { 'py-4': true }, ['rounded', 'shadow'])).toContain('py-4')
+    expect(cn('px-2', { 'py-4': true }, ['rounded', 'shadow'])).toContain('rounded')
+    expect(cn('px-2', { 'py-4': true }, ['rounded', 'shadow'])).toContain('shadow')
+  })
 
-test.each(doubleEliminationCases)(
-  'calculateDoubleEliminationRounds(%i) returns expected rounds',
-  (playerCount, expected) => {
-    expect(calculateDoubleEliminationRounds(playerCount)).toStrictEqual(expected)
-  },
-)
+  test('cn removes falsy values (undefined, null, false)', () => {
+    expect(cn('px-2', undefined, 'py-4', null, false, 'rounded')).toBe('px-2 py-4 rounded')
+  })
 
-test.each([-1, 2, 3, 7])('calculateDoubleEliminationRounds(%i) throws for invalid player count', (playerCount) => {
-  expect(() => calculateDoubleEliminationRounds(playerCount)).toThrow()
-})
+  test('cn handles complex tailwind conflicts', () => {
+    // Last conflicting class wins
+    expect(cn('bg-white', 'bg-black')).toBe('bg-black')
+    expect(cn('w-full', 'w-1/2', 'w-1/3')).toBe('w-1/3')
+  })
 
-test('shuffleArray returns a new array and does not mutate the original', () => {
-  const original = [1, 2, 3, 4, 5]
-  const result = shuffleArray(original)
+  test.each([
+    [-1, 1],
+    [0, 1],
+    [1, 2],
+    [1.5, 2],
+    [2, 4],
+    [3, 4],
+    [4, 8],
+    [5, 8],
+    [127, 128],
+    [127.999, 128],
+    [867, 1024],
+  ])('nextPowerOfTwo(%f) === %f', (input, expected) => {
+    expect(nextPowerOfTwo(input)).toBe(expected)
+  })
 
-  expect(result).toHaveLength(original.length)
-  expect(result).toEqual(expect.arrayContaining(original))
-  expect(original).toEqual([1, 2, 3, 4, 5])
-  expect(result).not.toBe(original)
-})
+  test.each([
+    [-4, false],
+    [-1, false],
+    [0, false],
+    [1, false],
+    [1.5, false],
+    [2, true],
+    [4, true],
+    [8, true],
+    [128, true],
+    [127.999, false],
+  ])('isPowerOfTwo(%f) === %s', (input, expected) => {
+    expect(isPowerOfTwo(input)).toBe(expected)
+  })
 
-test('shuffleArray follows the Fisher-Yates algorithm with deterministic Math.random', () => {
-  const randomValues = [0.9, 0.5, 0.2, 0.1]
-  const randomMock = vi.spyOn(Math, 'random')
-  randomMock.mockImplementation(() => randomValues.shift() ?? 0)
+  test.each(eliminationCases)('calculateEliminationRounds(%i) returns expected rounds', (playerCount, expected) => {
+    expect(calculateEliminationRounds(playerCount)).toStrictEqual(expected)
+  })
 
-  const input = [1, 2, 3, 4, 5]
-  const result = shuffleArray(input)
+  test.each([2, 145])('calculateEliminationRounds(%i) throws error for out-of-range player count', (playerCount) => {
+    expect(() => calculateEliminationRounds(playerCount)).toThrow(
+      `playerCount:${playerCount} must be between 4 and 128`,
+    )
+  })
 
-  expect(result).toEqual([2, 4, 1, 3, 5])
-  expect(randomMock).toHaveBeenCalled()
+  test.each([5, 6, 7, 9, 15])('calculateEliminationRounds(%i) throws error for non-power-of-two', (playerCount) => {
+    expect(() => calculateEliminationRounds(playerCount)).toThrow(`playerCount:${playerCount} must be a power of two.`)
+  })
 
-  randomMock.mockRestore()
+  test.each(doubleEliminationCases)(
+    'calculateDoubleEliminationRounds(%i) returns expected rounds',
+    (playerCount, expected) => {
+      expect(calculateDoubleEliminationRounds(playerCount)).toStrictEqual(expected)
+    },
+  )
+
+  test.each([2, 135])(
+    'calculateDoubleEliminationRounds(%i) throws error for out-of-range player count',
+    (playerCount) => {
+      expect(() => calculateDoubleEliminationRounds(playerCount)).toThrow(
+        `playerCount:${playerCount} must be between 4 and 128`,
+      )
+    },
+  )
+
+  test.each([5, 6, 7, 9, 15])(
+    'calculateDoubleEliminationRounds(%i) throws error for non-power-of-two',
+    (playerCount) => {
+      expect(() => calculateDoubleEliminationRounds(playerCount)).toThrow(
+        `playerCount:${playerCount} must be a power of two.`,
+      )
+    },
+  )
+
+  test('shuffleArray returns a new array and does not mutate the original', () => {
+    const original = [1, 2, 3, 4, 5]
+    const result = shuffleArray(original)
+
+    expect(result).toHaveLength(original.length)
+    expect(result).toEqual(expect.arrayContaining(original))
+    expect(original).toEqual([1, 2, 3, 4, 5])
+    expect(result).not.toBe(original)
+  })
+
+  test('shuffleArray follows the Fisher-Yates algorithm with deterministic Math.random', () => {
+    const randomValues = [0.9, 0.5, 0.2, 0.1]
+    const randomMock = vi.spyOn(Math, 'random')
+    randomMock.mockImplementation(() => randomValues.shift() ?? 0)
+
+    const input = [1, 2, 3, 4, 5]
+    const result = shuffleArray(input)
+
+    expect(result).toEqual([2, 4, 1, 3, 5])
+    expect(randomMock).toHaveBeenCalled()
+
+    randomMock.mockRestore()
+  })
+
+  test('shuffleArray handles edge cases correctly', () => {
+    expect(shuffleArray([])).toEqual([])
+    expect(shuffleArray([1])).toEqual([1])
+    expect(shuffleArray([1, 2])).toHaveLength(2)
+  })
 })

@@ -29,7 +29,9 @@ export default function App() {
       const storedTheme = localStorage.getItem('theme')
       const theme = storedTheme ? (isThemeType(storedTheme) ? storedTheme : DEFAULT_THEME) : DEFAULT_THEME
       setTheme(theme)
-
+      localStorage.setItem('theme', theme)
+      document.documentElement.classList.remove('light', 'dark')
+      document.documentElement.classList.add(theme)
       isInitialized.current = true
     }
   }, [i18n.language, setLanguage, setTheme])

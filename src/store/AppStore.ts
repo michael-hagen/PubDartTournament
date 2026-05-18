@@ -15,17 +15,7 @@ import {
   DEFAULT_EMPTY_TOURNAMENT,
   DEFAULT_EMPTY_PLAYER,
 } from '@/globals/defaults'
-import {
-  type GameCheckoutType,
-  type GameModeType,
-  type GameOpeningType,
-  type GameLegsType,
-  type GameStateType,
-  type GameEliminationType,
-  type GameVariantType,
-  type PlayerType,
-  type ThemeType,
-} from '@/globals/types'
+import { type PlayerType } from '@/globals/types'
 import { generateUUID } from '@/lib/utils'
 import { newTournament } from './TournamentActions'
 
@@ -45,75 +35,35 @@ export const useAppStore = create(
         gameElimination: DEFAULT_GAME_ELIMINATION,
         players: [{ ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }] as PlayerType[],
         tournament: { ...DEFAULT_EMPTY_TOURNAMENT },
-
-        selectedTab: DEFAULT_GAME_STATE,
         tournamentPanelScale: DEFAULT_SCALE,
+        selectedTab: DEFAULT_GAME_STATE,
+        showConfetti: false,
         // TODO: Better store an array of error messages
         preparationError: true,
-        showConfetti: false,
       },
 
       (set, get) => {
+        // Helper factory to reduce boilerplate for state setters with equality checks
+        const createSetter =
+          <K extends keyof ReturnType<typeof get>>(key: K) =>
+          (value: ReturnType<typeof get>[K]) => {
+            if (get()[key] === value) return
+            set({ [key]: value } as Record<K, ReturnType<typeof get>[K]>)
+          }
+
         return {
           actions: {
-            setLanguage: (newLanguage: string) => {
-              if (get().language === newLanguage) return
-              set({ language: newLanguage })
-            },
-
-            setTheme: (newTheme: ThemeType) => {
-              localStorage.setItem('theme', newTheme)
-              const root = document.documentElement
-              root.classList.remove('light', 'dark')
-              root.classList.add(newTheme)
-
-              if (get().theme === newTheme) return
-              set({ theme: newTheme })
-            },
-
-            setGameVariant: (newVariant: GameVariantType) => {
-              if (get().gameVariant === newVariant) return
-              set({ gameVariant: newVariant })
-            },
-
-            setGameMode: (newMode: GameModeType) => {
-              if (get().gameMode === newMode) return
-              set({ gameMode: newMode })
-            },
-
-            setGameOpening: (newOpening: GameOpeningType) => {
-              if (get().gameOpening === newOpening) return
-              set({ gameOpening: newOpening })
-            },
-
-            setGameCheckout: (newCheckout: GameCheckoutType) => {
-              if (get().gameCheckout === newCheckout) return
-              set({ gameCheckout: newCheckout })
-            },
-
-            setGameLegs: (newLegs: GameLegsType) => {
-              if (get().gameLegs === newLegs) return
-              set({ gameLegs: newLegs })
-            },
-
-            setGameElimination: (newElimination: GameEliminationType) => {
-              if (get().gameElimination === newElimination) return
-              set({ gameElimination: newElimination })
-            },
-
-            setSelectedTab: (newTab: GameStateType) => {
-              if (get().selectedTab === newTab) return
-              set({ selectedTab: newTab })
-            },
-
-            setTournamentPanelScale: (newScale: number) => {
-              if (get().tournamentPanelScale === newScale) return
-              set({ tournamentPanelScale: newScale })
-            },
-
-            setShowConfetti: (newShowConfetti: boolean) => {
-              set({ showConfetti: newShowConfetti })
-            },
+            setLanguage: createSetter('language'),
+            setTheme: createSetter('theme'),
+            setGameVariant: createSetter('gameVariant'),
+            setGameMode: createSetter('gameMode'),
+            setGameOpening: createSetter('gameOpening'),
+            setGameCheckout: createSetter('gameCheckout'),
+            setGameLegs: createSetter('gameLegs'),
+            setGameElimination: createSetter('gameElimination'),
+            setTournamentPanelScale: createSetter('tournamentPanelScale'),
+            setSelectedTab: createSetter('selectedTab'),
+            setShowConfetti: createSetter('showConfetti'),
           },
         }
       },
@@ -150,8 +100,7 @@ export const useAppStore = create(
 )
 
 // Export the set and get methods for external actions
-const { setState, getState } = useAppStore
-export { setState, getState }
+export const { setState, getState } = useAppStore
 
 // For convenience access to the actions
 export const useAppActions = () => useAppStore((state) => state.actions)
