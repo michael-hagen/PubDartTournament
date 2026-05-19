@@ -23,7 +23,7 @@ export const DEFAULT_GAME_OPENING: GameOpeningType = 'SINGLE_IN'
 export const DEFAULT_GAME_CHECKOUT: GameCheckoutType = 'SINGLE_OUT'
 export const DEFAULT_GAME_LEGS: GameLegsType = '2'
 export const DEFAULT_GAME_ELIMINATION: GameEliminationType = 'DOUBLE_KO'
-export const DEFAULT_SCALE: number = 100
+export const DEFAULT_TOURNAMENT_PANEL_SCALE: number = 100
 
 // The following objects are generated when module is loaded
 export const DEFAULT_GET_A_BYE_PLAYER: PlayerType = {

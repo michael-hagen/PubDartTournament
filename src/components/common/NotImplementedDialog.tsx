@@ -11,7 +11,7 @@ import {
 import type { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 
-export default function StartAlertButton({ children }: PropsWithChildren) {
+export default function NotImplementedDialog({ children }: PropsWithChildren) {
   const { t } = useTranslation()
   return (
     <AlertDialog>

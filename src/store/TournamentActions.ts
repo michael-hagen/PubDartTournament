@@ -19,13 +19,12 @@ import {
   DEFAULT_GAME_VARIANT,
   DEFAULT_GET_A_BYE_PLAYER,
   DEFAULT_LEG_VALUE,
-  DEFAULT_SCALE,
+  DEFAULT_TOURNAMENT_PANEL_SCALE,
 } from '@/globals/defaults'
 import { prepareGetAByeMatch } from './MatchActions'
 
 export function newTournament() {
   const newTournament = {
-    selectedTab: DEFAULT_GAME_STATE,
     gameState: DEFAULT_GAME_STATE,
     gameVariant: DEFAULT_GAME_VARIANT,
     gameMode: DEFAULT_GAME_MODE,
@@ -33,13 +32,15 @@ export function newTournament() {
     gameCheckout: DEFAULT_GAME_CHECKOUT,
     gameLegs: DEFAULT_GAME_LEGS,
     gameElimination: DEFAULT_GAME_ELIMINATION,
+    gameMatchForThirdPlace: false,
     players: [{ ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }] as PlayerType[],
     tournament: structuredClone(DEFAULT_EMPTY_TOURNAMENT),
-    tournamentPanelScale: DEFAULT_SCALE,
+    tournamentPanelScale: DEFAULT_TOURNAMENT_PANEL_SCALE,
+    selectedTab: DEFAULT_GAME_STATE,
+    showConfetti: false,
     // A new tournament has an empty list of players so we have an error by default
     // This prevents the user to start the tournament without a valid list of players
     preparationErrorMessages: ['ERROR_MESSAGE.MIN_MAX_PLAYER'],
-    showConfetti: false,
   }
   setState(newTournament)
 }
@@ -61,102 +62,110 @@ export function startTournament() {
 
 export function finishTournament() {
   const state = getState()
-  const newPlayers = state.players.slice(0, state.players.length - 1)
+
+  if (state.preparationErrorMessages && state.preparationErrorMessages.length > 0)
+    throw Error('Try to finishTournament while having preparation errors')
+
   const rounds = state.tournament.rounds
 
-  const calculateMatch = (match: MatchType, roundIndex: number) => {
-    const player1 = newPlayers.find((player) => match.playerOneRow.player.id === player.id)
-    const player2 = newPlayers.find((player) => match.playerTwoRow.player.id === player.id)
-    if (player1) {
-      player1.roundReached = roundIndex
-      if (match.playerOneRow.isWinner) {
-        player1.wonMatches++
-      } else {
-        player1.lostMatches++
-      }
-      match.playerOneRow.legs.map((leg) => {
-        player1.remainingPoints += leg.remainingPoints
-        if (leg.remainingPoints === 0) {
-          player1.wonLegs++
-        } else {
-          player1.lostLegs++
-        }
-      })
-    }
-    if (player2) {
-      player2.roundReached = roundIndex
-      if (match.playerTwoRow.isWinner) {
-        player2.wonMatches++
-      } else {
-        player2.lostMatches++
-      }
-      match.playerTwoRow.legs.map((leg) => {
-        player2.remainingPoints += leg.remainingPoints
-        if (leg.remainingPoints === 0) {
-          player2.wonLegs++
-        } else {
-          player2.lostLegs++
-        }
-      })
-    }
-  }
+  rounds.forEach((round) => {
+    if (!round.finished) throw Error('Not all rounds are finished')
+  })
 
+  const newPlayers = state.players.slice(0, state.players.length - 1)
+  // Visit all matches and aggregate the values for each player
   rounds.map((round, roundIndex) => {
+    const aggregateMatchValues = (match: MatchType, roundIndex: number) => {
+      const player1 = newPlayers.find((player) => match.playerOneRow.player.id === player.id)
+      const player2 = newPlayers.find((player) => match.playerTwoRow.player.id === player.id)
+      if (player1) {
+        player1.roundReached = roundIndex
+        if (match.playerOneRow.isWinner) {
+          player1.wonMatches++
+        } else {
+          player1.lostMatches++
+        }
+        match.playerOneRow.legs.map((leg) => {
+          player1.remainingPoints += leg.remainingPoints
+          if (leg.remainingPoints === 0) {
+            player1.wonLegs++
+          } else {
+            player1.lostLegs++
+          }
+        })
+      }
+      if (player2) {
+        player2.roundReached = roundIndex
+        if (match.playerTwoRow.isWinner) {
+          player2.wonMatches++
+        } else {
+          player2.lostMatches++
+        }
+        match.playerTwoRow.legs.map((leg) => {
+          player2.remainingPoints += leg.remainingPoints
+          if (leg.remainingPoints === 0) {
+            player2.wonLegs++
+          } else {
+            player2.lostLegs++
+          }
+        })
+      }
+    }
+
     round.winnerMatches.map((match) => {
-      calculateMatch(match, roundIndex)
+      aggregateMatchValues(match, roundIndex)
     })
     round.loserMatches?.map((match) => {
-      calculateMatch(match, roundIndex)
+      aggregateMatchValues(match, roundIndex)
     })
   })
+
+  // Regardless the other match values we want to have the winner of the final to be rank 1
+  // and the loser to be rank 2. If there is a match for third place we want the winner
+  // of that match to be rank 3 and the looser to be rank 4
+  // Because the default rank is 0 we use -4,-3, -2, -1 for the rank
+  // to make sorting more easy
   const finalRound = rounds[rounds.length - 1]
   const finalMatch = finalRound.winnerMatches[0]
   const player1 = newPlayers.find((player) => finalMatch.playerOneRow.player.id === player.id)
   const player2 = newPlayers.find((player) => finalMatch.playerTwoRow.player.id === player.id)
   if (player1 && player2) {
     if (finalMatch.playerOneRow.isWinner) {
-      player1.rank = -2
-      player2.rank = -1
+      player1.rank = -4
+      player2.rank = -3
     }
     if (finalMatch.playerTwoRow.isWinner) {
-      player1.rank = -1
-      player2.rank = -2
+      player1.rank = -3
+      player2.rank = -4
+    }
+  }
+  if (state.gameMatchForThirdPlace && finalRound.loserMatches && finalRound.loserMatches.length > 0) {
+    const matchForThirdPlace = finalRound.loserMatches[0]
+    const player1 = newPlayers.find((player) => matchForThirdPlace.playerOneRow.player.id === player.id)
+    const player2 = newPlayers.find((player) => matchForThirdPlace.playerTwoRow.player.id === player.id)
+    if (player1 && player2) {
+      if (matchForThirdPlace.playerOneRow.isWinner) {
+        player1.rank = -2
+        player2.rank = -1
+      }
+      if (matchForThirdPlace.playerTwoRow.isWinner) {
+        player1.rank = -1
+        player2.rank = -2
+      }
     }
   }
 
-  newPlayers.sort((player1: PlayerType, player2: PlayerType) => {
-    if (player1.rank > player2.rank) {
-      return 1
-    }
-    if (player1.rank < player2.rank) {
-      return -1
-    }
-    if (player1.roundReached > player2.roundReached) {
-      return -1
-    }
-    if (player1.roundReached < player2.roundReached) {
-      return 1
-    }
-    if (player1.wonMatches > player2.wonMatches) {
-      return -1
-    }
-    if (player1.wonMatches < player2.wonMatches) {
-      return 1
-    }
-    if (player1.wonLegs > player2.wonLegs) {
-      return -1
-    }
-    if (player1.wonLegs < player2.wonLegs) {
-      return 1
-    }
-    if (player1.remainingPoints < player2.remainingPoints) {
-      return -1
-    }
-    if (player1.remainingPoints > player2.remainingPoints) {
-      return 1
-    }
-    return 0
+  newPlayers.sort((a: PlayerType, b: PlayerType): number => {
+    return (
+      a.rank - b.rank ||
+      b.roundReached - a.roundReached ||
+      b.wonMatches - a.wonMatches ||
+      b.wonLegs - a.wonLegs ||
+      a.remainingPoints - b.remainingPoints
+    )
   })
+
+  // After sorting is done we have the final ranking of all players
   newPlayers.map((player, index) => {
     player.rank = index + 1
   })
@@ -187,6 +196,15 @@ function prepareFirstRound(newTournament: TournamentType, players: PlayerType[])
   })
 }
 
+function createEmptyMatchRow(): MatchRowType {
+  return {
+    id: generateUUID(),
+    player: { ...DEFAULT_EMPTY_PLAYER },
+    legs: [{ ...DEFAULT_LEG_VALUE }],
+    throws: [],
+  }
+}
+
 function prepareKOTournament() {
   const state = getState()
   // The count of players must be a power of 2 (2, 4, 8, 16, 32, ...)
@@ -207,31 +225,32 @@ function prepareKOTournament() {
       id: generateUUID(),
       name: index === eliminationRounds.length - 1 ? 'FINAL' : 'ROUND',
       winnerMatches: [],
+      loserMatches: state.gameMatchForThirdPlace && index === eliminationRounds.length - 1 ? [] : undefined,
       finishable: false,
       finished: false,
     }
     for (let i = 0; i < matchCount; i++) {
-      const playerOneRow: MatchRowType = {
-        id: generateUUID(),
-        player: { ...DEFAULT_EMPTY_PLAYER },
-        legs: [{ ...DEFAULT_LEG_VALUE }],
-        throws: [],
-      }
-      const playerTwoRow: MatchRowType = {
-        id: generateUUID(),
-        player: { ...DEFAULT_EMPTY_PLAYER },
-        legs: [{ ...DEFAULT_LEG_VALUE }],
-        throws: [],
-      }
       const winnerMatch: MatchType = {
         id: generateUUID(),
         fieldErrorMessages: [],
         matchErrorMessages: [],
-        playerOneRow: playerOneRow,
-        playerTwoRow: playerTwoRow,
+        playerOneRow: createEmptyMatchRow(),
+        playerTwoRow: createEmptyMatchRow(),
       }
       newRound.winnerMatches.push(winnerMatch)
     }
+
+    if (state.gameMatchForThirdPlace && index === eliminationRounds.length - 1) {
+      const matchForThirdPlace: MatchType = {
+        id: generateUUID(),
+        fieldErrorMessages: [],
+        matchErrorMessages: [],
+        playerOneRow: createEmptyMatchRow(),
+        playerTwoRow: createEmptyMatchRow(),
+      }
+      newRound.loserMatches?.push(matchForThirdPlace)
+    }
+
     newTournament.rounds.push(newRound)
   })
 
@@ -264,49 +283,36 @@ function prepareDoubleKOTournament() {
       finished: false,
     }
     for (let i = 0; i < winnerMatchCount; i++) {
-      const winnerPlayerOneRow: MatchRowType = {
-        id: generateUUID(),
-        player: { ...DEFAULT_EMPTY_PLAYER },
-        legs: [{ ...DEFAULT_LEG_VALUE }],
-        throws: [],
-      }
-      const winnerPlayerTwoRow: MatchRowType = {
-        id: generateUUID(),
-        player: { ...DEFAULT_EMPTY_PLAYER },
-        legs: [{ ...DEFAULT_LEG_VALUE }],
-        throws: [],
-      }
       const winnerMatch: MatchType = {
         id: generateUUID(),
         fieldErrorMessages: [],
         matchErrorMessages: [],
-        playerOneRow: winnerPlayerOneRow,
-        playerTwoRow: winnerPlayerTwoRow,
+        playerOneRow: createEmptyMatchRow(),
+        playerTwoRow: createEmptyMatchRow(),
       }
       newRound.winnerMatches.push(winnerMatch)
     }
     for (let i = 0; i < loserMatchCount; i++) {
-      const loserPlayerOneRow: MatchRowType = {
-        id: generateUUID(),
-        player: { ...DEFAULT_EMPTY_PLAYER },
-        legs: [{ ...DEFAULT_LEG_VALUE }],
-        throws: [],
-      }
-      const loserPlayerTowRow: MatchRowType = {
-        id: generateUUID(),
-        player: { ...DEFAULT_EMPTY_PLAYER },
-        legs: [{ ...DEFAULT_LEG_VALUE }],
-        throws: [],
-      }
       const loserMatch: MatchType = {
         id: generateUUID(),
         fieldErrorMessages: [],
         matchErrorMessages: [],
-        playerOneRow: loserPlayerOneRow,
-        playerTwoRow: loserPlayerTowRow,
+        playerOneRow: createEmptyMatchRow(),
+        playerTwoRow: createEmptyMatchRow(),
       }
       newRound.loserMatches?.push(loserMatch)
     }
+    if (state.gameMatchForThirdPlace && index === doubleEliminationRounds.length - 1) {
+      const matchForThirdPlace: MatchType = {
+        id: generateUUID(),
+        fieldErrorMessages: [],
+        matchErrorMessages: [],
+        playerOneRow: createEmptyMatchRow(),
+        playerTwoRow: createEmptyMatchRow(),
+      }
+      newRound.loserMatches?.push(matchForThirdPlace)
+    }
+
     newTournament.rounds.push(newRound)
   })
 

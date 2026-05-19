@@ -9,7 +9,7 @@ import {
   DEFAULT_GAME_CHECKOUT,
   DEFAULT_GAME_LEGS,
   DEFAULT_GAME_ELIMINATION,
-  DEFAULT_SCALE,
+  DEFAULT_TOURNAMENT_PANEL_SCALE,
   DEFAULT_GET_A_BYE_PLAYER,
   DEFAULT_EMPTY_PLAYER,
   DEFAULT_LEG_VALUE,
@@ -27,7 +27,7 @@ describe('defaults.ts exports', () => {
     expect(DEFAULT_GAME_CHECKOUT).toBe('SINGLE_OUT')
     expect(DEFAULT_GAME_LEGS).toBe('2')
     expect(DEFAULT_GAME_ELIMINATION).toBe('DOUBLE_KO')
-    expect(DEFAULT_SCALE).toBe(100)
+    expect(DEFAULT_TOURNAMENT_PANEL_SCALE).toBe(100)
   })
 
   test('exports a get-a-bye player with valid properties', () => {

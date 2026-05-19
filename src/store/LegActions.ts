@@ -63,7 +63,7 @@ export function setLegValue(
 // Utility functions
 //------------------------------------------------------------------------------
 
-function computeWinner(match: MatchType): { winsPlayerOne: number; winsPlayerTwo: number, hasWinner: boolean } {
+function computeWinner(match: MatchType): { winsPlayerOne: number; winsPlayerTwo: number; hasWinner: boolean } {
   const state = getState()
   const legsToWin = parseInt(state.gameLegs)
   const maxPoints = parseInt(state.gameMode)
@@ -153,4 +153,3 @@ function checkForEmptyLegs(match: MatchType) {
     }
   }
 }
-

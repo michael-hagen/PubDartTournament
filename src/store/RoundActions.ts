@@ -53,10 +53,31 @@ export function computeRoundFinishable(round: RoundType) {
 // Utility functions
 //------------------------------------------------------------------------------
 
-function finishKORound(newTournament: TournamentType, roundIndex: number) {
-  // In a elimination tournament we only have to put the winners of the current round in the new round
-  if (roundIndex > newTournament.rounds.length - 1) return
+// export function prepareNewMatch(round: RoundType, matchIndex: number, nextMatch: MatchType, winner: boolean) {
+//   const match1 = round.winnerMatches[matchIndex]
+//   const match2 = round.winnerMatches[matchIndex + 1]
+//   let player1: PlayerType | null = null
+//   let player2: PlayerType | null = null
+//   if (winner) {
+//     player1 = match1.playerOneRow.isWinner ? match1.playerOneRow.player : match1.playerTwoRow.player
+//     player2 = match2.playerOneRow.isWinner ? match2.playerOneRow.player : match2.playerTwoRow.player
+//   } else {
+//     player1 = match1.playerOneRow.isWinner ? match1.playerTwoRow.player : match1.playerOneRow.player
+//     player2 = match2.playerOneRow.isWinner ? match2.playerTwoRow.player : match2.playerOneRow.player
+//   }
+//   if (player1 && player2) {
+//     nextMatch.playerOneRow.player = structuredClone(player1)
+//     nextMatch.playerTwoRow.player = structuredClone(player2)
+//     const isPlayerOneGetABye = nextMatch.playerOneRow.player.name === 'GET_A_BYE'
+//     const isPlayerTwoGetABye = nextMatch.playerTwoRow.player.name === 'GET_A_BYE'
+//     prepareGetAByeMatch(nextMatch, isPlayerOneGetABye, isPlayerTwoGetABye)
+//   }
+// }
 
+function finishKORound(newTournament: TournamentType, roundIndex: number) {
+  if (roundIndex < 0 || roundIndex > newTournament.rounds.length - 1) return
+
+  // In an elimination tournament we have to put the winners of the current round in the new round
   const round = newTournament.rounds[roundIndex]
 
   if (!round.finishable) return
@@ -72,6 +93,15 @@ function finishKORound(newTournament: TournamentType, roundIndex: number) {
     prepareNewMatch(round, matchIndex, nextMatch, true)
     matchIndex += 2
   })
+
+  const state = getState()
+  if (state.gameMatchForThirdPlace && roundIndex === newTournament.rounds.length - 2) {
+    const finalRound = newTournament.rounds[newTournament.rounds.length - 1]
+    if (finalRound.loserMatches) {
+      const matchForThirdPlace = finalRound.loserMatches[0]
+      prepareNewMatch(round, 0, matchForThirdPlace, false)
+    }
+  }
   round.finished = true
 }
 
@@ -156,6 +186,26 @@ function finishEvenRound(newTournament: TournamentType, roundIndex: number) {
     const match1 = round.loserMatches[0]
     const player1 = match1.playerOneRow.isWinner ? match1.playerOneRow.player : match1.playerTwoRow.player
     nextRound.winnerMatches[0].playerTwoRow.player = structuredClone(player1)
+
+    const state = getState()
+    if (state.gameMatchForThirdPlace && roundIndex > 0 && roundIndex === newTournament.rounds.length - 2) {
+      const finalRound = newTournament.rounds[newTournament.rounds.length - 1]
+      const prevRound = newTournament.rounds[roundIndex - 1]
+      if (finalRound.loserMatches && prevRound.loserMatches) {
+        const matchForThirdPlace = finalRound.loserMatches[0]
+        const match1 = round.loserMatches[0]
+        const match2 = prevRound.loserMatches[0]
+        const player1 = match1.playerOneRow.isWinner ? match1.playerTwoRow.player : match1.playerOneRow.player
+        const player2 = match2.playerOneRow.isWinner ? match2.playerTwoRow.player : match2.playerOneRow.player
+        if (player1 && player2) {
+          matchForThirdPlace.playerOneRow.player = structuredClone(player1)
+          matchForThirdPlace.playerTwoRow.player = structuredClone(player2)
+          const isPlayerOneGetABye = matchForThirdPlace.playerOneRow.player.name === 'GET_A_BYE'
+          const isPlayerTwoGetABye = matchForThirdPlace.playerTwoRow.player.name === 'GET_A_BYE'
+          prepareGetAByeMatch(matchForThirdPlace, isPlayerOneGetABye, isPlayerTwoGetABye)
+        }
+      }
+    }
   } else {
     let matchIndex = 0
     nextRound.loserMatches?.map((nextMatch) => {

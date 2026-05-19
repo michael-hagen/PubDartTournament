@@ -12,12 +12,17 @@ import { useAppStore } from '@/store/AppStore'
 import { Goal } from 'lucide-react'
 import AlertDialogComponent from '@/components/common/AlertDialogComponent'
 import { startTournament } from '@/store/TournamentActions'
+import GameOptionsPanel from './GameOptionsPanel'
+import DonationPanel from './DonationPanel'
 
 export default function PreparationTab() {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
   const preparationErrorMessages = useAppStore((state) => state.preparationErrorMessages)
-  const startDisabled = (preparationErrorMessages && preparationErrorMessages.length > 0) || gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const startDisabled =
+    (preparationErrorMessages && preparationErrorMessages.length > 0) ||
+    gameState === 'TOURNAMENT' ||
+    gameState === 'REPORT'
 
   const handleStartClicked = () => {
     startTournament()
@@ -28,7 +33,7 @@ export default function PreparationTab() {
       <div className="flex-1 flex flex-col lg:flex-row w-full p-2 md:p-4 gap-4">
         <div className="flex-1 space-y-4">
           <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0">
-            <PreparationCard title={t('VARIANT')} className="flex-1 min-w-70 text-muted-foreground">
+            <PreparationCard title={t('VARIANT')} className="flex-1 min-w-70">
               <GameVariantSwitcher />
             </PreparationCard>
             <PreparationCard title={t('GAME_MODE')} className="flex-1 min-w-70">
@@ -51,6 +56,15 @@ export default function PreparationTab() {
             </PreparationCard>
             <PreparationCard title={t('TOURNAMENT_MODE')} className="flex-1 min-w-70">
               <GameEliminationSwitcher />
+            </PreparationCard>
+          </div>
+
+          <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0">
+            <PreparationCard title={t('OPTIONS')} className="flex-1 min-w-70">
+              <GameOptionsPanel />
+            </PreparationCard>
+            <PreparationCard title={t('DONATION')} className="flex-1 min-w-70">
+              <DonationPanel />
             </PreparationCard>
           </div>
         </div>

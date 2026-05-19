@@ -13,7 +13,7 @@ import {
   DEFAULT_GAME_VARIANT,
   DEFAULT_LANGUAGE,
   DEFAULT_THEME,
-  DEFAULT_SCALE,
+  DEFAULT_TOURNAMENT_PANEL_SCALE,
   DEFAULT_EMPTY_TOURNAMENT,
   DEFAULT_EMPTY_PLAYER,
 } from '@/globals/defaults'
@@ -34,9 +34,10 @@ export const useAppStore = create(
         gameCheckout: DEFAULT_GAME_CHECKOUT,
         gameLegs: DEFAULT_GAME_LEGS,
         gameElimination: DEFAULT_GAME_ELIMINATION,
+        gameMatchForThirdPlace: false,
         players: [{ ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }] as PlayerType[],
         tournament: { ...DEFAULT_EMPTY_TOURNAMENT },
-        tournamentPanelScale: DEFAULT_SCALE,
+        tournamentPanelScale: DEFAULT_TOURNAMENT_PANEL_SCALE,
         selectedTab: DEFAULT_GAME_STATE,
         showConfetti: false,
         // A new tournament has an empty list of players so we have an error by default
@@ -63,6 +64,7 @@ export const useAppStore = create(
             setGameCheckout: createSetter('gameCheckout'),
             setGameLegs: createSetter('gameLegs'),
             setGameElimination: createSetter('gameElimination'),
+            setGameMatchForThirdPlace: createSetter('gameMatchForThirdPlace'),
             setTournamentPanelScale: createSetter('tournamentPanelScale'),
             setSelectedTab: createSetter('selectedTab'),
             setShowConfetti: createSetter('showConfetti'),
@@ -72,18 +74,23 @@ export const useAppStore = create(
     ),
     {
       name: APP_STORE_STORAGE_NAME,
+      // TODO: Validate the state after loading. Maybe there are some undefined attributes or illegal combinations
       partialize: (state) => ({
-        gameState: state.gameState,
-        gameVariant: state.gameVariant,
-        gameMode: state.gameMode,
-        gameOpening: state.gameOpening,
-        gameCheckout: state.gameCheckout,
-        gameLegs: state.gameLegs,
-        gameElimination: state.gameElimination,
-        players: state.players,
-        tournament: state.tournament,
-        selectedTab: state.selectedTab,
-        tournamentPanelScale: state.tournamentPanelScale,
+        gameState: state.gameState ? state.gameState : DEFAULT_GAME_STATE,
+        gameVariant: state.gameVariant ? state.gameVariant : DEFAULT_GAME_VARIANT,
+        gameMode: state.gameMode ? state.gameMode : DEFAULT_GAME_MODE,
+        gameOpening: state.gameOpening ? state.gameOpening : DEFAULT_GAME_OPENING,
+        gameCheckout: state.gameCheckout ? state.gameCheckout : DEFAULT_GAME_CHECKOUT,
+        gameLegs: state.gameLegs ? state.gameLegs : DEFAULT_GAME_LEGS,
+        gameElimination: state.gameElimination ? state.gameElimination : DEFAULT_GAME_ELIMINATION,
+        gameMatchForThirdPlace: state.gameMatchForThirdPlace ? state.gameMatchForThirdPlace : false,
+        players: state.players ? state.players : ([{ ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }] as PlayerType[]),
+        tournament: state.tournament ? state.tournament : { ...DEFAULT_EMPTY_TOURNAMENT },
+        selectedTab: state.selectedTab ? state.selectedTab : DEFAULT_GAME_STATE,
+        tournamentPanelScale: state.tournamentPanelScale ? state.tournamentPanelScale : DEFAULT_TOURNAMENT_PANEL_SCALE,
+        preparationErrorMessages: state.preparationErrorMessages
+          ? state.preparationErrorMessages
+          : (['ERROR_MESSAGE.MIN_MAX_PLAYER'] as string[]),
       }),
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onRehydrateStorage: (_state) => {
