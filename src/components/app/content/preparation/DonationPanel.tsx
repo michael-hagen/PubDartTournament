@@ -7,9 +7,9 @@ export default function DonationPanel() {
   const { t } = useTranslation(['app'])
 
   const handleDonateClicked = () => {
-    // Erstelle zuvor ein PayPal.Me Link in meinem PayPal-Konto
-    // Öffnet die PayPal-Seite in einem neuen Tab mit festen 5€
-    // window.open("https://paypal.me/DeinName/5", "_blank", "noopener,noreferrer")
+    // Create a PayPal.Me Link in my PayPal account
+    // Open the paypal link in a new Tab wth fixed 5€
+    // window.open("https://paypal.me/my-name/5", "_blank", "noopener,noreferrer")
   }
 
   return (

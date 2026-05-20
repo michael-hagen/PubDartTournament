@@ -13,7 +13,7 @@ import {
   DEFAULT_TOURNAMENT_PANEL_SCALE,
 } from '@/globals/defaults'
 
-describe('AppStore.ts methods', () => {
+describe('TournamentActions.ts exported functions', () => {
   test('Defaults after newTournament', () => {
     const state = getState()
     newTournament()

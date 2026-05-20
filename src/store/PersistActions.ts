@@ -12,6 +12,7 @@ export async function saveTournament(): Promise<string | null> {
     gameCheckout: state.gameCheckout,
     gameLegs: state.gameLegs,
     gameElimination: state.gameElimination,
+    gameMatchForThirdPlace: state.gameMatchForThirdPlace,
     players: state.players,
     tournament: state.tournament,
     selectedTab: state.selectedTab,
@@ -43,6 +44,7 @@ export async function openTournament(): Promise<string | null> {
       gameCheckout: tournamentData.gameCheckout,
       gameLegs: tournamentData.gameLegs,
       gameElimination: tournamentData.gameElimination,
+      gameMatchForThirdPlace: tournamentData.gameMatchForThirdPlace,
       players: tournamentData.players,
       tournament: tournamentData.tournament,
       selectedTab: tournamentData.selectedTab,
@@ -128,7 +130,7 @@ async function loadContent(): Promise<LoadResultType> {
     }
   }
 
-  // Fallback for old browsers
+  // Fallback for old browser
   return new Promise((resolve) => {
     const input = document.createElement('input')
     input.type = 'file'

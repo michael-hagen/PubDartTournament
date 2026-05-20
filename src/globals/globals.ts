@@ -1,7 +1,8 @@
 // Some global constants
 export const MIN_PLAYERS = 4
 export const MAX_PLAYERS = 128
-export const ACTUAL_FILE_VERSION = "1.0.0"
+export const MAX_PLAYER_NAME_LENGTH = 32
+export const ACTUAL_FILE_VERSION = '1.0.0'
 export const APP_STORE_STORAGE_NAME: string = 'pub-dart-tournament'
 
 // Type declarations for File System Access API

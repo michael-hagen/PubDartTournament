@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import LegInput from './LegInput'
 import type { ChangeEvent } from 'react'
 import { setLegValue } from '@/store/LegActions'
+import { generateUUID } from '@/lib/utils'
 
 interface MatchRowItemProps {
   roundIndex: number
@@ -57,6 +58,7 @@ export default function MatchRowItem({
       </div>
       {legs.map((leg, index) => (
         <LegInput
+          id={generateUUID()}
           key={index}
           value={leg.remainingPoints.toString()}
           fieldError={leg.error}

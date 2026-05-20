@@ -1,16 +1,22 @@
 import { generateUUID } from '@/lib/utils'
 import { setState, getState } from './AppStore'
-import { MAX_PLAYERS, MIN_PLAYERS } from '@/globals/globals'
+import { MAX_PLAYER_NAME_LENGTH, MAX_PLAYERS, MIN_PLAYERS } from '@/globals/globals'
 import { DEFAULT_EMPTY_PLAYER } from '@/globals/defaults'
 import type { PlayerType } from '@/globals/types'
 
-export function addPlayer() {
+export function addPlayer(playerName?: string) {
   const state = getState()
 
   if (state.players.length >= MAX_PLAYERS) return
 
+  let name = ''
+  if (playerName) {
+    const maxLen = Math.min(playerName.trim().length, MAX_PLAYER_NAME_LENGTH)
+    name = playerName.trim().substring(0, maxLen)
+  }
+
   const newPlayers = state.players.slice()
-  const newPlayer = { ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }
+  const newPlayer = { ...DEFAULT_EMPTY_PLAYER, id: generateUUID(), name: name }
   newPlayers.push(newPlayer)
   validatePlayers(newPlayers)
   setState({ players: newPlayers })
@@ -19,7 +25,8 @@ export function addPlayer() {
 export function removePlayer(playerIndex: number) {
   const state = getState()
 
-  if (playerIndex < 0 || playerIndex > state.players.length - 1) return
+  if (playerIndex < 0 || playerIndex > state.players.length - 1)
+    throw Error(`Index out of bounds for playerIndex: ${playerIndex} players.length: ${state.players.length}`)
 
   // We don't delete the last player instead we set him to an empty string
   if (playerIndex === state.players.length - 1) {
@@ -38,10 +45,16 @@ export function removePlayer(playerIndex: number) {
 export function updatePlayer(playerIndex: number, playerName: string) {
   const state = getState()
 
-  if (playerIndex < 0 || playerIndex > state.players.length - 1) return
+  if (playerIndex < 0 || playerIndex > state.players.length - 1)
+    throw Error(`Index out of bounds for playerIndex: ${playerIndex} players.length: ${state.players.length}`)
+
+  if (playerName === null || playerName === undefined) throw Error('Player name must not be null or undefined')
+
+  const maxLen = Math.min(playerName.trim().length, MAX_PLAYER_NAME_LENGTH)
+  const name = playerName.trim().substring(0, maxLen)
 
   const newPlayers = state.players.slice()
-  newPlayers[playerIndex] = { ...newPlayers[playerIndex], name: playerName }
+  newPlayers[playerIndex] = { ...newPlayers[playerIndex], name: name }
   validatePlayers(newPlayers)
   setState({ players: newPlayers })
 }

@@ -5,6 +5,7 @@ import { useRef, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface LegInputProps {
+  id: string
   value: string
   legIndex: number
   disabled?: boolean
@@ -15,6 +16,7 @@ interface LegInputProps {
 }
 
 export default function LegInput({
+  id,
   value,
   legIndex,
   disabled,
@@ -48,6 +50,7 @@ export default function LegInput({
     <Tooltip delayDuration={1000}>
       <TooltipTrigger asChild onFocus={(e) => e.preventDefault()}>
         <Input
+          id={id}
           ref={inputRef}
           value={value}
           disabled={disabled}

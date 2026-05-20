@@ -57,17 +57,20 @@ export default function PlayerItem({
   }
 
   const handleAcceptPlayer = (cursorDirection: string) => {
-    updatePlayer(playerIndex, value)
+    const playerName = value ? value.trim() : ''
+    updatePlayer(playerIndex, playerName)
     if (isNewPlayer) {
-      if (value.length > 0) {
+      if (playerName.length > 0) {
         addPlayer()
       }
+      handleMoveFocus(cursorDirection)
     } else {
-      if (value.length === 0) {
+      if (playerName.length === 0) {
         removePlayer(playerIndex)
+      } else {
+        handleMoveFocus(cursorDirection)
       }
     }
-    handleMoveFocus(cursorDirection)
   }
 
   const handleRemovePlayer = () => {
