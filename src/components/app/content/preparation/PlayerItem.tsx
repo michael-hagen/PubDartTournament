@@ -88,7 +88,9 @@ export default function PlayerItem({
 
   return (
     <Field data-invalid={errorMessage != null}>
-      <InputGroup className={`rounded-none p-2 h-10 ${isNewPlayer ? '' : 'border-b-0'}`}>
+      <InputGroup
+        className={`rounded-none p-2 h-10 ${isNewPlayer ? '' : 'border-b-0'} ${disabled ? 'opacity-100! bg-background/50!' : ''}`}
+      >
         <InputGroupInput
           ref={inputRef}
           placeholder={isNewPlayer ? t('NEW_PLAYER') : t('REMOVE_PLAYER')}
@@ -102,7 +104,7 @@ export default function PlayerItem({
         <InputGroupAddon align="inline-start" className="pe-2">
           <p>{playerIndex + 1}</p>
         </InputGroupAddon>
-        {!isNewPlayer && (
+        {!isNewPlayer && !disabled && (
           <InputGroupAddon align="inline-end">
             <InputGroupButton variant="secondary" onClick={handleRemovePlayer}>
               <Trash2 />

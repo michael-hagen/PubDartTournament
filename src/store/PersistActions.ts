@@ -19,8 +19,7 @@ export async function saveTournament(): Promise<string | null> {
     tournamentPanelScale: state.tournamentPanelScale,
   }
   const content = JSON.stringify(tournamentData, null, 2)
-  const errorMessage = await saveContent(`${state.tournament.name}.json`, content)
-  return errorMessage
+  return saveContent(`${state.tournament.name}.json`, content)
 }
 
 export async function openTournament(): Promise<string | null> {

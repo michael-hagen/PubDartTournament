@@ -1,7 +1,6 @@
-import type { MatchRowType, MatchType } from '@/globals/types'
+import type { MatchRowType, MatchType, RoundType } from '@/globals/types'
 import { getState, setState } from './AppStore'
 import { DEFAULT_LEG_VALUE } from '@/globals/defaults'
-import { computeRoundFinishable } from './RoundActions'
 
 export function setLegValue(
   roundIndex: number,
@@ -51,7 +50,7 @@ export function setLegValue(
     conditionalAddLeg(match, hasWinner, winsPlayerOne, winsPlayerTwo)
     conditionalRemoveLeg(match, hasWinner, winsPlayerOne, winsPlayerTwo)
     checkForEmptyLegs(match)
-    computeRoundFinishable(round)
+    computeFinishable(round)
 
     setState({ tournament: newTournament })
   } else {
@@ -152,4 +151,37 @@ function checkForEmptyLegs(match: MatchType) {
       match.matchErrorMessages.push('ERROR_MESSAGE.EMPTY_LEG')
     }
   }
+}
+
+function computeFinishable(round: RoundType) {
+  // Guess it's finishable
+  round.finishable = true
+  for (const match of round.winnerMatches) {
+    // Do we have errors
+    if (match.fieldErrorMessages.length > 0 || match.matchErrorMessages.length > 0) {
+      round.finishable = false
+      return 
+    }
+    // Do we have a match winner
+    if (!(match.playerOneRow.isWinner || match.playerTwoRow.isWinner)) {
+      round.finishable = false
+      return 
+    }
+  }
+
+  if (!round.loserMatches) return
+
+  for (const match of round.loserMatches) {
+    // Do we have errors
+    if (match.fieldErrorMessages.length > 0 || match.matchErrorMessages.length > 0) {
+      round.finishable = false
+      return 
+    }
+    // Do we have a match winner
+    if (!(match.playerOneRow.isWinner || match.playerTwoRow.isWinner)) {
+      round.finishable = false
+      return 
+    }
+  }
+
 }
