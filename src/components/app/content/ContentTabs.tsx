@@ -27,17 +27,14 @@ export default function ContentTabs() {
       <div className="flex">
         <TabsList variant="line" className="mx-auto gap-4 md:gap-8 lg:gap-12 pt-2 bg-transparent no-print">
           {/* <TabsList variant="line" className="grid w-100 grid-cols-3"> */}
-          <TabsTrigger
-            value="PREPARATION"
-            className="lg:text-lg border-none data-[state=active]:text-emerald-600! dark:data-[state=active]:text-emerald-500!"
-          >
+          <TabsTrigger value="PREPARATION" className="lg:text-lg border-none data-[state=active]:text-primary!">
             <FileCog />
             {t('PREPARATION', { ns: 'app' })}
           </TabsTrigger>
           <TabsTrigger
             disabled={gameState === 'PREPARATION'}
             value="TOURNAMENT"
-            className="lg:text-lg border-none data-[state=active]:text-emerald-600! dark:data-[state=active]:text-emerald-500!"
+            className="lg:text-lg border-none data-[state=active]:text-primary!"
           >
             <Swords />
             {t('TOURNAMENT', { ns: 'app' })}
@@ -45,7 +42,7 @@ export default function ContentTabs() {
           <TabsTrigger
             disabled={gameState === 'PREPARATION' || gameState === 'TOURNAMENT'}
             value="REPORT"
-            className="lg:text-lg border-none data-[state=active]:text-emerald-600! dark:data-[state=active]:text-emerald-500!"
+            className="lg:text-lg border-none data-[state=active]:text-primary!"
           >
             <Trophy />
             {t('REPORT', { ns: 'app' })}

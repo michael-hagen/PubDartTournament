@@ -14,6 +14,7 @@ describe('types.ts type guards', () => {
   test('validates theme values correctly', () => {
     expect(isThemeType('light')).toBe(true)
     expect(isThemeType('dark')).toBe(true)
+    expect(isThemeType('custom')).toBe(true)
     expect(isThemeType('LIGHT' as string)).toBe(false)
     expect(isThemeType('')).toBe(false)
   })

@@ -1,5 +1,5 @@
 // Global type definitions
-export type ThemeType = 'light' | 'dark'
+export type ThemeType = 'light' | 'dark' | 'custom'
 export type GameStateType = 'PREPARATION' | 'TOURNAMENT' | 'REPORT'
 export type GameVariantType = 'ELECTRONIC_DART' | 'STEEL_DART'
 export type GameModeType = '301' | '501' | '701' | '1001'
@@ -59,7 +59,7 @@ export type TournamentType = {
 
 // Type guards for global types
 export function isThemeType(val: unknown): val is ThemeType {
-  return val === 'light' || val === 'dark'
+  return val === 'light' || val === 'dark' || val === 'custom'
 }
 
 export function isGameStateType(val: unknown): val is GameStateType {

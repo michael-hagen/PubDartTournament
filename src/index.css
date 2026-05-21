@@ -13,6 +13,10 @@
   .dark {
     color-scheme: dark;
   }
+
+  .custom {
+    color-scheme: light;
+  }
 }
 
 @theme inline {
@@ -127,6 +131,12 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+.custom {
+  --background: oklch(0.9 0 0);
+  --foreground: oklch(0 0 0);
+  --primary: oklch(0.7 0.1791 58.28);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -167,7 +177,7 @@
   /* Headers with light gray background */
   th {
     background-color: #f0f0f0 !important;
-    -webkit-print-color-adjust: exact; 
+    -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 }

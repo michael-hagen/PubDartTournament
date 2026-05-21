@@ -15,7 +15,7 @@ export default function DonationPanel() {
   return (
     <NotImplementedDialog>
       <Button variant="outline" onClick={handleDonateClicked}>
-        <Heart className="mr-2 text-emerald-600 dark:text-emerald-500" />
+        <Heart className="mr-2 text-primary" />
         {t('app:DONATE_5_EURO')}
       </Button>
     </NotImplementedDialog>

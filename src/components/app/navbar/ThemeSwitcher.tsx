@@ -1,4 +1,4 @@
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Palette, Sun } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { isThemeType } from '@/globals/types'
@@ -21,10 +21,10 @@ export default function ThemeSwitcher(props: ThemeSwitcherProps) {
     props.handleClosePopup?.()
 
     if (!isThemeType(value)) return
-    
+
     setTheme(value)
     localStorage.setItem('theme', value)
-    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.remove('light', 'dark', 'custom')
     document.documentElement.classList.add(value)
   }
 
@@ -34,6 +34,7 @@ export default function ThemeSwitcher(props: ThemeSwitcherProps) {
         <ToggleGroup variant="outline" type="single" defaultValue="" value="" onValueChange={handleThemeChange}>
           <ToggleGroupButton value={'dark'} currentValue={theme} children={<Moon />} />
           <ToggleGroupButton value={'light'} currentValue={theme} children={<Sun />} />
+          <ToggleGroupButton value={'custom'} currentValue={theme} children={<Palette />} />
         </ToggleGroup>
       </TooltipTrigger>
       <TooltipContent>

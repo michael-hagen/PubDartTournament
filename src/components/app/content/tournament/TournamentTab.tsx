@@ -22,9 +22,7 @@ export default function TournamentTab() {
           key={round.id}
           title={t(round.name, { round: roundIndex + 1 })}
           className="shrink-0"
-          titleClassName={
-            roundDisabled[roundIndex] ? 'text-muted-foreground' : 'text-emerald-600 dark:text-emerald-500'
-          }
+          titleClassName={roundDisabled[roundIndex] ? 'text-muted-foreground' : 'text-primary'}
         >
           <div className="flex-1 flex flex-col">
             <RoundPanel roundIndex={roundIndex} />
