@@ -1,3 +1,6 @@
+import type { buttonVariants } from "@/components/ui/button"
+import type { VariantProps } from "class-variance-authority"
+
 // Global type definitions
 export type ThemeType = 'light' | 'dark' | 'custom'
 export type GameStateType = 'PREPARATION' | 'TOURNAMENT' | 'REPORT'
@@ -71,6 +74,11 @@ export type SerializableTournamentType = {
   players: PlayerType[]
   tournament: TournamentType
   showConfetti: boolean
+}
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
 
 // Type guards for global types

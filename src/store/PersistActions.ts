@@ -1,6 +1,7 @@
 import { ACTUAL_FILE_VERSION } from '@/globals/globals'
 import { getState, setState } from './AppStore'
 
+// TODO: Validate data via Zod
 export async function saveTournament(): Promise<string | null> {
   const state = getState()
   if (state.connectionMode === 'CLIENT') return null
@@ -27,7 +28,7 @@ export async function saveTournament(): Promise<string | null> {
 export async function openTournament(): Promise<string | null> {
   const state = getState()
   if (state.connectionMode === 'CLIENT') return null
-  
+
   const result = await loadContent()
   if (result.content) {
     const tournamentData = JSON.parse(result.content)
@@ -53,6 +54,7 @@ export async function openTournament(): Promise<string | null> {
       tournament: tournamentData.tournament,
       selectedTab: tournamentData.selectedTab,
       tournamentPanelScale: tournamentData.tournamentPanelScale,
+      preparationErrorMessages: [],
     })
   }
   return result.errorMessage

@@ -81,7 +81,7 @@ export const useAppStore = create(
     ),
     {
       name: APP_STORE_STORAGE_NAME,
-      // TODO: Validate the state after loading. Maybe there are some undefined attributes or illegal combinations
+      // TODO: Validate the data via zod
       partialize: (state) => ({
         gameState: state.gameState ? state.gameState : DEFAULT_GAME_STATE,
         gameVariant: state.gameVariant ? state.gameVariant : DEFAULT_GAME_VARIANT,
@@ -95,9 +95,7 @@ export const useAppStore = create(
         tournament: state.tournament ? state.tournament : { ...DEFAULT_EMPTY_TOURNAMENT },
         selectedTab: state.selectedTab ? state.selectedTab : DEFAULT_GAME_STATE,
         tournamentPanelScale: state.tournamentPanelScale ? state.tournamentPanelScale : DEFAULT_TOURNAMENT_PANEL_SCALE,
-        preparationErrorMessages: state.preparationErrorMessages
-          ? state.preparationErrorMessages
-          : (['ERROR_MESSAGE.MIN_MAX_PLAYER'] as string[]),
+        preparationErrorMessages: state.preparationErrorMessages ? state.preparationErrorMessages : ([] as string[]),
       }),
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onRehydrateStorage: (_state) => {

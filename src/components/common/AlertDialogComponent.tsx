@@ -9,7 +9,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Button, type ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
+import type { ButtonProps } from '@/globals/types'
 import type { LucideIcon } from 'lucide-react'
 import { type PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'

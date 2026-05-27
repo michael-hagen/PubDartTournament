@@ -57,10 +57,10 @@ export function ConnectDialog({ children, handleConnect }: ConnectDialogProps) {
           </Field>
         </FieldGroup>
         <DialogFooter>
+          <Button onClick={handleOKClicked}>{t('OK')}</Button>
           <DialogClose asChild>
             <Button variant="outline">{t('CANCEL')}</Button>
           </DialogClose>
-          <Button onClick={handleOKClicked}>{t('OK')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

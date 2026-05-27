@@ -68,8 +68,9 @@ export function finishTournament() {
   const state = getState()
   if (state.connectionMode === 'CLIENT') return
 
-  if (state.preparationErrorMessages && state.preparationErrorMessages.length > 0)
+  if (state.preparationErrorMessages && state.preparationErrorMessages.length > 0) {
     throw Error('Try to finishTournament while having preparation errors')
+  }
 
   const rounds = state.tournament.rounds
 
