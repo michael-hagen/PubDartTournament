@@ -42,7 +42,7 @@ export default function AboutDialog(props: AboutDialogProps) {
           </DialogHeader>
           <div className="absolute bottom-12 w-full flex justify-center z-10">
             <DialogClose asChild>
-              <Button className="px-8">OK</Button>
+              <Button className="px-8">{t('OK')}</Button>
             </DialogClose>
           </div>
           <div className="absolute bottom-4 w-full flex justify-center text-muted-foreground ">

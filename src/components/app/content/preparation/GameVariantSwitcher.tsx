@@ -6,8 +6,10 @@ import { useAppActions, useAppStore } from '@/store/AppStore'
 
 export default function GameVariantSwitcher() {
   const gameState = useAppStore((state) => state.gameState)
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
   // TODO: Remove "|| true" when game variant selection is implemented
-  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || true
+  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || isObserverMode || true
   const gameVariant = useAppStore((state) => state.gameVariant)
   const { setGameVariant } = useAppActions()
 

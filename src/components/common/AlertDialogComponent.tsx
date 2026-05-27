@@ -51,7 +51,7 @@ export default function AlertDialogComponent({
             size={size ? size : 'default'}
             className={className ? className : ''}
           >
-            {Icon && <Icon />}
+            {Icon && <Icon className="text-primary" />}
             {buttonTitle ? t(buttonTitle) : ''}
           </Button>
         )}

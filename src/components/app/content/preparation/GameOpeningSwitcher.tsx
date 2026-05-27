@@ -6,7 +6,9 @@ import { useAppActions, useAppStore } from '@/store/AppStore'
 
 export default function GameOpeningSwitcher() {
   const gameState = useAppStore((state) => state.gameState)
-  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
+  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || isObserverMode
   const gameOpening = useAppStore((state) => state.gameOpening)
   const { setGameOpening } = useAppActions()
 

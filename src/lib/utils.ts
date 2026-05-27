@@ -1,9 +1,29 @@
-import { MAX_PLAYERS, MIN_PLAYERS } from '@/globals/globals'
+import { CONNECTION_STRING_PREFIX, MAX_PLAYERS, MIN_PLAYERS } from '@/globals/globals'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
+}
+
+export async function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms))
+}
+
+export function debounce<T extends (...args: unknown[]) => void>(
+  func: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
+
+  return (...args: Parameters<T>) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      func(...args)
+    }, delay)
+  }
 }
 
 export function generateUUID(): string {
@@ -98,4 +118,14 @@ export function shuffleArray<T>(arr: T[]): T[] {
     ;[newArr[i], newArr[j]] = [newArr[j], newArr[i]]
   }
   return newArr
+}
+
+export function generateRandomConnectionString() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz'
+  let result = ''
+  for (let i = 0; i < 4; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length)
+    result += chars[randomIndex]
+  }
+  return CONNECTION_STRING_PREFIX + result
 }

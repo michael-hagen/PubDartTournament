@@ -1,10 +1,13 @@
 import NotImplementedDialog from '@/components/common/NotImplementedDialog'
 import { Button } from '@/components/ui/button'
+import { useAppStore } from '@/store/AppStore'
 import { Heart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export default function DonationPanel() {
   const { t } = useTranslation(['app'])
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
 
   const handleDonateClicked = () => {
     // Create a PayPal.Me Link in my PayPal account
@@ -14,7 +17,7 @@ export default function DonationPanel() {
 
   return (
     <NotImplementedDialog>
-      <Button variant="outline" onClick={handleDonateClicked}>
+      <Button disabled={isObserverMode} variant="outline" onClick={handleDonateClicked}>
         <Heart className="mr-2 text-primary" />
         {t('app:DONATE_5_EURO')}
       </Button>

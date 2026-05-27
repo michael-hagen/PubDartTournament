@@ -7,6 +7,8 @@ export type GameOpeningType = 'SINGLE_IN' | 'DOUBLE_IN' | 'MASTER_IN'
 export type GameCheckoutType = 'SINGLE_OUT' | 'DOUBLE_OUT' | 'MASTER_OUT'
 export type GameLegsType = '2' | '3' | '4' | '5'
 export type GameEliminationType = 'KO' | 'DOUBLE_KO'
+export type ConnectionModeType = 'NONE' | 'SERVER' | 'CLIENT'
+export type ConnectionActionType = 'SHARE' | 'CONNECT' | 'DISCONNECT'
 
 export type PlayerType = {
   id: string
@@ -57,6 +59,20 @@ export type TournamentType = {
   rounds: RoundType[]
 }
 
+export type SerializableTournamentType = {
+  gameState: GameStateType
+  gameVariant: GameVariantType
+  gameMode: GameModeType
+  gameOpening: GameOpeningType
+  gameCheckout: GameCheckoutType
+  gameLegs: GameLegsType
+  gameElimination: GameEliminationType
+  gameMatchForThirdPlace: boolean
+  players: PlayerType[]
+  tournament: TournamentType
+  showConfetti: boolean
+}
+
 // Type guards for global types
 export function isThemeType(val: unknown): val is ThemeType {
   return val === 'light' || val === 'dark' || val === 'custom'
@@ -88,4 +104,12 @@ export function isGameLegsType(val: unknown): val is GameLegsType {
 
 export function isGameEliminationType(val: unknown): val is GameEliminationType {
   return val === 'KO' || val === 'DOUBLE_KO'
+}
+
+export function isConnectionModeType(val: unknown): val is ConnectionModeType {
+  return val === 'NONE' || val === 'SERVER' || val === 'CLIENT'
+}
+
+export function isConnectionActionType(val: unknown): val is ConnectionActionType {
+  return val === 'SHARE' || val === 'CONNECT' || val === 'DISCONNECT'
 }

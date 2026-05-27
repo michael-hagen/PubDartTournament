@@ -21,6 +21,8 @@ export default function MatchRowItem({
   const { t } = useTranslation(['app'])
   const rounds = useAppStore((state) => state.tournament.rounds)
   const round = useAppStore((state) => state.tournament.rounds[roundIndex])
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
   const winnerMatch = winnerMatchIndex != undefined ? round.winnerMatches[winnerMatchIndex] : null
   const loserMatch = loserMatchIndex != undefined && round.loserMatches ? round.loserMatches[loserMatchIndex] : null
   const match = winnerMatch ? winnerMatch : loserMatch
@@ -38,7 +40,11 @@ export default function MatchRowItem({
   const legs = isPlayerOne ? match.playerOneRow.legs : match.playerTwoRow.legs
   const prevRoundFinished = roundIndex > 0 ? rounds[roundIndex - 1].finished : true
   const disabled =
-    round.finished || !prevRoundFinished || playerOneName === 'GET_A_BYE' || playerTwoName === 'GET_A_BYE'
+    round.finished ||
+    !prevRoundFinished ||
+    playerOneName === 'GET_A_BYE' ||
+    playerTwoName === 'GET_A_BYE' ||
+    isObserverMode
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement, HTMLInputElement>, legIndex: number) => {
     const value = parseInt(event.target.value)

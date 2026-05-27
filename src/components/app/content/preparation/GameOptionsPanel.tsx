@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next'
 export default function GameOptionsPanel() {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
-  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
+  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || isObserverMode
   const gameMatchForThirdPlace = useAppStore((state) => state.gameMatchForThirdPlace)
   const { setGameMatchForThirdPlace } = useAppActions()
 

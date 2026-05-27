@@ -13,7 +13,7 @@ export default function ZoomSlider() {
   }
 
   return (
-    <div className="flex justify-center w-50 gap-2">
+    <div className="flex justify-center w-50 gap-2 pt-1">
       <ZoomOut />
       <SliderWithTooltip
         defaultValue={[tournamentPanelScale]}

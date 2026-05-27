@@ -30,8 +30,9 @@ I'm also looking for a new job and use this project as a reference for my work
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Components:** [shadcn/ui](https://ui.shadcn.com/)
 - **State Management:** [Zustand](https://docs.pmnd.rs/zustand/)
+- **P2P:** [PeerJS](https://www.peerjs.com/)
 - **Localization:** [i18next](https://www.i18next.com/)
-- **Vitest:** [vitest](https://www.https://vitest.dev/)
+- **Test:** [vitest](https://www.https://vitest.dev/)
 
 ## 📸 Screenshots
 

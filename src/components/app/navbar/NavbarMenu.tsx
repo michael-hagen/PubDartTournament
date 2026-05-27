@@ -14,12 +14,13 @@ import { newTournament } from '@/store/TournamentActions'
 import { openTournament, saveTournament } from '@/store/PersistActions'
 import { useState } from 'react'
 import ErrorDialog from '@/components/common/ErrorDialog'
+import { useAppStore } from '@/store/AppStore'
 
 export default function NavbarMenu() {
   const { t } = useTranslation(['common'])
-  const openFileDisabled = !('showSaveFilePicker' in window)
-  const saveFileDisabled = !('showOpenFilePicker' in window)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
 
   const handleNewTournamentClicked = () => {
     newTournament()
@@ -42,6 +43,7 @@ export default function NavbarMenu() {
         dialogDescription="app:NEW_TOURNAMENT_DESCRIPTION"
         handleClick={handleNewTournamentClicked}
         size="lg"
+        disabled={isObserverMode}
       />
       <AlertDialogComponent
         icon={FolderOpen}
@@ -50,16 +52,16 @@ export default function NavbarMenu() {
         dialogDescription="app:OPEN_TOURNAMENT_DESCRIPTION"
         handleClick={handleOpenTournamentClicked}
         size="lg"
-        disabled={openFileDisabled}
+        disabled={isObserverMode}
       />
-      <Button disabled={saveFileDisabled} variant="outline" size="lg" onClick={handleSaveTournamentClicked}>
-        <Save />
+      <Button variant="outline" size="lg" disabled={isObserverMode} onClick={handleSaveTournamentClicked}>
+        <Save className="text-primary" />
         {t('SAVE')}
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="lg">
-            <Globe />
+            <Globe className="text-primary" />
             {t('LANGUAGE')}
             <ChevronDown />
           </Button>
@@ -70,7 +72,7 @@ export default function NavbarMenu() {
       </DropdownMenu>
       <AboutDialog>
         <Button variant="outline" size="lg">
-          <Info />
+          <Info className="text-primary" />
           {t('ABOUT')}
         </Button>
       </AboutDialog>

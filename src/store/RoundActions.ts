@@ -4,6 +4,7 @@ import { prepareGetAByeMatch, prepareNewMatch } from './MatchActions'
 
 export function finishRound(roundIndex: number) {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return
 
   if (roundIndex < 0 || roundIndex > state.tournament.rounds.length - 1)
     throw Error(`Invalid roundIndex: ${roundIndex}`)

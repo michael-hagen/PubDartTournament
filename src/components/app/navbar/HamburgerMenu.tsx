@@ -24,13 +24,14 @@ import AlertDialogComponent from '@/components/common/AlertDialogComponent'
 import ErrorDialog from '@/components/common/ErrorDialog'
 import { newTournament } from '@/store/TournamentActions'
 import { openTournament, saveTournament } from '@/store/PersistActions'
+import { useAppStore } from '@/store/AppStore'
 
 export default function HamburgerMenu() {
   const { t } = useTranslation(['common'])
   const [menuOpen, setMenuOpen] = useState(false)
-  const openFileDisabled = !('showSaveFilePicker' in window)
-  const saveFileDisabled = !('showOpenFilePicker' in window)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
 
   const handleNewTournamentClicked = () => {
     setMenuOpen(false)
@@ -71,7 +72,7 @@ export default function HamburgerMenu() {
             dialogDescription="app:NEW_TOURNAMENT_DESCRIPTION"
             handleClick={handleNewTournamentClicked}
           >
-            <DropdownMenuItem className="h-10" onSelect={(e) => e.preventDefault()}>
+            <DropdownMenuItem disabled={isObserverMode} className="h-10" onSelect={(e) => e.preventDefault()}>
               <File />
               {t('NEW')}
             </DropdownMenuItem>
@@ -82,14 +83,14 @@ export default function HamburgerMenu() {
             dialogDescription="app:OPEN_TOURNAMENT_DESCRIPTION"
             handleClick={handleOpenTournamentClicked}
           >
-            <DropdownMenuItem disabled={openFileDisabled} className="h-10" onSelect={(e) => e.preventDefault()}>
+            <DropdownMenuItem disabled={isObserverMode} className="h-10" onSelect={(e) => e.preventDefault()}>
               <FolderOpen />
               {t('OPEN')}
             </DropdownMenuItem>
           </AlertDialogComponent>
 
           <DropdownMenuItem
-            disabled={saveFileDisabled}
+            disabled={isObserverMode}
             className="h-10"
             onSelect={(e) => e.preventDefault()}
             onClick={handleSaveTournamentClicked}

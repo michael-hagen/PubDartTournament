@@ -28,7 +28,9 @@ export default function PlayerItem({
 }: PlayerProps) {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
-  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
+  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || isObserverMode
   const [value, setValue] = useState(player)
   const inputRef = useRef<HTMLInputElement>(null)
   const errMsg = errorMessage !== undefined ? t(errorMessage) : null
@@ -37,6 +39,13 @@ export default function PlayerItem({
     if (!gainFocus || !inputRef || !inputRef.current) return
     inputRef.current.focus()
   })
+
+  // To avoid modifications of the player list whenever we type a letter we use 
+  // a copy of the player name for manipulation. As a drawback we have to set
+  // the value on every render of this component
+  useEffect(() => {
+    setValue(player)
+  }, [player])
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {

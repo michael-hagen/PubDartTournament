@@ -11,11 +11,13 @@ import type {
   TournamentType,
   PlayerType,
   LegValueType,
+  ConnectionModeType,
 } from './types'
 
 // Default values for global types
 export const DEFAULT_LANGUAGE: string = 'en'
 export const DEFAULT_THEME: ThemeType = 'dark'
+export const DEFAULT_CONNECTION_MODE: ConnectionModeType = 'NONE'
 export const DEFAULT_GAME_STATE: GameStateType = 'PREPARATION'
 export const DEFAULT_GAME_VARIANT: GameVariantType = 'ELECTRONIC_DART'
 export const DEFAULT_GAME_MODE: GameModeType = '501'
@@ -27,7 +29,7 @@ export const DEFAULT_TOURNAMENT_PANEL_SCALE: number = 100
 
 // The following objects are generated when module is loaded
 export const DEFAULT_GET_A_BYE_PLAYER: PlayerType = {
-  id: generateUUID(), 
+  id: generateUUID(),
   name: 'GET_A_BYE',
   rank: 0,
   roundReached: 0,
@@ -35,12 +37,12 @@ export const DEFAULT_GET_A_BYE_PLAYER: PlayerType = {
   lostMatches: 0,
   wonLegs: 0,
   lostLegs: 0,
-  remainingPoints: 0
+  remainingPoints: 0,
 }
 Object.freeze(DEFAULT_GET_A_BYE_PLAYER)
 
 export const DEFAULT_EMPTY_PLAYER: PlayerType = {
-  id: generateUUID(), 
+  id: generateUUID(),
   name: '',
   rank: 0,
   roundReached: 0,
@@ -48,7 +50,7 @@ export const DEFAULT_EMPTY_PLAYER: PlayerType = {
   lostMatches: 0,
   wonLegs: 0,
   lostLegs: 0,
-  remainingPoints: 0
+  remainingPoints: 0,
 }
 Object.freeze(DEFAULT_EMPTY_PLAYER)
 

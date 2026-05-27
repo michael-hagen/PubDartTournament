@@ -16,8 +16,9 @@ import {
   DEFAULT_TOURNAMENT_PANEL_SCALE,
   DEFAULT_EMPTY_TOURNAMENT,
   DEFAULT_EMPTY_PLAYER,
+  DEFAULT_CONNECTION_MODE,
 } from '@/globals/defaults'
-import { generateUUID } from '@/lib/utils'
+import { generateRandomConnectionString, generateUUID } from '@/lib/utils'
 import { newTournament } from './TournamentActions'
 
 export const useAppStore = create(
@@ -26,6 +27,9 @@ export const useAppStore = create(
       {
         language: DEFAULT_LANGUAGE,
         theme: DEFAULT_THEME,
+        isConnectionPending: false,
+        connectionMode: DEFAULT_CONNECTION_MODE,
+        connectionString: generateRandomConnectionString(),
 
         gameState: DEFAULT_GAME_STATE,
         gameVariant: DEFAULT_GAME_VARIANT,
@@ -58,6 +62,9 @@ export const useAppStore = create(
           actions: {
             setLanguage: createSetter('language'),
             setTheme: createSetter('theme'),
+            setIsConnectionPending: createSetter('isConnectionPending'),
+            setConnectionMode: createSetter('connectionMode'),
+            setConnectionString: createSetter('connectionString'),
             setGameVariant: createSetter('gameVariant'),
             setGameMode: createSetter('gameMode'),
             setGameOpening: createSetter('gameOpening'),
@@ -110,6 +117,9 @@ export const useAppStore = create(
 
 // Export the set and get methods for external actions
 export const { setState, getState } = useAppStore
+
+// Extract the getState type
+export type AppStateType = ReturnType<typeof useAppStore.getState>
 
 // For convenience access to the actions
 export const useAppActions = () => useAppStore((state) => state.actions)

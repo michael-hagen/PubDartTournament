@@ -6,6 +6,7 @@ import type { PlayerType } from '@/globals/types'
 
 export function addPlayer(playerName?: string) {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return
 
   if (state.players.length >= MAX_PLAYERS) return
 
@@ -24,6 +25,7 @@ export function addPlayer(playerName?: string) {
 
 export function removePlayer(playerIndex: number) {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return
 
   if (playerIndex < 0 || playerIndex > state.players.length - 1)
     throw Error(`Index out of bounds for playerIndex: ${playerIndex} players.length: ${state.players.length}`)
@@ -44,6 +46,7 @@ export function removePlayer(playerIndex: number) {
 
 export function updatePlayer(playerIndex: number, playerName: string) {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return
 
   if (playerIndex < 0 || playerIndex > state.players.length - 1)
     throw Error(`Index out of bounds for playerIndex: ${playerIndex} players.length: ${state.players.length}`)

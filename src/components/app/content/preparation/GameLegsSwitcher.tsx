@@ -6,7 +6,9 @@ import { useAppActions, useAppStore } from '@/store/AppStore'
 
 export default function GameLegsSwitcher() {
   const gameState = useAppStore((state) => state.gameState)
-  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT'
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
+  const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || isObserverMode
   const gameLegs = useAppStore((state) => state.gameLegs)
   const { setGameLegs } = useAppActions()
 

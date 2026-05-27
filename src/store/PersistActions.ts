@@ -3,6 +3,8 @@ import { getState, setState } from './AppStore'
 
 export async function saveTournament(): Promise<string | null> {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return null
+
   const tournamentData = {
     actFileVersion: ACTUAL_FILE_VERSION,
     gameState: state.gameState,
@@ -23,6 +25,9 @@ export async function saveTournament(): Promise<string | null> {
 }
 
 export async function openTournament(): Promise<string | null> {
+  const state = getState()
+  if (state.connectionMode === 'CLIENT') return null
+  
   const result = await loadContent()
   if (result.content) {
     const tournamentData = JSON.parse(result.content)

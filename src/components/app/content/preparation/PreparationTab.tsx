@@ -19,10 +19,13 @@ export default function PreparationTab() {
   const { t } = useTranslation(['app'])
   const gameState = useAppStore((state) => state.gameState)
   const preparationErrorMessages = useAppStore((state) => state.preparationErrorMessages)
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
   const startDisabled =
     (preparationErrorMessages && preparationErrorMessages.length > 0) ||
     gameState === 'TOURNAMENT' ||
-    gameState === 'REPORT'
+    gameState === 'REPORT' ||
+    isObserverMode
 
   const handleStartClicked = () => {
     startTournament()

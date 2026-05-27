@@ -24,6 +24,9 @@ import {
 import { prepareGetAByeMatch } from './MatchActions'
 
 export function newTournament() {
+  const state = getState()
+  if (state.connectionMode === 'CLIENT') return
+
   const newTournament = {
     gameState: DEFAULT_GAME_STATE,
     gameVariant: DEFAULT_GAME_VARIANT,
@@ -47,6 +50,7 @@ export function newTournament() {
 
 export function startTournament() {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return
 
   if (state.preparationErrorMessages && state.preparationErrorMessages.length > 0)
     throw Error('Try to startTournament while having preparation errors')
@@ -62,6 +66,7 @@ export function startTournament() {
 
 export function finishTournament() {
   const state = getState()
+  if (state.connectionMode === 'CLIENT') return
 
   if (state.preparationErrorMessages && state.preparationErrorMessages.length > 0)
     throw Error('Try to finishTournament while having preparation errors')

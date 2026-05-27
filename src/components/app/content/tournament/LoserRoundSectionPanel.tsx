@@ -11,10 +11,12 @@ interface LoserRoundSectionPanelProps {
 export default function LoserRoundSectionPanel({ roundIndex }: LoserRoundSectionPanelProps) {
   const rounds = useAppStore((state) => state.tournament.rounds)
   const round = useAppStore((state) => state.tournament.rounds[roundIndex])
+  const connectionMode = useAppStore((state) => state.connectionMode)
+  const isObserverMode = connectionMode === 'CLIENT'
   const { setShowConfetti } = useAppActions()
   const prevRoundFinished = roundIndex > 0 ? rounds[roundIndex - 1].finished : true
   const active = prevRoundFinished && !round.finished
-  const disabled = round.finished || !prevRoundFinished || !round.finishable
+  const disabled = round.finished || !prevRoundFinished || !round.finishable || isObserverMode
   const isFinalRound = roundIndex === rounds.length - 1
 
   const handleFinishClicked = () => {
