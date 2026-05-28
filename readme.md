@@ -46,9 +46,9 @@ Set up your game modes, players, and variants.
 
 Keep track of matches, scores, and brackets.
 
-<img width="1927" height="1011" alt="tournament_2" src="https://github.com/user-attachments/assets/246059ef-77d3-4972-b033-d8c37b27278a" />
-
 <img width="1929" height="1006" alt="tournament_1" src="https://github.com/user-attachments/assets/aa43e2d5-3199-46b0-879f-a4af0128f869" />
+
+<img width="1927" height="1011" alt="tournament_2" src="https://github.com/user-attachments/assets/246059ef-77d3-4972-b033-d8c37b27278a" />
 
 ### Results & Reports
 
