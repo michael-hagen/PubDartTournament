@@ -8,8 +8,9 @@ import { useAppStore } from '@/store/AppStore'
 import { ChevronDown, GlobeOff, Loader2, Radio, Share2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { ConnectDialog } from './ConnectDialog'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { setConnectionString } from '@/store/PeerServiceActions'
+import { toast } from 'sonner'
 
 export default function ConnectControl() {
   const { t } = useTranslation(['app'])
@@ -20,13 +21,26 @@ export default function ConnectControl() {
     connectionMode === 'SERVER' || connectionMode === 'CLIENT' ? 'DISCONNECT' : 'SHARE'
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  // Establishing a connection is async. It starts with setting pending to true
+  // and finished setting pending to false. So if it's no longer pending and there 
+  // are error messages we have to show it somehow
+  useEffect(() => {
+    if (isConnectionPending || !PeerService.getInstance().hasErrors()) return
+    let errMsg = ''
+    PeerService.getInstance()
+      .getErrorMessages()
+      .forEach((message) => (errMsg += message + '\n'))
+    toast(t('app:ERROR_MESSAGE.CONNECTION_ERROR_TITLE'), {
+      closeButton: true,
+      duration: 8000,
+      description: <span className="whitespace-pre-line">{errMsg}</span>,
+    })
+  }, [isConnectionPending, t])
+
   const handleActionClicked = (currentAction: ConnectionActionType) => {
     switch (currentAction) {
       case 'SHARE':
         PeerService.getInstance().share()
-        break
-      case 'CONNECT':
-        PeerService.getInstance().connect()
         break
       case 'DISCONNECT':
         PeerService.getInstance().disconnect()
@@ -94,12 +108,12 @@ export default function ConnectControl() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-full">
-              <DropdownMenuItem onClick={() => handleActionClicked('SHARE')}>
+              <DropdownMenuItem className="p-2" onClick={() => handleActionClicked('SHARE')}>
                 <Share2 />
                 <span>{t('SHARE_MENU_ITEM')}</span>
               </DropdownMenuItem>
               <ConnectDialog handleConnect={handleConnect}>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <DropdownMenuItem className="p-2" onSelect={(e) => e.preventDefault()}>
                   <Radio />
                   <span>{t('CONNECT_MENU_ITEM')}</span>
                 </DropdownMenuItem>

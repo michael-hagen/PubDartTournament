@@ -32,7 +32,7 @@ export default function PlayersList() {
         <PlayerItem
           key={player.id}
           playerIndex={playerIndex}
-          player={player.name}
+          playerName={player.name}
           isNewPlayer={playerIndex === players.length - 1}
           gainFocus={playerIndex === selectedPlayer}
           errorMessage={player.errorMessage}

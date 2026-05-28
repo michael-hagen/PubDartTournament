@@ -84,6 +84,7 @@
     "LEG_INPUT_CONTENT_1": "Type 0 for the winner",
     "LEG_INPUT_CONTENT_2": "Type the points left for the loser"
   },
+
   "ERROR_MESSAGE": {
     "MIN_PLAYERS": "The minimum amount of players is 4",
     "MAX_PLAYERS": "The maximum amount of players is 128",
@@ -94,6 +95,12 @@
     "INVALID_LEG": "The winner of the leg must have 0 remaining points the loser a value greater than 0",
     "TO_MANY_WINS": "To many legs",
     "EMPTY_LEG": "Leg with no winner",
-    "MATCH_INPUT_ERRORS": "This match has the following input errors:"
+    "MATCH_INPUT_ERRORS": "This match has the following input errors:",
+    "CONNECTION_ERROR_TITLE": "Connection error",
+    "CONNECTION_BROWSER_INCOMPATIBLE": "Your browser does not support WebRTC",
+    "CONNECTION_PEER_UNAVAILABLE": "No server found for the connection code",
+    "CONNECTION_NETWORK": "Network error. Please check your internet connection",
+    "CONNECTION_TIMEOUT": "Timeout while try to connect to server",
+    "CONNECTION_ERROR": "Connection error: {{errorMessage}} "
   }
 }

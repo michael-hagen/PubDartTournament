@@ -8,10 +8,12 @@ import {
   setConnectionString,
   setSerializableState,
   getConnectionMode,
+  setSelectedTab,
 } from '@/store/PeerServiceActions'
 import type { SerializableTournamentType } from '@/globals/types'
 import { generateRandomConnectionString, debounce } from '@/lib/utils'
 import { useAppStore } from '@/store/AppStore'
+import { t } from 'i18next'
 
 export type PeerMessageCommand = 'SYNC_STATE'
 export type PeerMessageType = {
@@ -19,13 +21,13 @@ export type PeerMessageType = {
   payload: SerializableTournamentType
 }
 
-// TODO: Replace alert messages with toast messages 
 export default class PeerService {
   private static instance: PeerService | null = null
   private peer: Peer | null = null
   private clientConnections: Map<string, DataConnection> = new Map()
   private serverConnection: DataConnection | null = null
   private prevStateJSON: string = ''
+  private errorMessages: string[] = []
 
   // Singleton with lazy initialization
   private constructor() {}
@@ -41,33 +43,11 @@ export default class PeerService {
   // Share as server
   public async share() {
     setIsConnectionPending(true)
+    this.errorMessages = []
     this.peer = new Peer(getConnectionString())
+    this.setupPeerErrorListener()
 
-    // Check for connection errors to the signaling server
-    this.peer.on('error', (err) => {
-      setIsConnectionPending(false)
-      setConnectionMode('NONE')
-      this.peer?.destroy()
-      this.peer = null
-      switch (err.type) {
-        case 'browser-incompatible':
-          console.error('Your browser does not support WebRTC')
-          alert('Your browser does not support WebRTC')
-          break
-        case 'peer-unavailable':
-          console.error('No server with the connection code was found')
-          alert('No server with the connection code was found')
-          break
-        case 'network':
-          console.error('Network error. Please check your internet connection')
-          alert('Network error. Please check your internet connection')
-          break
-        default:
-          console.error(`Connection Error: ${err.message}`)
-          alert(`Connection Error: ${err.message}`)
-      }
-    })
-
+    // Listen to peer been opened
     this.peer.on('open', (id: string) => {
       setConnectionString(id)
       setConnectionMode('SERVER')
@@ -83,45 +63,20 @@ export default class PeerService {
   // Connect as client
   public async connect() {
     setIsConnectionPending(true)
+    this.errorMessages = []
     this.peer = new Peer()
-    // Check for connection errors to the signaling server
-    this.peer.on('error', (err) => {
-      setIsConnectionPending(false)
-      setConnectionMode('NONE')
-      this.peer?.destroy()
-      this.peer = null
-
-      switch (err.type) {
-        case 'browser-incompatible':
-          console.error('Your browser does not support WebRTC')
-          alert('Your browser does not support WebRTC')
-          break
-        case 'peer-unavailable':
-          console.error('No server with the connection code was found')
-          alert('No server with the connection code was found')
-          break
-        case 'network':
-          console.error('Network error. Please check your internet connection')
-          alert('Network error. Please check your internet connection')
-          break
-        default:
-          console.error(`Connection Error: ${err.message}`)
-          alert(`Connection Error: ${err.message}`)
-      }
-    })
+    this.setupPeerErrorListener()
 
     this.peer.on('open', () => {
       try {
         const conn = this.peer!.connect(getConnectionString())
         const connectionTimeout = setTimeout(() => {
           if (!conn.open) {
-            conn.close()
             this.peer?.destroy()
             this.peer = null
+            this.errorMessages.push(t('app:ERROR_MESSAGE.CONNECTION_TIMEOUT'))
             setConnectionMode('NONE')
             setIsConnectionPending(false)
-            console.error('Connection failed. Server is not responding')
-            alert('Connection failed. Server is not responding')
           }
         }, 10000)
 
@@ -129,13 +84,15 @@ export default class PeerService {
           // If connection could be opened we can clear the timeout
           clearTimeout(connectionTimeout)
           this.setupClientConnectionListeners(conn)
+          setSelectedTab('PREPARATION')
           setConnectionMode('CLIENT')
           setIsConnectionPending(false)
         })
       } catch (error) {
-        console.error('Error try to connect to server: ', error)
-        alert('Error while try to connect to server. Exception: ' + error)
-      } finally {
+        this.errorMessages.push(t('app:ERROR_MESSAGE.CONNECTION_ERROR', { errorMessage: error }))
+        this.peer?.destroy()
+        this.peer = null
+        setConnectionMode('NONE')
         setIsConnectionPending(false)
       }
     })
@@ -144,58 +101,72 @@ export default class PeerService {
   // Close connection
   public async disconnect() {
     setIsConnectionPending(true)
-    if (this.serverConnection) {
-      // Disconnect a client
-      this.serverConnection.close()
-      this.serverConnection = null
-    } else {
-      // Disconnect a server
-      this.clientConnections.forEach((conn) => {
-        if (conn.open) conn.close()
-      })
-      this.clientConnections.clear()
-    }
-    if (this.peer) {
-      this.peer.destroy()
+    this.errorMessages = []
+    try {
+      if (this.serverConnection) {
+        // Disconnect a client
+        this.serverConnection.close()
+        this.serverConnection = null
+      } else {
+        // Disconnect a server
+        this.clientConnections.forEach((conn) => {
+          if (conn.open) conn.close()
+        })
+        this.clientConnections.clear()
+      }
+      this.peer?.destroy()
       this.peer = null
+      setConnectionString(generateRandomConnectionString())
+      setConnectionMode('NONE')
+    } finally {
+      setIsConnectionPending(false)
     }
-    setConnectionString(generateRandomConnectionString())
-    setConnectionMode('NONE')
-    setIsConnectionPending(false)
+  }
+
+  public hasErrors(): boolean {
+    return this.errorMessages.length > 0
+  }
+
+  public getErrorMessages(): string[] {
+    return this.errorMessages.slice()
+  }
+
+  private setupPeerErrorListener() {
+    // Check for connection errors to the signaling server
+    this.peer?.on('error', (err) => {
+      this.peer?.destroy()
+      this.peer = null
+      switch (err.type) {
+        case 'browser-incompatible':
+          this.errorMessages.push(t('app:ERROR_MESSAGE.CONNECTION_BROWSER_INCOMPATIBLE'))
+          break
+        case 'peer-unavailable':
+          this.errorMessages.push(t('app:ERROR_MESSAGE.CONNECTION_PEER_UNAVAILABLE'))
+          break
+        case 'network':
+          this.errorMessages.push(t('app:ERROR_MESSAGE.CONNECTION_PEER_NETWORK'))
+          break
+        default:
+          this.errorMessages.push(t('app:ERROR_MESSAGE.CONNECTION_ERROR', { errorMessage: err.message }))
+      }
+      setConnectionMode('NONE')
+      setIsConnectionPending(false)
+    })
   }
 
   private setupServerConnectionListeners(conn: DataConnection) {
     conn.on('open', () => {
-      this.clientConnections.set(conn.peer, conn)
-      if (conn.open) {
-        const currentState = getSerializableState()
-        const message: PeerMessageType = { command: 'SYNC_STATE', payload: currentState }
-        conn.send(message)
+      try {
+        this.clientConnections.set(conn.peer, conn)
+        if (conn.open) {
+          const currentState = getSerializableState()
+          const message: PeerMessageType = { command: 'SYNC_STATE', payload: currentState }
+          conn.send(message)
+        }
+      } catch (error) {
+        console.error('Exception try to send data to clients. Error: ', error)
       }
     })
-
-    // conn.on('data', (data: any) => {
-    //   const message = data as TournamentMessage // Unser definiertes Protokoll
-    //   const store = useTournamentStore.getState() // Zustand-State direkt holen
-
-    //   switch (message.type) {
-    //     case 'REQUEST_SCORING':
-    //       // Push ins Zustand-Store -> Shadcn Popup öffnet sich automatisch
-    //       store.addIncomingRequest({
-    //         clientId: conn.peer,
-    //         matchId: message.payload.matchId,
-    //         clientName: message.payload.clientName,
-    //       })
-    //       break
-
-    //     case 'SUBMIT_THROW':
-    //       // Wurf im Master-Store verarbeiten (Score abziehen, etc.)
-    //       store.handleIncomingThrow(message.payload.matchId, message.payload.throwData)
-    //       // Danach neuen Gesamtstate an ALLE Clients broadcasten
-    //       this.broadcastState()
-    //       break
-    //   }
-    // })
 
     conn.on('close', () => {
       this.clientConnections.delete(conn.peer)
@@ -206,12 +177,16 @@ export default class PeerService {
     this.serverConnection = conn
 
     conn.on('data', (data) => {
-      const message = data as PeerMessageType
+      try {
+        const message = data as PeerMessageType
 
-      switch (message.command) {
-        case 'SYNC_STATE':
-          setSerializableState(message.payload)
-          break
+        switch (message.command) {
+          case 'SYNC_STATE':
+            setSerializableState(message.payload)
+            break
+        }
+      } catch (error) {
+        console.error('Exception receiving data from server. Error: ', error)
       }
     })
   }
@@ -230,7 +205,11 @@ export default class PeerService {
 
     const message: PeerMessageType = { command: 'SYNC_STATE', payload: currentState }
     PeerService.instance.clientConnections.forEach((conn) => {
-      if (conn.open) conn.send(message)
+      try {
+        if (conn.open) conn.send(message)
+      } catch (error) {
+        console.error('Exception broadcast data from server. Error: ', error)
+      }
     })
   }
 }

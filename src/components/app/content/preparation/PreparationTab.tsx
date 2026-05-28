@@ -77,7 +77,7 @@ export default function PreparationTab() {
         </PreparationCard>
       </div>
 
-      <div className="flex justify-center p-2">
+      <div className="flex justify-center p-2 lg:p-6">
         <AlertDialogComponent
           icon={Goal}
           buttonTitle="app:START_TOURNAMENT"
@@ -86,7 +86,7 @@ export default function PreparationTab() {
           disabled={startDisabled}
           handleClick={handleStartClicked}
           size="lg"
-          className="min-w-60 md:min-h-12 lg:min-h-14"
+          className="min-w-60"
         />
       </div>
     </div>

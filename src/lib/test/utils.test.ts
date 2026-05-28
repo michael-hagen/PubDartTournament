@@ -3,9 +3,11 @@ import {
   calculateDoubleEliminationRounds,
   calculateEliminationRounds,
   cn,
+  generateRandomConnectionString,
   isPowerOfTwo,
   nextPowerOfTwo,
   shuffleArray,
+  sleep,
 } from '../utils'
 import { doubleEliminationCases, eliminationCases } from './utils.data'
 
@@ -53,6 +55,15 @@ describe('utils.ts exports', () => {
     // Last conflicting class wins
     expect(cn('bg-white', 'bg-black')).toBe('bg-black')
     expect(cn('w-full', 'w-1/2', 'w-1/3')).toBe('w-1/3')
+  })
+
+  test('sleep waits for 100 milliseconds', async () => {
+    const duration = 100
+    const startTime = performance.now()
+    await sleep(duration)
+    const elapsed = performance.now() - startTime
+    // sleep uses timeout which isn't exactly timed but we only need a value very close to duration
+    expect(elapsed).toBeGreaterThanOrEqual(duration - 2)
   })
 
   test.each([
@@ -153,5 +164,42 @@ describe('utils.ts exports', () => {
     expect(shuffleArray([])).toEqual([])
     expect(shuffleArray([1])).toEqual([1])
     expect(shuffleArray([1, 2])).toHaveLength(2)
+  })
+
+  test('should return a string with the correct prefix and 4 random characters', () => {
+    const result = generateRandomConnectionString()
+
+    // 1. Check if it returns a string
+    expect(result).toBeTypeOf('string')
+
+    // 2. Check if it contains lowercase letters at the end
+    // This regex checks that the string ENDS with exactly 4 lowercase letters.
+    // Adjust if your CONNECTION_STRING_PREFIX contains special regex characters.
+    const lowercaseSuffixRegex = /[a-z]{4}$/
+    expect(result).toMatch(lowercaseSuffixRegex)
+  })
+
+  test('should generate different strings on consecutive calls', () => {
+    const call1 = generateRandomConnectionString()
+    const call2 = generateRandomConnectionString()
+    const call3 = generateRandomConnectionString()
+
+    // Since it's random, consecutive calls should mathematically almost never match
+    expect(call1).not.toBe(call2)
+    expect(call1).not.toBe(call3)
+    expect(call2).not.toBe(call3)
+  })
+
+  test('should only use characters from the defined alphabet', () => {
+    // Run the function 100 times to ensure statistical coverage of the random string
+    for (let i = 0; i < 100; i++) {
+      const result = generateRandomConnectionString()
+
+      // Extract the random 4-character part at the end
+      const randomPart = result.slice(-4)
+
+      // Ensure no numbers, uppercase letters, or special characters are present
+      expect(randomPart).toMatch(/^[a-z]+$/)
+    }
   })
 })

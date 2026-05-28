@@ -12,6 +12,7 @@ import Statusbar from './components/app/statusbar/Statusbar'
 
 import { useAppActions, useAppStore } from './store/AppStore'
 import { finishTournament } from './store/TournamentActions'
+import { Toaster } from 'sonner'
 
 export default function App() {
   const isInitialized = useRef(false)
@@ -90,6 +91,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
+      <Toaster />
       <div className="flex flex-col" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
         <Navbar />
         <div className="flex flex-col flex-1 overflow-auto">

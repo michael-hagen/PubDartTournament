@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { getState } from '../AppStore'
 import { finishTournament, newTournament, startTournament } from '../TournamentActions'
 import {
@@ -14,9 +14,12 @@ import {
 } from '@/globals/defaults'
 
 describe('TournamentActions.ts exported functions', () => {
+  beforeEach(() => {
+    newTournament()
+  })
+
   test('Defaults after newTournament', () => {
     const state = getState()
-    newTournament()
     expect(state.gameState).toBe(DEFAULT_GAME_STATE)
     expect(state.gameVariant).toBe(DEFAULT_GAME_VARIANT)
     expect(state.gameMode).toBe(DEFAULT_GAME_MODE)
@@ -47,13 +50,10 @@ describe('TournamentActions.ts exported functions', () => {
   })
 
   test('startTournament throws error after newTournament is called', () => {
-    newTournament()
     expect(startTournament).toThrow('Try to startTournament while having preparation errors')
   })
 
   test('finishTournament throws error after newTournament is called', () => {
-    newTournament()
     expect(finishTournament).toThrow('Try to finishTournament while having preparation errors')
   })
-
 })

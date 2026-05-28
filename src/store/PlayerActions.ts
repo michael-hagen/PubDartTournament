@@ -46,6 +46,7 @@ export function removePlayer(playerIndex: number) {
 
 export function updatePlayer(playerIndex: number, playerName: string) {
   const state = getState()
+
   if (state.connectionMode === 'CLIENT') return
 
   if (playerIndex < 0 || playerIndex > state.players.length - 1)
@@ -53,11 +54,10 @@ export function updatePlayer(playerIndex: number, playerName: string) {
 
   if (playerName === null || playerName === undefined) throw Error('Player name must not be null or undefined')
 
-  const maxLen = Math.min(playerName.trim().length, MAX_PLAYER_NAME_LENGTH)
-  const name = playerName.trim().substring(0, maxLen)
+  if (state.players[playerIndex].name === playerName) return
 
   const newPlayers = state.players.slice()
-  newPlayers[playerIndex] = { ...newPlayers[playerIndex], name: name }
+  newPlayers[playerIndex] = { ...newPlayers[playerIndex], name: playerName }
   validatePlayers(newPlayers)
   setState({ players: newPlayers })
 }
@@ -84,7 +84,7 @@ function validatePlayers(newPlayers: PlayerType[]) {
 
     // Check if there are players with the same name
     const otherPlayers = newPlayers.filter((_, index) => index !== playerIndex)
-    const exists = otherPlayers.some((p) => p.name === player.name)
+    const exists = otherPlayers.some((p) => p.name && p.name.length > 0 && p.name === player.name)
 
     if (exists) {
       newPlayers[playerIndex].errorMessage = 'ERROR_MESSAGE.DUPLICATE_PLAYER_NAME'

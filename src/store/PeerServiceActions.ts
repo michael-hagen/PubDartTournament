@@ -1,4 +1,4 @@
-import type { ConnectionModeType, SerializableTournamentType } from '@/globals/types'
+import type { ConnectionModeType, GameStateType, SerializableTournamentType } from '@/globals/types'
 import { getState, setState } from './AppStore'
 
 export function setIsConnectionPending(value: boolean) {
@@ -23,7 +23,14 @@ export function getConnectionMode(): ConnectionModeType {
 
 export function setConnectionMode(value: ConnectionModeType) {
   setState({
+    selectedTab: 'PREPARATION',
     connectionMode: value,
+  })
+}
+
+export function setSelectedTab(value: GameStateType) {
+  setState({
+    selectedTab: value,
   })
 }
 

@@ -2,15 +2,16 @@ import { useTranslation } from 'react-i18next'
 import { Ban, Trash2 } from 'lucide-react'
 
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group'
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useRef, type ChangeEvent } from 'react'
 import { useAppStore } from '@/store/AppStore'
 import { Field, FieldError } from '@/components/ui/field'
 import { addPlayer, removePlayer, updatePlayer } from '@/store/PlayerActions'
+import { MAX_PLAYER_NAME_LENGTH } from '@/globals/globals'
 
 interface PlayerProps {
   playerIndex: number
   isNewPlayer: boolean
-  player: string
+  playerName: string
   gainFocus: boolean
   errorMessage: string | undefined
   handleSelectPlayer: (playerIndex: number) => void
@@ -20,7 +21,7 @@ interface PlayerProps {
 export default function PlayerItem({
   playerIndex,
   isNewPlayer,
-  player,
+  playerName,
   gainFocus,
   errorMessage,
   handleSelectPlayer,
@@ -31,7 +32,6 @@ export default function PlayerItem({
   const connectionMode = useAppStore((state) => state.connectionMode)
   const isObserverMode = connectionMode === 'CLIENT'
   const disabled = gameState === 'TOURNAMENT' || gameState === 'REPORT' || isObserverMode
-  const [value, setValue] = useState(player)
   const inputRef = useRef<HTMLInputElement>(null)
   const errMsg = errorMessage !== undefined ? t(errorMessage) : null
 
@@ -40,58 +40,54 @@ export default function PlayerItem({
     inputRef.current.focus()
   })
 
-  // To avoid modifications of the player list whenever we type a letter we use 
-  // a copy of the player name for manipulation. As a drawback we have to set
-  // the value on every render of this component
-  useEffect(() => {
-    setValue(player)
-  }, [player])
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
       case 'Enter':
-        handleAcceptPlayer('down')
+        storePlayer()
+        handleMoveFocus('down')
         break
       case 'ArrowUp':
-        handleAcceptPlayer('up')
+        storePlayer()
+        handleMoveFocus('up')
         break
       case 'ArrowDown':
-        handleAcceptPlayer('down')
+        storePlayer()
+        handleMoveFocus('down')
         break
     }
   }
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
-    setValue(event.target.value)
-  }
-
-  const handleAcceptPlayer = (cursorDirection: string) => {
-    const playerName = value ? value.trim() : ''
-    updatePlayer(playerIndex, playerName)
-    if (isNewPlayer) {
-      if (playerName.length > 0) {
-        addPlayer()
-      }
-      handleMoveFocus(cursorDirection)
-    } else {
-      if (playerName.length === 0) {
-        removePlayer(playerIndex)
-      } else {
-        handleMoveFocus(cursorDirection)
-      }
-    }
+    updatePlayer(playerIndex, event.target.value)
   }
 
   const handleRemovePlayer = () => {
     removePlayer(playerIndex)
   }
 
-  const handleOnFocus = (gained: boolean) => {
-    if (gained) {
-      handleSelectPlayer(playerIndex)
+  const handleOnFocus = () => {
+    handleSelectPlayer(playerIndex)
+  }
+
+  const handleOnBlur = () => {
+    storePlayer()
+    handleSelectPlayer(-1)
+  }
+
+  const storePlayer = () => {
+    const value = inputRef.current?.value ? inputRef.current?.value.trim() : ''
+    const length = Math.min(value.length, MAX_PLAYER_NAME_LENGTH)
+    const name = value.substring(0, length)
+
+    updatePlayer(playerIndex, name)
+    if (isNewPlayer) {
+      if (name.length > 0) {
+        addPlayer()
+      }
     } else {
-      updatePlayer(playerIndex, value)
-      handleSelectPlayer(-1)
+      if (name.length === 0) {
+        removePlayer(playerIndex)
+      }
     }
   }
 
@@ -103,10 +99,10 @@ export default function PlayerItem({
         <InputGroupInput
           ref={inputRef}
           placeholder={isNewPlayer ? t('NEW_PLAYER') : t('REMOVE_PLAYER')}
-          value={value}
+          value={playerName}
           disabled={disabled}
-          onFocus={() => handleOnFocus(true)}
-          onBlur={() => handleOnFocus(false)}
+          onFocus={() => handleOnFocus()}
+          onBlur={() => handleOnBlur()}
           onKeyDown={handleKeyDown}
           onChange={handleOnChange}
         />
