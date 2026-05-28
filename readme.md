@@ -40,20 +40,21 @@ I'm also looking for a new job and use this project as a reference for my work
 
 Set up your game modes, players, and variants.
 
-<img width="1371" height="1118" alt="preparation" src="https://github.com/user-attachments/assets/3d0b142d-b9fe-42ed-981f-8a864133ff1c" />
+<img width="1926" height="1010" alt="preparation" src="https://github.com/user-attachments/assets/c9f9dcb5-0214-4360-aea5-031129817b53" />
 
 ### Tournament Management
 
 Keep track of matches, scores, and brackets.
 
-<img width="1373" height="1121" alt="tournament_1" src="https://github.com/user-attachments/assets/7433e17b-7557-4e01-a121-db3d0b0162c8" />
-<img width="1371" height="1120" alt="tournament_2" src="https://github.com/user-attachments/assets/8943ce3b-45a9-43cb-b739-211455fd6f41" />
+<img width="1927" height="1011" alt="tournament_2" src="https://github.com/user-attachments/assets/246059ef-77d3-4972-b033-d8c37b27278a" />
+
+<img width="1929" height="1006" alt="tournament_1" src="https://github.com/user-attachments/assets/aa43e2d5-3199-46b0-879f-a4af0128f869" />
 
 ### Results & Reports
 
 Detailed rankings and tournament statistics.
 
-<img width="1374" height="1121" alt="report" src="https://github.com/user-attachments/assets/f9703cde-bb7a-4e58-b3ec-63f2d14705d0" />
+<img width="1929" height="1008" alt="report" src="https://github.com/user-attachments/assets/bbfd8bfd-3539-4a5b-91b3-0f085ea627f0" />
 
 ## 🚀 Getting Started
 
