@@ -89,7 +89,6 @@ export default function LegInput({
           type="text"
           // inputMode="numeric"
           inputMode="none"
-          readOnly
           pattern="[0-9]*"
           autoComplete="one-time-code"
           spellCheck="false"

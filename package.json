@@ -1,7 +1,7 @@
 {
   "name": "pub-dart-tournament",
   "private": false,
-  "version": "0.5.1 alpha",
+  "version": "0.5.2 alpha",
   "build-date": "2026-06-01",
   "type": "module",
   "scripts": {
