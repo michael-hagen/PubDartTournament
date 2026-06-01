@@ -51,7 +51,7 @@ export default function LegInput({
     const start = inputRef.current.selectionStart ?? 0
     const end = inputRef.current.selectionEnd ?? 0
     const currentValue = inputRef.current.value
-    
+
     if (e.key in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) {
       const newValue = currentValue.substring(0, start) + e.key + currentValue.substring(end)
       if (newValue.length > maxLen) return
@@ -87,7 +87,9 @@ export default function LegInput({
           disabled={disabled}
           className={`rounded-none text-right ${maxLen === 3 ? 'w-12' : 'w-14'} ${fieldError ? 'text-destructive' : ''} ${matchError ? 'border-destructive' : ''} ${className}`}
           type="text"
-          inputMode="numeric"
+          // inputMode="numeric"
+          inputMode="none"
+          readOnly
           pattern="[0-9]*"
           autoComplete="one-time-code"
           spellCheck="false"
