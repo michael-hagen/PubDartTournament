@@ -79,6 +79,8 @@
     "COLOR_THEME": "Color Theme",
     "SET_FULLSCREEN": "Fullscreen",
     "EXIT_FULLSCREEN": "Exit Fullscreen",
+    "SHOW_NUMPAD": "Show Numpad",
+    "HIDE_NUMPAD": "Hide Numpad",
     "CONNECTION_STRING": "Share this code with participants who wish to connect via the app as observers",
     "LEG_INPUT_TITLE": "Input points left",
     "LEG_INPUT_CONTENT_1": "Type 0 for the winner",
