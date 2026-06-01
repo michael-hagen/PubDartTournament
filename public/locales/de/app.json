@@ -72,6 +72,8 @@
 
   "TIP": {
     "COLOR_THEME": "Farbschema",
+    "SHOW_NUMPAD": "Zehnertastatur anzeigen",
+    "HIDE_NUMPAD": "Zehnertastatur ausblenden",
     "SET_FULLSCREEN": "Vollbildmodus",
     "EXIT_FULLSCREEN": "Vollbildmodus beenden",
     "CONNECTION_STRING": "Geben Sie diesen Code an die Teilnehmer weiter, die sich als Beobachter mit der App verbinden möchten",

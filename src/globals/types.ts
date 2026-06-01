@@ -76,6 +76,8 @@ export type SerializableTournamentType = {
   showConfetti: boolean
 }
 
+export type NumpadCallbackType = (e: KeyboardEvent) => void
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean

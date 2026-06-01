@@ -12,6 +12,7 @@ import type {
   PlayerType,
   LegValueType,
   ConnectionModeType,
+  NumpadCallbackType,
 } from './types'
 
 // Default values for global types
@@ -26,6 +27,10 @@ export const DEFAULT_GAME_CHECKOUT: GameCheckoutType = 'SINGLE_OUT'
 export const DEFAULT_GAME_LEGS: GameLegsType = '2'
 export const DEFAULT_GAME_ELIMINATION: GameEliminationType = 'DOUBLE_KO'
 export const DEFAULT_TOURNAMENT_PANEL_SCALE: number = 100
+
+export const DEFAULT_NUMPAD_CALLBACK: NumpadCallbackType = (e: KeyboardEvent) => {
+  console.log('numpad callback: ', e.code)
+}
 
 // The following objects are generated when module is loaded
 export const DEFAULT_GET_A_BYE_PLAYER: PlayerType = {

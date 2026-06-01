@@ -17,6 +17,7 @@ import {
   DEFAULT_EMPTY_TOURNAMENT,
   DEFAULT_EMPTY_PLAYER,
   DEFAULT_CONNECTION_MODE,
+  DEFAULT_NUMPAD_CALLBACK,
 } from '@/globals/defaults'
 import { generateRandomConnectionString, generateUUID } from '@/lib/utils'
 import { newTournament } from './TournamentActions'
@@ -41,8 +42,11 @@ export const useAppStore = create(
         gameMatchForThirdPlace: false,
         players: [{ ...DEFAULT_EMPTY_PLAYER, id: generateUUID() }] as PlayerType[],
         tournament: { ...DEFAULT_EMPTY_TOURNAMENT },
+
         tournamentPanelScale: DEFAULT_TOURNAMENT_PANEL_SCALE,
         selectedTab: DEFAULT_GAME_STATE,
+        numpadCallback: DEFAULT_NUMPAD_CALLBACK,
+        showNumpad: false,
         showConfetti: false,
         // A new tournament has an empty list of players so we have an error by default
         // This prevents the user to start the tournament without a valid list of players
@@ -74,6 +78,8 @@ export const useAppStore = create(
             setGameMatchForThirdPlace: createSetter('gameMatchForThirdPlace'),
             setTournamentPanelScale: createSetter('tournamentPanelScale'),
             setSelectedTab: createSetter('selectedTab'),
+            setNumpadCallback: createSetter('numpadCallback'),
+            setShowNumpad: createSetter('showNumpad'),
             setShowConfetti: createSetter('showConfetti'),
           },
         }

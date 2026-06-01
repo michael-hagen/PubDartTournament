@@ -1,7 +1,6 @@
 import { useAppStore } from '@/store/AppStore'
 import { useTranslation } from 'react-i18next'
 import LegInput from './LegInput'
-import type { ChangeEvent } from 'react'
 import { setLegValue } from '@/store/LegActions'
 import { generateUUID } from '@/lib/utils'
 
@@ -46,8 +45,8 @@ export default function MatchRowItem({
     playerTwoName === 'GET_A_BYE' ||
     isObserverMode
 
-  const handleOnChange = (event: ChangeEvent<HTMLInputElement, HTMLInputElement>, legIndex: number) => {
-    const value = parseInt(event.target.value)
+  const handleOnChange = (newValue: string, legIndex: number) => {
+    const value = parseInt(newValue)
     const remainingPoints = isNaN(value) ? 0 : value
     setLegValue(roundIndex, winnerMatchIndex, loserMatchIndex, isPlayerOne, legIndex, remainingPoints)
   }

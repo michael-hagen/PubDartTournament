@@ -6,17 +6,21 @@ export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
 }
 
+export function isTouchDevice(): boolean {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0
+}
+
 export async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms))
 }
 
-export function debounce<T extends (...args: unknown[]) => void>(
-  func: T,
+export function debounce<Args extends unknown[]>(
+  func: (...args: Args) => void,
   delay: number,
-): (...args: Parameters<T>) => void {
+): (...args: Args) => void {
   let timeoutId: ReturnType<typeof setTimeout> | undefined
 
-  return (...args: Parameters<T>) => {
+  return (...args: Args) => {
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
@@ -25,7 +29,6 @@ export function debounce<T extends (...args: unknown[]) => void>(
     }, delay)
   }
 }
-
 export function generateUUID(): string {
   return globalThis.crypto.randomUUID()
 }

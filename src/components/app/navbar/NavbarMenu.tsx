@@ -36,6 +36,7 @@ export default function NavbarMenu() {
 
   return (
     <div className="hidden lg:flex items-center space-x-2 lg:space-x-4">
+      <ErrorDialog errorMsg={errorMsg} setErrorMsg={setErrorMsg} />
       <AlertDialogComponent
         icon={File}
         buttonTitle="NEW"
@@ -77,9 +78,8 @@ export default function NavbarMenu() {
         </Button>
       </AboutDialog>
       <ThemeSwitcher />
+      {/* <NumpadSwitcher /> */}
       <FullscreenSwitcher />
-
-      <ErrorDialog errorMsg={errorMsg} setErrorMsg={setErrorMsg} />
     </div>
   )
 }

@@ -120,6 +120,7 @@ export default function HamburgerMenu() {
           <DropdownMenuSeparator />
           <div className="flex flex-row p-2 space-x-2">
             <ThemeSwitcher handleClosePopup={handleClosePopup} />
+            {/* <NumpadSwitcher handleClosePopup={handleClosePopup} /> */}
             <FullscreenSwitcher handleClosePopup={handleClosePopup} />
           </div>
         </DropdownMenuContent>
