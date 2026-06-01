@@ -85,7 +85,7 @@ export default function Numpad() {
               focusNextElement()
             }}
           >
-            ⭲
+            ⇥
           </Button>
         </div>
       </div>
